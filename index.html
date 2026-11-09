@@ -575,41 +575,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <details><summary>Verzorgt Girasole ook catering?</summary><p>Ja, Luca verzorgt ook catering op locatie, voor feesten en bruiloften. Bel ons op 076 522 4437 voor de mogelijkheden.</p></details>
 </div>
 </section>
-<section id="reserveren" class="paper" style="padding: 140px 5vw 140px">
-<div style="max-width: 980px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 52px">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center">
-<span class="lbl rv" style="color: #74644F">Reserveren</span>
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(46px, 5vw, 80px); line-height: 0.95; text-transform: uppercase">
-<span class="ln"><span>Reserveer</span></span>
-<span class="ln"><span style="transition-delay: .12s">je tafel</span></span>
-</h2>
-</div>
-<form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="rv" style="width: 100%; display: flex; flex-direction: column; gap: 22px">
-<input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 22px 20px">
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Datum<input type="text" name="datum" required placeholder="dd-mm-jjjj" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Tijd<select name="tijd" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option>20:00</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Personen<select name="personen" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option>2 personen</option><option>3 personen</option><option>4 personen</option><option>5 personen</option><option>6 of meer</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Keuze<select name="keuze" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option value="kaart">À la carte</option><option value="4">Menu, 4 gangen</option><option value="6">Menu, 6 gangen</option><option value="huis">De Huiskamer</option></select></label>
-</div>
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 22px 20px">
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Naam<input type="text" name="naam" autocomplete="name" required style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-<label style="display: flex; flex-direction: column; gap: 8px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Telefoonnummer<input type="tel" name="telefoon" autocomplete="tel" required style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-</div>
-<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 28px; margin-top: 20px">
-<button type="submit" class="btn sun" style="min-height: 56px; padding: 0 40px">Reservering plaatsen</button>
-<span style="font-size: 14px; color: #74644F">Liever bellen? <a class="ul" href="tel:+31765224437" style="background-size: 100% 1px">076 522 4437</a></span>
-</div>
-</form>
-
-<div class="js-thanks" hidden>
-<div class="fade" style="text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center">
-<span class="script" style="font-size: 64px; line-height: 1; color: #B87A0E">Grazie, tot snel</span>
-<span style="color: #5E5040">Je aanvraag is binnen. We bevestigen je tafel zo snel mogelijk.</span>
-</div>
-</div>
-</div>
-</section>
 
 </main>
 <footer style="background: #1F1610; color: #F4ECDF; padding: 70px 5vw 40px">
@@ -833,35 +798,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <details><summary>Verzorgt Girasole ook catering?</summary><p>Ja, Luca verzorgt ook catering op locatie, voor feesten en bruiloften. Bel ons op 076 522 4437 voor de mogelijkheden.</p></details>
 </div>
 </section>
-<section id="reserveren-m" class="paper" style="padding: 80px 20px 90px; display: flex; flex-direction: column; gap: 34px">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center">
-<span class="lbl rv" style="color: #74644F">Reserveren</span>
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 46px; line-height: 0.95; text-transform: uppercase">
-<span class="ln"><span>Reserveer</span></span>
-<span class="ln"><span style="transition-delay: .12s">je tafel</span></span>
-</h2>
-</div>
-<form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field" class="rv" style="display: flex; flex-direction: column; gap: 20px">
-<input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Datum<input type="text" name="datum" required placeholder="dd-mm-jjjj" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Tijd<select name="tijd" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option>17:00</option><option>17:30</option><option>18:00</option><option>18:30</option><option>19:00</option><option>19:30</option><option>20:00</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Personen<select name="personen" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option>2</option><option>3</option><option>4</option><option>5</option><option>6 of meer</option></select></label>
-</div>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Keuze<select name="keuze" style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; width: 100%"><option value="kaart">À la carte</option><option value="4">Menu, 4 gangen</option><option value="6">Menu, 6 gangen</option><option value="huis">De Huiskamer</option></select></label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Naam<input type="text" name="naam" autocomplete="name" required style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-<label style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: #74644F">Telefoonnummer<input type="tel" name="telefoon" autocomplete="tel" required style="background: transparent; border: 0; border-bottom: 1px solid rgba(42,30,20,0.35); color: #2A1E14; padding: 10px 0; font: inherit; font-size: 17px; letter-spacing: 0; text-transform: none; height: 50px; box-sizing: border-box; width: 100%"></label>
-<button type="submit" class="btn sun" style="margin-top: 10px; min-height: 56px">Reservering plaatsen</button>
-<span style="text-align: center; font-size: 14px; color: #74644F">Liever bellen? <a class="ul" href="tel:+31765224437">076 522 4437</a></span>
-</form>
-
-<div class="js-thanks" hidden>
-<div class="fade" style="text-align: center; display: flex; flex-direction: column; gap: 10px">
-<span class="script" style="font-size: 56px; line-height: 1; color: #B87A0E">Grazie, tot snel</span>
-<span style="color: #5E5040">Je aanvraag is binnen. We bevestigen je tafel zo snel mogelijk.</span>
-</div>
-</div>
-</section>
 
 <footer class="stg" style="background: #1F1610; color: #F4ECDF; padding: 50px 20px 110px">
 <a href="#top-m" style="display: block; width: 78%; margin-bottom: 8px"><img class="lk" style="display: block; width: 100%; height: auto" src="media/logo-light.webp" alt="by Luca's Kitchen" width="900" height="185"></a>
@@ -1030,9 +966,16 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   }
   d.addEventListener('cancel', function (e) { e.preventDefault(); shut(); });
   d.addEventListener('close', function () { if (innerWidth <= 760 && window.gsCover) gsCover(false); });
-  function open(e) { if (e) e.preventDefault(); var pd = document.querySelector('.pop-d[open]'); if (pd) pd.close(); show('home'); head(); d.showModal(); if (innerWidth <= 760 && window.gsCover) setTimeout(function () { if (d.open) gsCover(true); }, 650); }
-  document.addEventListener('click', function (e) { if (e.target.closest('[data-bk]')) open(e); });
-  if (location.hash === '#boeken') open();
+  function open(e) { if (e) e.preventDefault(); var pd = document.querySelector('.pop-d[open]'); if (pd) pd.close(); show('home'); head(); mark(); d.showModal(); if (innerWidth <= 760 && window.gsCover) setTimeout(function () { if (d.open) gsCover(true); }, 650); }
+  var KEUZE = { '4': 'Menu, 4 gangen', '6': 'Menu, 6 gangen', huis: 'De Huiskamer', kaart: 'À la carte' };
+  document.addEventListener('click', function (e) {
+    var a = e.target.closest('[data-bk], a[href*="#reserveren"]');
+    if (!a || a.closest('.bk')) return;
+    var k = a.getAttribute('data-keuze');
+    if (k) { st.k = k; st.l = KEUZE[k]; }
+    open(e);
+  });
+  if (location.hash === '#boeken' || location.hash.indexOf('#reserveren') === 0) open();
 
   // featured card from the seasonal popup config
   fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) {
@@ -1113,11 +1056,6 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-cat]');
     if (t) { state.cat = t.getAttribute('data-cat'); render(); return; }
-    t = e.target.closest('[data-keuze]');
-    if (t) {
-      var v = t.getAttribute('data-keuze');
-      document.querySelectorAll('select[name="keuze"]').forEach(function (s) { s.value = v; });
-    }
     t = e.target.closest('[data-menu]');
     if (t) {
       var root = t.closest('.v-desk, .v-mob');
