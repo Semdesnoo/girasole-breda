@@ -11,6 +11,7 @@ const ev = async e => (await cdp('Runtime.evaluate', { expression: e, returnByVa
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const shot = async n => { const r = await cdp('Page.captureScreenshot'); (await import('fs')).writeFileSync(`${S}/${n}.png`, Buffer.from(r.data, 'base64')); };
 const W = +process.env.W || 1440;
+await cdp('Network.enable'); await cdp('Network.setCacheDisabled', { cacheDisabled: true });
 await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: 900, deviceScaleFactor: 1, mobile: W < 700 });
 await cdp('Page.navigate', { url: process.env.URL || 'http://127.0.0.1:8767/index.html' }); await sleep(3000);
 const opener = W < 700 ? '.v-mob .bar [data-bk]' : '.fab[data-bk]';
@@ -34,3 +35,26 @@ ok((await ev(`document.querySelector('.bk form [type=submit]').textContent`)) ==
 console.log(await ev(`JSON.stringify(Object.fromEntries(new FormData(document.querySelector('.bk form'))))`));
 await shot('bk-form-' + W);
 ws.close();
+// animation: opens rising from below, closes with an exit animation
+{
+  const ws2 = new WebSocket((await (await fetch('http://127.0.0.1:9333/json')).json()).find(t => t.type === 'page').webSocketDebuggerUrl);
+  await new Promise(r => ws2.onopen = r);
+  let i2 = 0; const p2 = {};
+  ws2.onmessage = m => { const x = JSON.parse(m.data); if (p2[x.id]) { p2[x.id](x.result); delete p2[x.id]; } };
+  const c2 = (method, params = {}) => new Promise(r => { p2[++i2] = r; ws2.send(JSON.stringify({ id: i2, method, params })); });
+  const e2 = async e => (await c2('Runtime.evaluate', { expression: e, returnByValue: true })).result.value;
+  await c2('Emulation.setDeviceMetricsOverride', { width: W, height: 900, deviceScaleFactor: 1, mobile: W < 700 }); await sleep(300);
+  await e2(`document.querySelector('.bk').open && document.querySelector('.bk').close()`);
+  await e2(`document.querySelector('${opener}').click()`); await sleep(120);
+  const mid = await e2(`getComputedStyle(document.querySelector('.bk')).transform`);
+  ok(mid !== 'none', 'opening animation runs (' + mid.slice(0, 40) + ')');
+  await sleep(150); { const r = await c2('Page.captureScreenshot'); (await import('fs')).writeFileSync(`${S}/bk-anim-${W}.png`, Buffer.from(r.data, 'base64')); }
+  await sleep(700);
+  const r = await e2(`(()=>{const b=document.querySelector('.bk').getBoundingClientRect();return [Math.round(b.right),Math.round(b.bottom),innerWidth,innerHeight]})()`);
+  ok(W < 700 ? r[1] === r[3] : (r[2] - r[0] >= 20 && r[3] - r[1] >= 20), 'panel anchored bottom-right ' + JSON.stringify(r));
+  await e2(`document.querySelector('[data-bk-close]').click()`); await sleep(100);
+  ok(await e2(`document.querySelector('.bk').open && document.querySelector('.bk').classList.contains('out')`), 'closing animation running');
+  await sleep(400);
+  ok(await e2(`!document.querySelector('.bk').open`), 'closed after animation');
+  ws2.close();
+}
