@@ -197,6 +197,58 @@ a{color:inherit}
 .rcard figcaption span{color:#8C7B66}
 @media (max-width:760px){.rev{padding:80px 0 90px}.rev-head{padding:0 20px}.rev-head .script{font-size:44px}.rev-head h2{font-size:44px}.rev-score .num{font-size:60px}.marq{margin-top:50px}.rcard{width:270px;padding:32px 26px 26px}.rcard blockquote{font-size:21px}.marq-track{animation-duration:60s}}
 @media (prefers-reduced-motion: reduce){.marq{overflow-x:auto;mask-image:none}.marq-track{animation:none}.marq-dup{display:none}}
+
+.bk{position:fixed;inset:0 0 0 auto;margin:0;width:min(440px,100vw);height:100dvh;max-height:none;max-width:none;padding:0;border:0;background:#F4ECDF;color:#2A1E14;box-shadow:-30px 0 80px rgba(0,0,0,.35)}
+.bk::backdrop{background:rgba(31,22,16,.6);backdrop-filter:blur(2px)}
+.bk[open]{animation:bkin .5s cubic-bezier(.2,.7,.2,1) both}
+@keyframes bkin{from{transform:translateX(40px);opacity:0}to{transform:none;opacity:1}}
+.bk:focus{outline:none}
+.bk-in{display:flex;flex-direction:column;height:100%;font-family:'Instrument Sans','Helvetica Neue',sans-serif;font-size:15px;line-height:1.5}
+.bk-top{display:grid;grid-template-columns:48px 1fr 48px;align-items:center;padding:10px 12px;background:#1F1610;color:#F4ECDF}
+.bk-top button{width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:none;border:0;color:inherit;cursor:pointer}
+.bk-top button[hidden]{visibility:hidden;display:flex}
+.bk-title{text-align:center;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;letter-spacing:.14em;text-transform:uppercase}
+.bk-body{flex:1;overflow-y:auto;padding:18px 18px 28px}
+.bk-v[hidden]{display:none}
+.bk-row{width:100%;display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:56px;margin-bottom:10px;padding:0 18px;border:1px solid rgba(42,30,20,.22);background:#FBF7F0;color:#2A1E14;font:inherit;cursor:pointer;transition:border-color .3s ease}
+.bk-row:hover{border-color:#2A1E14}
+.bk-row span{color:#7C6C58}
+.bk-row.cta{justify-content:center;background:#E8A93A;border-color:#E8A93A;font-weight:500}
+.bk-card{display:block;width:100%;margin-top:14px;padding:0;border:0;background:#FBF7F0;color:#2A1E14;font:inherit;text-align:left;cursor:pointer;box-shadow:0 10px 30px rgba(31,22,16,.10);overflow:hidden}
+.bk-card img{display:block;width:100%;aspect-ratio:2/1;object-fit:cover;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+.bk-card:hover img{transform:scale(1.04)}
+.bk-card b{display:block;padding:14px 16px 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:25px;line-height:1.1}
+.bk-card small{display:block;padding:2px 16px 16px;font-size:14px;color:#7C6C58}
+.bk-feat{background:#1F1610;color:#F4ECDF;padding:10px}
+.bk-feat i{display:block;padding:2px 2px 10px;font-style:normal;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#E8A93A}
+.bk-feat b{font-family:'Mrs Saint Delafield',cursive;font-weight:400;font-size:44px;padding:12px 6px 0}
+.bk-feat small{color:#CDBDA5;padding:0 6px 8px}
+.bk h3{margin:4px 0 16px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;text-align:center;text-transform:uppercase;letter-spacing:.06em}
+.bk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.bk-grid button,.bk-cal button,.bk-times button{min-height:50px;padding:0;border:0;background:#E9DFCF;color:#2A1E14;font:inherit;font-weight:500;cursor:pointer;transition:background-color .25s ease}
+.bk-grid button:hover,.bk-cal button:not(:disabled):hover,.bk-times button:hover{background:#DCCDB6}
+.bk-grid small{display:block;font-size:10px;font-weight:400;letter-spacing:.06em;color:#8C7B66;margin-top:-4px}
+.bk .on,.bk .on:hover{background:#1F1610 !important;color:#F4ECDF}
+.bk .on small{color:#E8A93A}
+.bk-note{margin:16px 0 0;padding:12px 14px;background:#E8A93A;font-size:14px}
+.bk-mon{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-weight:500;text-transform:capitalize}
+.bk-mon button{width:44px;height:44px;background:none;border:0;cursor:pointer;color:#2A1E14}
+.bk-mon button:disabled{opacity:.25;cursor:default}
+.bk-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.bk-cal span{text-align:center;font-size:12px;color:#8C7B66;padding-bottom:4px}
+.bk-cal button{min-height:44px}
+.bk-cal button:disabled{background:none;color:#C4B7A3;font-weight:400;cursor:default}
+.bk-times{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.bk-sub{margin:22px 0 10px;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#74644F}
+.bk-sum{padding:16px 18px;background:#1F1610;color:#F4ECDF;margin-bottom:18px}
+.bk-sum b{display:block;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:24px;line-height:1.15}
+.bk form{display:flex;flex-direction:column;gap:16px}
+.bk label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#74644F}
+.bk input{height:50px;box-sizing:border-box;padding:0 14px;border:1px solid rgba(42,30,20,.3);background:#FBF7F0;color:#2A1E14;font:inherit;font-size:16px;letter-spacing:0;text-transform:none}
+.bk input:focus{outline:2px solid #E8A93A;outline-offset:0;border-color:#2A1E14}
+.bk form .btn{min-height:56px;margin-top:6px}
+@media (max-width:760px){.bk{width:100vw;box-shadow:none}}
+@media (prefers-reduced-motion: reduce){.bk[open]{animation:none}}
 </style>
 </head>
 <body>
@@ -712,12 +764,148 @@ a{color:inherit}
 </footer>
 
 <div class="bar" style="position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 20; display: flex; gap: 8px">
-<a class="btn sun" href="#reserveren-m" style="flex: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.25)">Reserveren</a>
+<a class="btn sun" href="#reserveren-m" data-bk style="flex: 1; box-shadow: 0 10px 30px rgba(0,0,0,0.25)">Reserveren</a>
 <a class="btn" href="tel:+31765224437" aria-label="Bellen" style="width: 50px; padding: 0; background: #F4ECDF; color: #2A1E14; border-color: #F4ECDF; box-shadow: 0 10px 30px rgba(0,0,0,0.2)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"></path></svg></a>
 </div>
 </div>
 
 </div>
+
+<dialog class="bk" aria-label="Reserveren" autofocus>
+<section class="bk-in">
+<div class="bk-top"><button type="button" data-bk-back aria-label="Terug" hidden><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button><span class="bk-title">Girasole</span><button type="button" data-bk-close aria-label="Sluiten"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><line x1="3" y1="3" x2="17" y2="17"></line><line x1="17" y1="3" x2="3" y2="17"></line></svg></button></div>
+<div class="bk-body">
+<div class="bk-v" data-v="home">
+<button type="button" class="bk-row" data-go="pers"><span>Personen</span><b class="js-bk-p">2 personen</b></button>
+<button type="button" class="bk-row cta" data-go="date"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg><b class="js-bk-dt">Selecteer een datum en tijd</b></button>
+<div class="js-bk-feat"></div>
+<button type="button" class="bk-card" data-k="kaart" data-l="À la carte"><img src="media/tafel-rond.webp" alt="" loading="lazy"><b>À la carte</b><small>Kies vrij van de kaart van Luca</small></button><button type="button" class="bk-card" data-k="4" data-l="Menu, 4 gangen"><img src="media/pasta.webp" alt="" loading="lazy"><b>Menu, 4 gangen</b><small>De kaart van het seizoen, € 74 p.p.</small></button><button type="button" class="bk-card" data-k="6" data-l="Menu, 6 gangen"><img src="media/bord.webp" alt="" loading="lazy"><b>Menu, 6 gangen</b><small>Het hele verhaal van Luca, € 98 p.p.</small></button><button type="button" class="bk-card" data-k="huis" data-l="De Huiskamer"><img src="media/muur.webp" alt="" loading="lazy"><b>De Huiskamer</b><small>Eigen ruimte tot 12 gasten, op aanvraag</small></button>
+</div>
+<div class="bk-v" data-v="pers" hidden>
+<div class="bk-grid"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button><button type="button" data-p="5">5</button><button type="button" data-p="6">6</button><button type="button" data-p="7">7<small>aanvraag</small></button><button type="button" data-p="8">8<small>aanvraag</small></button><button type="button" data-p="9">9<small>aanvraag</small></button><button type="button" data-p="10">10<small>aanvraag</small></button><button type="button" data-p="11">11<small>aanvraag</small></button><button type="button" data-p="12">12<small>aanvraag</small></button></div>
+<p class="bk-note">Met 7 tot 12 personen reserveer je op aanvraag. We bellen je om alles af te stemmen.</p>
+</div>
+<div class="bk-v" data-v="date" hidden>
+<div class="bk-mon"><button type="button" data-m="-1" aria-label="Vorige maand"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button><span class="js-bk-mon"></span><button type="button" data-m="1" aria-label="Volgende maand"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><polyline points="6,3 11,8 6,13"></polyline></svg></button></div>
+<div class="bk-cal js-bk-cal"></div>
+<p class="bk-note">Op maandag zijn we gesloten.</p>
+<div class="js-bk-tw" hidden><p class="bk-sub">Tijd</p><div class="bk-times js-bk-times"></div></div>
+</div>
+<div class="bk-v" data-v="form" hidden>
+<div class="bk-sum"><b class="js-bk-k"></b><span class="js-bk-s"></span></div>
+<form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+<input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
+<input type="hidden" name="datum"><input type="hidden" name="tijd"><input type="hidden" name="personen"><input type="hidden" name="keuze">
+<label>Naam<input type="text" name="naam" autocomplete="name" required></label>
+<label>Telefoonnummer<input type="tel" name="telefoon" autocomplete="tel" required></label>
+<p class="bk-note js-bk-req" hidden>Dit is een aanvraag. We bellen je om je tafel te bevestigen.</p>
+<button type="submit" class="btn sun">Reservering plaatsen</button>
+</form>
+<div class="js-thanks" hidden><div class="fade" style="text-align: center; padding-top: 30px"><span class="script" style="font-size: 56px; line-height: 1; color: #B87A0E">Grazie, tot snel</span><p style="color: #5E5040">Je aanvraag is binnen. We bevestigen je tafel zo snel mogelijk.</p></div></div>
+</div>
+</div>
+</section>
+</dialog>
+<script>
+// Reserveringspaneel: personen -> datum/tijd -> keuze -> gegevens. Verstuurt via het bestaande reservering-formulier.
+(function () {
+  var d = document.querySelector('.bk');
+  if (!d || !d.showModal) return;
+  var q = function (s) { return d.querySelector(s); };
+  var DG = ['zo', 'ma', 'di', 'wo', 'do', 'vr', 'za'];
+  var MN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+  var TITLE = { home: 'Girasole', pers: 'Personen', date: 'Datum en tijd', form: 'Je gegevens' };
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var iso = function (dt) { return dt.getFullYear() + '-' + pad(dt.getMonth() + 1) + '-' + pad(dt.getDate()); };
+  var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+  var maxD = new Date(today + 'T12:00'); maxD.setDate(maxD.getDate() + 90); var max = iso(maxD);
+  var st = { p: 2, date: null, time: null, k: null, l: '', y: +today.slice(0, 4), m: +today.slice(5, 7) - 1 };
+
+  function show(v) {
+    d.querySelectorAll('.bk-v').forEach(function (n) { n.hidden = n.getAttribute('data-v') !== v; });
+    q('[data-bk-back]').hidden = v === 'home';
+    q('.bk-title').textContent = TITLE[v];
+    if (v === 'pers') d.querySelectorAll('[data-p]').forEach(function (b) { b.classList.toggle('on', +b.getAttribute('data-p') === st.p); });
+    if (v === 'date') cal();
+    if (v === 'form') form();
+    q('.bk-body').scrollTop = 0;
+  }
+  function next() { show(!st.k ? 'home' : (!st.time ? 'date' : 'form')); }
+  function label(dt) { var x = new Date(dt + 'T12:00'); return DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; }
+  function head() {
+    q('.js-bk-p').textContent = st.p + (st.p === 1 ? ' persoon' : ' personen') + (st.p > 6 ? ' (op aanvraag)' : '');
+    q('.js-bk-dt').textContent = st.time ? label(st.date) + ', ' + st.time : 'Selecteer een datum en tijd';
+  }
+  function cal() {
+    var first = new Date(st.y, st.m, 1), off = (first.getDay() + 6) % 7, n = new Date(st.y, st.m + 1, 0).getDate();
+    var h = ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].map(function (w) { return '<span>' + w + '</span>'; }).join('');
+    for (var i = 0; i < off; i++) h += '<span></span>';
+    for (var day = 1; day <= n; day++) {
+      var dt = new Date(st.y, st.m, day), v = iso(dt), off2 = v < today || v > max || dt.getDay() === 1;
+      h += '<button type="button" data-d="' + v + '"' + (off2 ? ' disabled' : '') + (v === st.date ? ' class="on"' : '') + '>' + day + '</button>';
+    }
+    q('.js-bk-cal').innerHTML = h;
+    q('.js-bk-mon').textContent = MN[st.m] + ' ' + st.y;
+    var ym = st.y * 12 + st.m;
+    q('[data-m="-1"]').disabled = ym <= +today.slice(0, 4) * 12 + (+today.slice(5, 7) - 1);
+    q('[data-m="1"]').disabled = ym >= maxD.getFullYear() * 12 + maxD.getMonth();
+    times();
+  }
+  function times() {
+    var w = q('.js-bk-tw');
+    if (!st.date) { w.hidden = true; return; }
+    var wd = new Date(st.date + 'T12:00').getDay(), last = (wd === 5 || wd === 6) ? 20 * 60 + 30 : 20 * 60;
+    var now = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }).split(':');
+    var min = st.date === today ? +now[0] * 60 + +now[1] + 60 : 0, h = '';
+    for (var t = 17 * 60; t <= last; t += 30) if (t >= min) {
+      var s = pad(Math.floor(t / 60)) + ':' + pad(t % 60);
+      h += '<button type="button" data-t="' + s + '"' + (s === st.time ? ' class="on"' : '') + '>' + s + '</button>';
+    }
+    q('.js-bk-times').innerHTML = h || '<p style="grid-column: 1 / -1; margin: 0; color: #7C6C58">Vandaag kun je niet meer online reserveren. Bel ons op 076 522 4437.</p>';
+    w.hidden = false;
+  }
+  function form() {
+    var f = q('form'), req = st.p > 6;
+    q('.js-bk-k').textContent = st.l;
+    q('.js-bk-s').textContent = label(st.date) + ' om ' + st.time + ', ' + st.p + (st.p === 1 ? ' persoon' : ' personen');
+    f.datum.value = label(st.date) + ' ' + st.date.slice(0, 4);
+    f.tijd.value = st.time;
+    f.personen.value = st.p + (req ? ' (aanvraag)' : '');
+    f.keuze.value = st.l;
+    q('.js-bk-req').hidden = !req;
+    f.querySelector('[type=submit]').textContent = req ? 'Aanvraag versturen' : 'Reservering plaatsen';
+  }
+
+  d.addEventListener('click', function (e) {
+    if (e.target === d) return d.close();
+    var t = e.target.closest('button');
+    if (!t) return;
+    if (t.hasAttribute('data-bk-close')) d.close();
+    else if (t.hasAttribute('data-bk-back')) { st.k = null; show('home'); }
+    else if (t.hasAttribute('data-go')) show(t.getAttribute('data-go'));
+    else if (t.hasAttribute('data-p')) { st.p = +t.getAttribute('data-p'); head(); next(); }
+    else if (t.hasAttribute('data-m')) { var m = st.m + +t.getAttribute('data-m'); st.y += Math.floor(m / 12); st.m = (m + 12) % 12; cal(); }
+    else if (t.hasAttribute('data-d')) { st.date = t.getAttribute('data-d'); st.time = null; head(); cal(); q('.js-bk-tw').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+    else if (t.hasAttribute('data-t')) { st.time = t.getAttribute('data-t'); head(); next(); }
+    else if (t.hasAttribute('data-k')) { st.k = t.getAttribute('data-k'); st.l = t.getAttribute('data-l'); next(); }
+  });
+
+  function open(e) { if (e) e.preventDefault(); var pd = document.querySelector('.pop-d[open]'); if (pd) pd.close(); show('home'); head(); d.showModal(); }
+  document.addEventListener('click', function (e) { if (e.target.closest('[data-bk]')) open(e); });
+  if (location.hash === '#boeken') open();
+
+  // featured card from the seasonal popup config
+  fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) {
+    if (!c.actief || (c.van && today < c.van) || (c.tot && today > c.tot)) return;
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'bk-card bk-feat';
+    b.setAttribute('data-k', c.id); b.setAttribute('data-l', (c.titel || []).join(' '));
+    b.innerHTML = '<i>Uitgelicht</i><img alt=""><b></b><small></small>';
+    b.querySelector('img').src = c.afbeelding; b.querySelector('b').textContent = (c.titel || []).join(' '); b.querySelector('small').textContent = c.tekst || '';
+    q('.js-bk-feat').appendChild(b);
+  }).catch(function () {});
+})();
+</script>
 <script>
 (function () {
   var MENU = {
@@ -939,7 +1127,7 @@ a{color:inherit}
 
 </script>
 
-<a class="fab fab-desk" href="#reserveren"><span class="script">Girasole</span><i aria-hidden="true"></i>Reserveer een tafel<i aria-hidden="true"></i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg></a>
+<a class="fab fab-desk" href="#reserveren" data-bk><span class="script">Girasole</span><i aria-hidden="true"></i>Reserveer een tafel<i aria-hidden="true"></i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg></a>
 
 <dialog class="pop-d" aria-labelledby="pop-t" autofocus>
 <div class="pop-in">
@@ -971,7 +1159,7 @@ a{color:inherit}
       var r = d.getBoundingClientRect();
       if (e.target.closest('.pop-x, .pop-b') || e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
     });
-    setTimeout(function () { d.showModal(); }, c.vertraging_ms || 1500);
+    setTimeout(function () { if (!document.querySelector('.bk[open]')) d.showModal(); }, c.vertraging_ms || 1500);
   }).catch(function () {});
 })();
 </script>
