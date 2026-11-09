@@ -191,8 +191,8 @@ a{color:inherit}
 .rev-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
 .marq{margin-top:80px;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
 .marq-track,.marq-dup{display:flex;gap:34px;width:max-content}
-.marq-track{padding:16px 0 16px 34px;animation:marq 80s linear infinite}
-@keyframes marq{to{transform:translateX(calc(-50% - 17px))}}
+.marq-track{padding:16px 0 16px 34px;animation:marq 80s linear infinite;animation-delay:-14s}
+@keyframes marq{to{transform:translateX(calc(-1px * var(--shift, 0)))}}
 .rcard{flex:none;width:340px;box-sizing:border-box;margin:0;padding:38px 34px 32px;background:#F4ECDF url(media/grain.png) 0 0/300px;color:#2A1E14;display:flex;flex-direction:column;gap:16px;outline:1px solid rgba(42,30,20,.22);outline-offset:-16px;
   -webkit-mask:linear-gradient(#000 0 0) 50%/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle,#0000 6px,#000 6.5px) -9px -9px/18px 18px round;
   mask:linear-gradient(#000 0 0) 50%/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle,#0000 6px,#000 6.5px) -9px -9px/18px 18px round;
@@ -1121,6 +1121,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   document.querySelectorAll('.marq-track').forEach(function (t) {
     var d = document.createElement('div'); d.className = 'marq-dup'; d.setAttribute('aria-hidden', 'true');
     d.innerHTML = t.innerHTML; t.appendChild(d);
+    // loop distance = exact start of the copy, so the jump back is invisible
+    var fit = function () { t.style.setProperty('--shift', d.offsetLeft - t.firstElementChild.offsetLeft); };
+    fit(); window.addEventListener('resize', fit);
   });
   // Videos: load when near the screen and (re)start every time they come into view.
   // Fallback for phones that block autoplay (iOS Low Power Mode, data saver): start on the first tap or scroll.
