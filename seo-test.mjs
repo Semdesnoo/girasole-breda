@@ -1,0 +1,32 @@
+
+// SEO-change check: SHOTS=<dir> URL=<base> W=390 node seo-test.mjs (headless chrome on :9334)
+const S = process.env.SHOTS, BASE = process.env.URL || 'http://127.0.0.1:8767/', W = +process.env.W || 390;
+const tabs = await (await fetch('http://127.0.0.1:9334/json')).json();
+const ws = new WebSocket(tabs.find(t => t.type === 'page').webSocketDebuggerUrl);
+await new Promise(r => ws.onopen = r);
+let id = 0; const pend = {};
+ws.onmessage = m => { const x = JSON.parse(m.data); if (pend[x.id]) { pend[x.id](x.result); delete pend[x.id]; } };
+const cdp = (method, params = {}) => new Promise(r => { pend[++id] = r; ws.send(JSON.stringify({ id, method, params })); });
+const ev = async e => (await cdp('Runtime.evaluate', { expression: e, returnByValue: true })).result.value;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const shot = async n => { const r = await cdp('Page.captureScreenshot'); (await import('fs')).writeFileSync(`${S}/${n}.png`, Buffer.from(r.data, 'base64')); };
+const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process.exitCode = 1; };
+await cdp('Network.enable'); await cdp('Network.setCacheDisabled', { cacheDisabled: true });
+await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: 844, deviceScaleFactor: 2, mobile: W < 700 });
+await cdp('Page.navigate', { url: BASE + 'index.html' }); await sleep(3500);
+await ev(`document.querySelector('.pop-d[open]')?.close()`);
+const root = W < 700 ? '.v-mob' : '.v-desk';
+ok(await ev(`document.querySelectorAll('${root} .marq-dup .rcard').length === 10`), 'marquee copy created at runtime');
+await ev(`document.querySelector('${root} .marq').scrollIntoView({block:'center'})`); await sleep(1500);
+const x1 = await ev(`new DOMMatrix(getComputedStyle(document.querySelector('${root} .marq-track')).transform).m41`); await sleep(2000);
+const x2 = await ev(`new DOMMatrix(getComputedStyle(document.querySelector('${root} .marq-track')).transform).m41`);
+ok(x1 !== x2, `marquee moves (${Math.round(x1)} -> ${Math.round(x2)})`);
+const faq = W < 700 ? '#vragen-m' : '#vragen';
+await ev(`document.querySelector('${faq}').scrollIntoView()`); await sleep(1200);
+const r = await ev(`(()=>{const s=document.querySelector('${faq} summary').getBoundingClientRect();return [s.x+20,s.y+s.height/2,Math.round(s.height)]})()`);
+for (const type of ['mousePressed', 'mouseReleased']) await cdp('Input.dispatchMouseEvent', { type, x: r[0], y: r[1], button: 'left', clickCount: 1 });
+await sleep(400);
+ok(await ev(`document.querySelector('${faq} details').open`) && r[2] >= 44, `faq opens on tap, row ${r[2]}px`);
+ok(await ev(`document.documentElement.scrollWidth <= innerWidth`), 'no horizontal overflow');
+await shot(`seo-faq-${W}`);
+ws.close();
