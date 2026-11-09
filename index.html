@@ -970,7 +970,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     else if (t.hasAttribute('data-bk-back')) show(ORDER[Math.max(0, ORDER.indexOf(cur) - 1)]);
     else if (t.hasAttribute('data-step')) show(t.getAttribute('data-step'));
     else if (t.hasAttribute('data-go')) show(t.getAttribute('data-go'));
-    else if (t.hasAttribute('data-p')) { st.p = +t.getAttribute('data-p'); d.querySelectorAll('[data-p]').forEach(function (b) { b.classList.toggle('on', b === t); }); setTimeout(function () { show('home'); }, 260); }
+    else if (t.hasAttribute('data-p')) { st.p = +t.getAttribute('data-p'); if (st.p === 12) { st.k = 'huis'; st.l = 'De Huiskamer'; } mark(); d.querySelectorAll('[data-p]').forEach(function (b) { b.classList.toggle('on', b === t); }); setTimeout(function () { show('home'); }, 260); }
     else if (t.hasAttribute('data-m')) { var m = st.m + +t.getAttribute('data-m'); st.y += Math.floor(m / 12); st.m = (m + 12) % 12; cal(); }
     else if (t.hasAttribute('data-d')) { st.date = t.getAttribute('data-d'); st.time = null; head(); cal(); q('.js-bk-tw').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     else if (t.hasAttribute('data-t')) { st.time = t.getAttribute('data-t'); t.classList.add('on'); setTimeout(function () { show('form'); }, 220); }
