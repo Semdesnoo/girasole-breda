@@ -6,7 +6,8 @@
 <title>Contact en route | Girasole by Luca's Kitchen, Breda</title>
 <meta name="description" content="Girasole by Luca's Kitchen, Sophiastraat 14, 4811 EK Breda. Openingstijden, telefoon en route naar ons Italiaanse familierestaurant.">
 <meta name="theme-color" content="#1F1610">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&amp;family=Instrument+Sans:wght@400;500&amp;family=Mrs+Saint+Delafield&amp;display=swap" rel="stylesheet">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"Restaurant","name":"Girasole by Luca's Kitchen","servesCuisine":"Italiaans","telephone":"+31765224437","address":{"@type":"PostalAddress","streetAddress":"Sophiastraat 14","postalCode":"4811 EK","addressLocality":"Breda","addressCountry":"NL"},"openingHours":["Tu-Th 17:00-21:00","Fr-Sa 17:00-21:30","Su 17:00-21:00"]}</script>
@@ -28,7 +29,8 @@ a{color:inherit}
 .stamp.up{background-image:radial-gradient(circle at 50% 100%,#F4ECDF 6px,transparent 6.5px)}
 
 header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:24px 5vw}
-.logo{text-decoration:none;display:flex;align-items:baseline;gap:12px;line-height:1}
+.logo{text-decoration:none;display:flex;align-items:center;gap:12px;line-height:1}
+.logo .lk{height:34px;width:auto}
 .logo b{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:30px;letter-spacing:.12em}
 .logo .script{font-size:30px;color:#B87A0E}
 nav{display:flex;align-items:center;gap:30px;font-size:13px;letter-spacing:.14em;text-transform:uppercase}
@@ -66,7 +68,7 @@ footer{background:#1F1610;color:#B9A88F;padding:28px 5vw 40px;display:flex;flex-
 .fab svg{color:#2A1E14}
 
 @media (max-width:760px){
-header{padding:18px 20px}.logo .script,nav .hide-m{display:none}.logo b{font-size:26px}
+header{padding:18px 20px}.logo{flex-direction:column;align-items:flex-start;gap:5px}.logo .lk{height:21px;margin-left:-2px}nav .hide-m{display:none}.logo b{font-size:26px}
 .hero{padding:40px 20px 60px}.hero .script{font-size:46px}
 .cols{grid-template-columns:1fr;gap:40px;padding:0 20px 70px;text-align:center}.hours{justify-content:center;text-align:left}
 .mapwrap{padding:50px 14px 110px}.map iframe{height:420px}
@@ -83,7 +85,7 @@ footer{padding:24px 20px 100px}
 <body>
 <div class="paper">
 <header>
-<a class="logo" href="index.html"><b>GIRASOLE</b><span class="script">Luca's Kitchen</span></a>
+<a class="logo" href="index.html"><b>GIRASOLE</b><img class="lk" src="media/logo-dark.webp" alt="by Luca's Kitchen" width="900" height="185"></a>
 <nav aria-label="Hoofdmenu"><a class="hide-m" href="index.html#kaart">De kaart</a><a class="hide-m" href="index.html#menus">Menu's</a><a class="btn sun" href="index.html#reserveren">Reserveren</a></nav>
 </header>
 
@@ -132,6 +134,7 @@ footer{padding:24px 20px 100px}
 <div class="stamp up" aria-hidden="true" style="background-color:#1F1610"></div>
 
 <footer>
+<a href="index.html" style="flex-basis: 100%; display: block; max-width: 340px; margin-bottom: 14px"><img class="lk" style="display: block; width: 100%; height: auto" src="media/logo-light.webp" alt="by Luca's Kitchen" width="900" height="185"></a>
 <span>Girasole by Luca's Kitchen, Breda</span>
 <a class="ul" href="index.html">Terug naar de homepage</a>
 </footer>
