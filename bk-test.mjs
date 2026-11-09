@@ -1,5 +1,5 @@
 
-// CDP check of the booking drawer flow. Usage: node bk-test.mjs (chrome on :9333, site on :8767)
+// CDP check of the booking drawer. Run headless chrome with --remote-debugging-port=9333, then: SHOTS=<dir> URL=<site> W=1440 node bk-test.mjs
 const S = process.env.SHOTS;
 const tabs = await (await fetch('http://127.0.0.1:9333/json')).json();
 const ws = new WebSocket(tabs.find(t => t.type === 'page').webSocketDebuggerUrl);
@@ -12,7 +12,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const shot = async n => { const r = await cdp('Page.captureScreenshot'); (await import('fs')).writeFileSync(`${S}/${n}.png`, Buffer.from(r.data, 'base64')); };
 const W = +process.env.W || 1440;
 await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: 900, deviceScaleFactor: 1, mobile: W < 700 });
-await cdp('Page.navigate', { url: 'http://127.0.0.1:8767/index.html' }); await sleep(3000);
+await cdp('Page.navigate', { url: process.env.URL || 'http://127.0.0.1:8767/index.html' }); await sleep(3000);
 const opener = W < 700 ? '.v-mob .bar [data-bk]' : '.fab[data-bk]';
 await ev(`document.querySelector('${opener}').click()`); await sleep(800);
 const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process.exitCode = 1; };
