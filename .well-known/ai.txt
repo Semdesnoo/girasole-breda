@@ -1,0 +1,7 @@
+# AI crawler policy for Girasole by Luca's Kitchen
+User-agent: *
+Allow: /
+Disallow-training: no
+Contact: tel:+31765224437
+Sitemap: https://semdesnoo.github.io/girasole-breda/sitemap.xml
+LLMs: https://semdesnoo.github.io/girasole-breda/llms.txt

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://semdesnoo.github.io/girasole-breda/</loc><lastmod>2026-11-09</lastmod><priority>1.0</priority>
+<video:video><video:thumbnail_loc>https://semdesnoo.github.io/girasole-breda/media/film.jpg</video:thumbnail_loc><video:title>Een avond bij Girasole</video:title><video:description>Sfeerfilm van een avond aan tafel bij Girasole by Luca's Kitchen in Breda.</video:description><video:content_loc>https://semdesnoo.github.io/girasole-breda/media/film.mp4</video:content_loc><video:duration>38</video:duration></video:video>
+</url>
+<url><loc>https://semdesnoo.github.io/girasole-breda/contact.html</loc><lastmod>2026-11-09</lastmod><priority>0.8</priority></url>
+</urlset>

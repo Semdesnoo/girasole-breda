@@ -1,0 +1,23 @@
+{
+  "name": "Girasole by Luca's Kitchen",
+  "services": [
+    {
+      "name": "Diner à la carte",
+      "description": "Seizoenskaart met verse pasta, vis, vlees en pizza."
+    },
+    {
+      "name": "Luca's Kitchen Menu",
+      "description": "Vier gangen voor EUR 74 of zes gangen voor EUR 98 per persoon."
+    },
+    {
+      "name": "De Huiskamer",
+      "description": "Besloten ruimte voor groepen tot 12 gasten, op aanvraag."
+    },
+    {
+      "name": "Catering en bruiloften",
+      "description": "Luca kookt op locatie voor feesten en bruiloften."
+    }
+  ],
+  "reservations": "https://semdesnoo.github.io/girasole-breda/#reserveren",
+  "telephone": "+31765224437"
+}
