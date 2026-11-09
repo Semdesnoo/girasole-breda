@@ -61,7 +61,7 @@ a{color:inherit}
 .anim .cl.in{clip-path:inset(0 0 0 0)}
 .anim .pop{opacity:0;transform:scale(.86);transition:opacity 1.4s ease,transform 1.6s cubic-bezier(.2,.7,.2,1)}
 .anim .pop.in{opacity:1;transform:none}
-.tab{background:none;border:0;padding:10px 0;font:inherit;font-size:13px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:#8C7B66;border-bottom:1px solid transparent;transition:color .35s ease,border-color .35s ease}
+.tab{background:none;border:0;padding:11px 0;min-height:44px;font:inherit;font-size:13px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;color:#8C7B66;border-bottom:1px solid transparent;transition:color .35s ease,border-color .35s ease}
 .tab:hover{color:#2A1E14}
 .tab[aria-pressed="true"]{color:#2A1E14;border-bottom-color:#2A1E14}
 .arrow{width:44px;height:44px;display:inline-flex;align-items:center;justify-content:center;border:1px solid rgba(244,236,223,.35);background:transparent;color:#F4ECDF;cursor:pointer;padding:0;transition:background-color .35s ease,color .35s ease}
@@ -249,6 +249,18 @@ a{color:inherit}
 .bk form .btn{min-height:56px;margin-top:6px}
 @media (max-width:760px){.bk{width:100vw;box-shadow:none}}
 @media (prefers-reduced-motion: reduce){.bk[open]{animation:none}}
+
+.film{background:#1F1610;color:#F4ECDF;padding:40px 5vw 110px;display:flex;flex-direction:column;align-items:center;gap:34px;text-align:center}
+.film .script{font-size:52px;line-height:.8;color:#E8A93A}
+.film h2{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(40px,5vw,76px);line-height:.95;text-transform:uppercase}
+.film p{margin:0;max-width:440px;color:#CDBDA5}
+.film-box{position:relative;width:min(1100px,100%);padding:8px;background:#F4ECDF;box-sizing:border-box;box-shadow:0 40px 100px rgba(0,0,0,.45)}
+.film-box video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#1F1610}
+.film-play{position:absolute;left:30px;bottom:30px;display:inline-flex;align-items:center;gap:12px;min-height:52px;padding:0 24px 0 18px;border:0;border-radius:999px;background:#E8A93A;color:#2A1E14;font:inherit;font-size:14px;font-weight:500;letter-spacing:.06em;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.35);transition:transform .3s ease}
+.film-play:hover{transform:translateY(-2px)}
+.film-play:active{transform:scale(.97)}
+.film-box.sound .film-play{display:none}
+@media (max-width:760px){.film{padding:30px 14px 80px;gap:26px}.film .script{font-size:42px}.film h2{font-size:40px}.film-box{padding:5px}.film-play{left:14px;bottom:14px;min-height:48px;font-size:13px;padding:0 18px 0 14px}}
 </style>
 </head>
 <body>
@@ -352,6 +364,12 @@ a{color:inherit}
 <div class="gal" tabindex="0" aria-label="Foto's van Girasole"><img src="media/interieur.webp" alt="De eetzaal van Girasole" loading="lazy"><img src="media/tafel-rond.webp" alt="Ronde tafel met gerechten" loading="lazy"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur" loading="lazy"><img src="media/muur.webp" alt="Zwart-witportretten aan de muur" loading="lazy"><img src="media/gerecht.webp" alt="Een gerecht van Luca" loading="lazy"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" loading="lazy"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf" loading="lazy"><img src="media/tafel.webp" alt="Gedekte tafel met bloemen en een kaarsje" loading="lazy"></div>
 <div style="display: flex; gap: 10px; margin-top: 22px"><button type="button" class="arrow" data-gal="-1" aria-label="Vorige foto"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button><button type="button" class="arrow" data-gal="1" aria-label="Volgende foto"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="6,3 11,8 6,13"></polyline></svg></button></div>
 </section>
+<section class="film" aria-label="Film: een avond bij Girasole">
+<span class="script rv">Una serata</span>
+<h2><span class="ln"><span>Een avond</span></span><span class="ln"><span style="transition-delay: .12s">bij Girasole</span></span></h2>
+<p class="rv">Van de eerste slok wijn tot het laatste gerecht. Zo voelt een avond aan tafel bij Luca.</p>
+<div class="film-box rv"><video data-src="media/film.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="none" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
+</section>
 <div class="stamp up" aria-hidden="true"></div>
 
 <section id="menus" class="paper" style="padding: 40px 5vw 140px">
@@ -441,14 +459,14 @@ a{color:inherit}
 </div>
 <div class="hide-m" style="flex: 1 1 440px; position: sticky; top: 40px">
 <div class="cl" data-zoom="1" style="height: min(720px, 82vh); border-radius: 999px 999px 999px 999px / 380px 380px 380px 380px; overflow: hidden; background: #1F1610">
-<video data-src="media/tafel.mp4" poster="media/pasta.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
+<video data-src="media/plating.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
 </div>
 </div>
 </section>
 
 <section aria-label="Buona sera" style="position: relative; height: 600px; overflow: hidden; background: #1F1610">
-<video class="kb" data-src="media/avond.mp4" poster="media/gerecht.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
+<video class="kb" data-src="media/tafel-boven.mp4" poster="media/tafel-boven.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
 <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(31,22,16,0.15), rgba(31,22,16,0.55))"></div>
 <p class="rv" style="position: absolute; top: 56px; right: 5vw; margin: 0; max-width: 260px; color: #F4ECDF; font-size: 14px">Elke avond open vanaf 17:00, behalve op maandag. Kom voor een gerecht of blijf de hele avond.</p>
 <span class="ln" data-parx="-1" aria-hidden="true" style="position: absolute; left: 4vw; bottom: -0.2em; font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(130px, 19vw, 300px); line-height: 1; color: #F4ECDF; text-transform: uppercase"><span>Buona</span></span>
@@ -626,6 +644,12 @@ a{color:inherit}
 <div class="gal" tabindex="0" aria-label="Foto's van Girasole"><img src="media/interieur.webp" alt="De eetzaal van Girasole" loading="lazy"><img src="media/tafel-rond.webp" alt="Ronde tafel met gerechten" loading="lazy"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur" loading="lazy"><img src="media/muur.webp" alt="Zwart-witportretten aan de muur" loading="lazy"><img src="media/gerecht.webp" alt="Een gerecht van Luca" loading="lazy"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" loading="lazy"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf" loading="lazy"><img src="media/tafel.webp" alt="Gedekte tafel met bloemen en een kaarsje" loading="lazy"></div>
 <div style="display: flex; gap: 10px; margin-top: 22px"><button type="button" class="arrow" data-gal="-1" aria-label="Vorige foto"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button><button type="button" class="arrow" data-gal="1" aria-label="Volgende foto"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="6,3 11,8 6,13"></polyline></svg></button></div>
 </section>
+<section class="film" aria-label="Film: een avond bij Girasole">
+<span class="script rv">Una serata</span>
+<h2><span class="ln"><span>Een avond</span></span><span class="ln"><span style="transition-delay: .12s">bij Girasole</span></span></h2>
+<p class="rv">Van de eerste slok wijn tot het laatste gerecht. Zo voelt een avond aan tafel bij Luca.</p>
+<div class="film-box rv"><video data-src="media/film-m.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="none" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
+</section>
 <div class="stamp up" aria-hidden="true"></div>
 
 <section id="menus-m" class="paper" style="padding: 24px 20px 90px; display: flex; flex-direction: column; gap: 36px">
@@ -668,7 +692,7 @@ a{color:inherit}
 <p class="rv" style="margin: 0; color: #5E5040">Verse pasta, elke dag gemaakt. Bijgerechten zijn €&nbsp;7,50.</p>
 </div>
 <div class="cl" data-zoom="1" style="margin: 0 20px; height: 300px; border-radius: 200px 200px 0 0; overflow: hidden; background: #1F1610">
-<video data-src="media/tafel.mp4" poster="media/pasta.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
+<video data-src="media/plating.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
 <div class="tabs" role="group" aria-label="Kies een deel van de kaart" style="display: flex; gap: 22px; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid rgba(42,30,20,0.14); margin: 0 20px; padding: 0">
 <template class="tpl-tab">
@@ -692,7 +716,7 @@ a{color:inherit}
 </section>
 
 <section aria-label="Buona sera" style="position: relative; height: 380px; overflow: hidden; background: #1F1610">
-<video class="kb" data-src="media/avond.mp4" poster="media/gerecht.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
+<video class="kb" data-src="media/tafel-boven-m.mp4" poster="media/tafel-boven.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
 <div aria-hidden="true" style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(31,22,16,0.1), rgba(31,22,16,0.5))"></div>
 <span class="ln" data-parx="-0.5" aria-hidden="true" style="position: absolute; left: 14px; bottom: -0.2em; font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 112px; line-height: 1; color: #F4ECDF; text-transform: uppercase"><span>Buona</span></span>
 </section>
@@ -1015,13 +1039,26 @@ a{color:inherit}
   tick(); setInterval(tick, 60000);
 
   // videos: only load the ones in the version that is visible
+  function startVideo(v) {
+    if (!v.hasAttribute('data-src')) return;
+    v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); v.muted = true;
+    var p = v.play(); if (p && p.catch) p.catch(function () {});
+  }
+  var vio = 'IntersectionObserver' in window && new IntersectionObserver(function (es) {
+    es.forEach(function (en) { if (en.isIntersecting) { startVideo(en.target); vio.unobserve(en.target); } });
+  }, { rootMargin: '400px 0px' });
+  // film: play from the start with sound, back to the silent loop when it ends
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-film]'); if (!b) return;
+    var box = b.closest('.film-box'), v = box.querySelector('video');
+    startVideo(v);
+    box.classList.add('sound'); v.loop = false; v.muted = false; v.controls = true; v.currentTime = 0; v.play();
+    v.onended = function () { box.classList.remove('sound'); v.controls = false; v.muted = true; v.loop = true; v.play(); };
+  });
   function loadVideos() {
     roots.forEach(function (root) {
       if (!root || root.offsetParent === null && getComputedStyle(root).display === 'none') return;
-      root.querySelectorAll('video[data-src]').forEach(function (v) {
-        v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); v.muted = true;
-        var p = v.play(); if (p && p.catch) p.catch(function () {});
-      });
+      root.querySelectorAll('video[data-src]').forEach(function (v) { vio ? vio.observe(v) : startVideo(v); });
     });
   }
   loadVideos();
