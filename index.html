@@ -149,6 +149,21 @@ a{color:inherit}
 .gal::-webkit-scrollbar{display:none}
 .gal img{flex:none;height:min(560px,70vh);aspect-ratio:4/5;object-fit:cover;scroll-snap-align:start;display:block}
 @media (max-width:760px){.info{grid-template-columns:1fr 1fr;gap:48px 18px}.info img{width:76px;height:76px}.info h3{font-size:17px;letter-spacing:.1em}.info p{font-size:14px}.gal{padding-right:20px}.gal img{height:420px;aspect-ratio:3/4}}
+
+.pop-d{border:0;padding:10px;background:#F4ECDF;width:min(940px,calc(100vw - 32px));max-width:none;box-sizing:border-box;box-shadow:0 40px 120px rgba(0,0,0,.5)}
+.pop-d:focus{outline:none}
+.pop-d::backdrop{background:rgba(31,22,16,.65);backdrop-filter:blur(3px)}
+.pop-d[open]{animation:fade .7s cubic-bezier(.2,.7,.2,1) both}
+.pop-in{position:relative;aspect-ratio:16/10;background:#1F1610 center/cover;color:#F4ECDF;overflow:hidden;font-family:'Instrument Sans','Helvetica Neue',sans-serif}
+.pop-in::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,rgba(31,22,16,.8),rgba(31,22,16,.2))}
+.pop-t{position:absolute;left:7%;top:13%;margin:0;font-family:'Mrs Saint Delafield',cursive;font-weight:400;font-size:clamp(64px,10vw,128px);line-height:.85;transform:rotate(-7deg);transform-origin:0 50%}
+.pop-t span{display:block}.pop-t span+span{padding-left:.9em}
+.pop-s{position:absolute;left:7%;bottom:12%;max-width:300px;margin:0;font-size:15px;line-height:1.55;color:#E9DCC6}
+.pop-b{position:absolute;right:8%;bottom:13%;padding:14px 28px;border:1px solid currentColor;outline:1px solid currentColor;outline-offset:5px;font-family:'Cormorant Garamond',serif;font-size:26px;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;color:#F4ECDF;transform:rotate(-3deg);transition:background-color .4s ease,color .4s ease}
+.pop-b:hover,.pop-b:focus-visible{background:#F4ECDF;color:#2A1E14}
+.pop-x{position:absolute;top:12px;right:12px;z-index:2;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:none;border:0;color:#F4ECDF;cursor:pointer}
+@media (max-width:760px){.pop-in{aspect-ratio:4/5}.pop-t{font-size:76px;top:14%}.pop-s{bottom:auto;top:54%;right:7%}.pop-b{left:7%;right:auto;bottom:9%;font-size:21px;padding:12px 22px}}
+@media (prefers-reduced-motion: reduce){.pop-d[open]{animation:none}}
 </style>
 </head>
 <body>
@@ -946,6 +961,41 @@ a{color:inherit}
   render();
 })();
 
+</script>
+
+<dialog class="pop-d" aria-labelledby="pop-t" autofocus>
+<div class="pop-in">
+<button type="button" class="pop-x" aria-label="Sluiten"><svg width="26" height="26" viewBox="0 0 26 26" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><line x1="3" y1="3" x2="23" y2="23"></line><line x1="23" y1="3" x2="3" y2="23"></line></svg></button>
+<h2 class="pop-t" id="pop-t"></h2>
+<p class="pop-s"></p>
+<a class="pop-b" href="#reserveren"></a>
+</div>
+</dialog>
+<script>
+// Seizoenspopup: inhoud komt uit popup.json (later te beheren vanuit het dashboard).
+(function () {
+  var d = document.querySelector('.pop-d');
+  if (!d || !d.showModal) return;
+  fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) {
+    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' }); // yyyy-mm-dd
+    if (!c.actief || (c.van && today < c.van) || (c.tot && today > c.tot)) return;
+    var key = 'popup-gezien-' + c.id;
+    try { if (localStorage.getItem(key)) return; } catch (e) {}
+    var t = d.querySelector('.pop-t');
+    (c.titel || []).forEach(function (l) { var s = document.createElement('span'); s.textContent = l; t.appendChild(s); });
+    d.querySelector('.pop-s').textContent = c.tekst || '';
+    var b = d.querySelector('.pop-b'), h = c.link || '#reserveren';
+    if (h.charAt(0) === '#' && matchMedia('(max-width: 760px)').matches && document.getElementById(h.slice(1) + '-m')) h += '-m';
+    b.textContent = c.knop || 'Reserveren'; b.href = h;
+    if (c.afbeelding) d.querySelector('.pop-in').style.backgroundImage = 'url("' + encodeURI(c.afbeelding) + '")';
+    d.addEventListener('close', function () { try { localStorage.setItem(key, '1'); } catch (e) {} });
+    d.addEventListener('click', function (e) {
+      var r = d.getBoundingClientRect();
+      if (e.target.closest('.pop-x, .pop-b') || e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
+    });
+    setTimeout(function () { d.showModal(); }, c.vertraging_ms || 1500);
+  }).catch(function () {});
+})();
 </script>
 </body>
 </html>

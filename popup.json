@@ -1,0 +1,15 @@
+{
+  "actief": true,
+  "id": "kerst-2026",
+  "van": "2026-11-01",
+  "tot": "2026-12-31",
+  "titel": [
+    "Natale",
+    "a Girasole"
+  ],
+  "tekst": "Vier de feestdagen aan de tafel van Luca. Reserveer op tijd voor de kerstdagen.",
+  "knop": "Reserveer voor kerst",
+  "link": "#reserveren",
+  "afbeelding": "media/interieur.webp",
+  "vertraging_ms": 1500
+}
