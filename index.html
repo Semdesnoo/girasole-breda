@@ -316,6 +316,22 @@ a{color:inherit}
 .menu-wrap nav a:hover{transform:translateX(14px);color:#E8A93A}
 @media (max-width:760px){.mbtn{gap:10px;font-size:11px}.mbtn.x .mbtn-l{display:none}.mbtn-o{width:52px;height:52px}.mbtn-ring{-webkit-mask:radial-gradient(circle,transparent 20px,#000 20.5px 25.5px,transparent 26px);mask:radial-gradient(circle,transparent 20px,#000 20.5px 25.5px,transparent 26px)}.mbtn-c{width:36px;height:36px}.mbtn-c i{left:11px;right:11px}.mbtn-c i:last-child{right:14px}}
 @media (prefers-reduced-motion: reduce){.mbtn-ring,.mbtn.x .mbtn-c,.menu-wrap .ovl,.menu-wrap.closing .ovl{animation:none}}
+
+.bk-menu-t{margin:26px 0 0}
+.bk-menu{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.bk-menu .bk-card{margin:0;position:relative}
+.bk-menu .bk-card img{aspect-ratio:4/3}
+.bk-menu .bk-card b{font-size:21px;padding:12px 12px 0}
+.bk-menu .bk-card small{padding:2px 12px 14px;font-size:13px}
+.bk-card{position:relative;outline:2px solid transparent;outline-offset:-2px;transition:outline-color .25s ease,transform .25s ease}
+.bk-card:active{transform:scale(.98)}
+.bk-card.on{outline-color:#E8A93A}
+.bk-chk{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;background:rgba(31,22,16,.55);color:transparent;border:1.5px solid #F4ECDF;transition:background-color .25s ease,color .25s ease,transform .35s cubic-bezier(.16,1,.3,1)}
+.bk-card.on .bk-chk{background:#E8A93A;border-color:#E8A93A;color:#2A1E14;transform:scale(1.1)}
+.bk-sum{position:relative}
+.bk-edit{position:absolute;top:14px;right:14px;min-height:36px;padding:0 12px;border:1px solid rgba(244,236,223,.4);background:none;color:#F4ECDF;font:inherit;font-size:12px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+@media (max-width:380px){.bk-menu .bk-card b{font-size:19px}}
+.kb,.spin,.marq-track,[data-par],[data-parx]{will-change:transform}
 </style>
 </head>
 <body>
@@ -623,7 +639,7 @@ a{color:inherit}
 <div class="progress" aria-hidden="true"></div>
 <section id="top-m" style="position: relative; height: 820px; overflow: hidden; background: #1F1610">
 <div aria-hidden="true" style="position: absolute; left: 0; right: 0; bottom: 0; height: 52%; overflow: hidden">
-<video class="kb" data-src="media/sfeer.mp4" poster="media/interieur.webp" autoplay="" muted="" loop="" playsinline="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
+<video class="kb" data-src="media/sfeer-m.mp4" poster="media/interieur.webp" autoplay="" muted="" loop="" playsinline="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
 <div style="position: absolute; inset: 0; background: rgba(31,22,16,0.3)"></div>
 </div>
 <div class="paper" style="position: absolute; top: 0; left: 0; right: 0; height: 60%; clip-path: ellipse(90% 100% at 50% 0%)"></div>
@@ -642,7 +658,7 @@ a{color:inherit}
 <span class="fade" style="display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: #4D3F30; animation-delay: .8s"><span aria-hidden="true" style="color: #B87A0E; letter-spacing: 2px">★★★★★</span>4,6 op Google, 468 reviews</span>
 </div>
 <div class="pop" data-par="-0.15" style="position: absolute; z-index: 4; left: 50%; top: 452px; width: 270px; height: 270px; margin-left: -135px; border-radius: 50%; overflow: hidden; box-shadow: 0 30px 60px rgba(0,0,0,0.35)">
-<video class="spin" data-src="media/tafel-rond.mp4" poster="media/tafel-rond.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
+<video class="spin" data-src="media/tafel-rond-m.mp4" poster="media/tafel-rond.webp" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
 <div class="fade" style="position: absolute; z-index: 4; left: 20px; right: 20px; bottom: 24px; display: flex; flex-direction: column; gap: 10px; animation-delay: 1s">
 <a class="btn sun" href="#reserveren-m">Tafel reserveren</a>
@@ -751,7 +767,7 @@ a{color:inherit}
 <p class="rv" style="margin: 0; color: #5E5040">Verse pasta, elke dag gemaakt. Bijgerechten zijn €&nbsp;7,50.</p>
 </div>
 <div class="cl" data-zoom="1" style="margin: 0 20px; height: 300px; border-radius: 200px 200px 0 0; overflow: hidden; background: #1F1610">
-<video data-src="media/plating.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
+<video data-src="media/plating-m.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
 <div class="tabs" role="group" aria-label="Kies een deel van de kaart" style="display: flex; gap: 22px; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid rgba(42,30,20,0.14); margin: 0 20px; padding: 0">
 <template class="tpl-tab">
@@ -874,8 +890,10 @@ a{color:inherit}
 <div class="bk-v" data-v="home">
 <button type="button" class="bk-row" data-go="pers"><span>Personen</span><b class="js-bk-p">2 personen</b></button>
 <button type="button" class="bk-row cta" data-go="date"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg><b class="js-bk-dt">Selecteer een datum en tijd</b></button>
+<p class="bk-sub bk-menu-t">Kies je menu</p>
 <div class="js-bk-feat"></div>
-<button type="button" class="bk-card" data-k="kaart" data-l="À la carte"><img src="media/tafel-rond.webp" alt="Ronde tafel met Italiaanse gerechten" loading="lazy"><b>À la carte</b><small>Kies vrij van de kaart van Luca</small></button><button type="button" class="bk-card" data-k="4" data-l="Menu, 4 gangen"><img src="media/pasta.webp" alt="Verse pasta met gamba's van bovenaf" loading="lazy"><b>Menu, 4 gangen</b><small>De kaart van het seizoen, € 74 p.p.</small></button><button type="button" class="bk-card" data-k="6" data-l="Menu, 6 gangen"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" loading="lazy"><b>Menu, 6 gangen</b><small>Het hele verhaal van Luca, € 98 p.p.</small></button><button type="button" class="bk-card" data-k="huis" data-l="De Huiskamer"><img src="media/muur.webp" alt="Zwart-witportretten aan de muur van het restaurant" loading="lazy"><b>De Huiskamer</b><small>Eigen ruimte tot 12 gasten, op aanvraag</small></button>
+<div class="bk-menu"><button type="button" class="bk-card" aria-pressed="false" data-k="kaart" data-l="À la carte"><img src="media/tafel-rond.webp" alt="Ronde tafel met Italiaanse gerechten" loading="lazy"><b>À la carte</b><small>Kies vrij van de kaart van Luca</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="4" data-l="Menu, 4 gangen"><img src="media/pasta.webp" alt="Verse pasta met gamba's van bovenaf" loading="lazy"><b>Menu, 4 gangen</b><small>De kaart van het seizoen, € 74 p.p.</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="6" data-l="Menu, 6 gangen"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" loading="lazy"><b>Menu, 6 gangen</b><small>Het hele verhaal van Luca, € 98 p.p.</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="huis" data-l="De Huiskamer"><img src="media/muur.webp" alt="Zwart-witportretten aan de muur van het restaurant" loading="lazy"><b>De Huiskamer</b><small>Eigen ruimte tot 12 gasten, op aanvraag</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button>
+</div>
 </div>
 <div class="bk-v" data-v="pers" hidden>
 <div class="bk-grid"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button><button type="button" data-p="5">5</button><button type="button" data-p="6">6</button><button type="button" data-p="7">7<small>aanvraag</small></button><button type="button" data-p="8">8<small>aanvraag</small></button><button type="button" data-p="9">9<small>aanvraag</small></button><button type="button" data-p="10">10<small>aanvraag</small></button><button type="button" data-p="11">11<small>aanvraag</small></button><button type="button" data-p="12">12<small>aanvraag</small></button></div>
@@ -888,7 +906,7 @@ a{color:inherit}
 <div class="js-bk-tw" hidden><p class="bk-sub">Tijd</p><div class="bk-times js-bk-times"></div></div>
 </div>
 <div class="bk-v" data-v="form" hidden>
-<div class="bk-sum"><b class="js-bk-k"></b><span class="js-bk-s"></span></div>
+<div class="bk-sum"><b class="js-bk-k"></b><span class="js-bk-s"></span><button type="button" class="bk-edit" data-go="home">Wijzig</button></div>
 <form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field">
 <input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
 <input type="hidden" name="datum"><input type="hidden" name="tijd"><input type="hidden" name="personen"><input type="hidden" name="keuze">
@@ -927,9 +945,14 @@ a{color:inherit}
     if (v === 'form') form();
     q('.bk-body').scrollTop = 0;
   }
+  function mark() {
+    d.querySelectorAll('[data-k]').forEach(function (c) { var on = c.getAttribute('data-k') === st.k; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on); });
+    q('.js-bk-dt').textContent = st.time ? label(st.date) + ', ' + st.time : (st.k ? 'Kies een datum en tijd' : 'Selecteer een datum en tijd');
+  }
   function next() { show(!st.k ? 'home' : (!st.time ? 'date' : 'form')); }
   function label(dt) { var x = new Date(dt + 'T12:00'); return DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; }
   function head() {
+    setTimeout(mark, 0);
     q('.js-bk-p').textContent = st.p + (st.p === 1 ? ' persoon' : ' personen') + (st.p > 6 ? ' (op aanvraag)' : '');
     q('.js-bk-dt').textContent = st.time ? label(st.date) + ', ' + st.time : 'Selecteer een datum en tijd';
   }
@@ -978,13 +1001,13 @@ a{color:inherit}
     var t = e.target.closest('button');
     if (!t) return;
     if (t.hasAttribute('data-bk-close')) shut();
-    else if (t.hasAttribute('data-bk-back')) { st.k = null; show('home'); }
+    else if (t.hasAttribute('data-bk-back')) show('home');
     else if (t.hasAttribute('data-go')) show(t.getAttribute('data-go'));
     else if (t.hasAttribute('data-p')) { st.p = +t.getAttribute('data-p'); head(); next(); }
     else if (t.hasAttribute('data-m')) { var m = st.m + +t.getAttribute('data-m'); st.y += Math.floor(m / 12); st.m = (m + 12) % 12; cal(); }
     else if (t.hasAttribute('data-d')) { st.date = t.getAttribute('data-d'); st.time = null; head(); cal(); q('.js-bk-tw').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
     else if (t.hasAttribute('data-t')) { st.time = t.getAttribute('data-t'); head(); next(); }
-    else if (t.hasAttribute('data-k')) { st.k = t.getAttribute('data-k'); st.l = t.getAttribute('data-l'); next(); }
+    else if (t.hasAttribute('data-k')) { st.k = t.getAttribute('data-k'); st.l = t.getAttribute('data-l'); mark(); setTimeout(next, 380); }
   });
 
   function shut() {
@@ -994,7 +1017,8 @@ a{color:inherit}
     setTimeout(function () { d.classList.remove('out'); d.close(); }, 320);
   }
   d.addEventListener('cancel', function (e) { e.preventDefault(); shut(); });
-  function open(e) { if (e) e.preventDefault(); var pd = document.querySelector('.pop-d[open]'); if (pd) pd.close(); show('home'); head(); d.showModal(); }
+  d.addEventListener('close', function () { if (innerWidth <= 760 && window.gsCover) gsCover(false); });
+  function open(e) { if (e) e.preventDefault(); var pd = document.querySelector('.pop-d[open]'); if (pd) pd.close(); show('home'); head(); d.showModal(); if (innerWidth <= 760 && window.gsCover) setTimeout(function () { if (d.open) gsCover(true); }, 650); }
   document.addEventListener('click', function (e) { if (e.target.closest('[data-bk]')) open(e); });
   if (location.hash === '#boeken') open();
 
@@ -1004,7 +1028,7 @@ a{color:inherit}
     var b = document.createElement('button');
     b.type = 'button'; b.className = 'bk-card bk-feat';
     b.setAttribute('data-k', c.id); b.setAttribute('data-l', (c.titel || []).join(' '));
-    b.innerHTML = '<i>Uitgelicht</i><img alt=""><b></b><small></small>';
+    b.innerHTML = '<i>Uitgelicht</i><img alt=""><b></b><small></small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span>'; b.setAttribute('aria-pressed', 'false');
     b.querySelector('img').src = c.afbeelding; b.querySelector('b').textContent = (c.titel || []).join(' '); b.querySelector('small').textContent = c.tekst || '';
     q('.js-bk-feat').appendChild(b);
   }).catch(function () {});
@@ -1089,13 +1113,14 @@ a{color:inherit}
       if (w && w.hasAttribute('hidden')) {
         var b = t.getBoundingClientRect(), o = w.querySelector('.ovl');
         o.style.setProperty('--mx', (b.right - 29) + 'px'); o.style.setProperty('--my', (b.top + b.height / 2) + 'px');
-        w.removeAttribute('hidden'); document.body.style.overflow = 'hidden';
+        w.removeAttribute('hidden'); document.body.style.overflow = 'hidden'; setTimeout(function () { if (!w.hidden && !w.classList.contains('closing')) gsCover(true); }, 800);
         var x = w.querySelector('.mbtn.x'); if (x) x.focus({ preventScroll: true });
       } else if (w) closeMenu(w);
     }
   });
   function closeMenu(w) {
     if (w.classList.contains('closing')) return;
+    if (covered) gsCover(false);
     var done = function () { w.classList.remove('closing'); w.setAttribute('hidden', ''); document.body.style.overflow = ''; };
     if (matchMedia('(prefers-reduced-motion: reduce)').matches) return done();
     w.classList.add('closing'); setTimeout(done, 550);
@@ -1139,16 +1164,33 @@ a{color:inherit}
     if (v.hasAttribute('data-src')) { v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); }
     playV(v);
   }
-  var vio = 'IntersectionObserver' in window && new IntersectionObserver(function (es) {
-    es.forEach(function (en) { if (en.isIntersecting) startVideo(en.target); });
-  }, { rootMargin: '600px 0px' });
+  // load a little ahead, but only decode while actually on screen: several videos playing off-screen is what made phones stutter
+  var vload = 'IntersectionObserver' in window && new IntersectionObserver(function (es) {
+    es.forEach(function (en) { var v = en.target; if (en.isIntersecting && v.hasAttribute('data-src')) { v.preload = 'auto'; v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); } });
+  }, { rootMargin: '900px 0px' });
+  var vio = vload && new IntersectionObserver(function (es) {
+    es.forEach(function (en) {
+      var v = en.target;
+      if (en.isIntersecting && !covered) startVideo(v);
+      else if (!v.paused && !v.closest('.film-box.sound')) v.pause();
+    });
+  }, { rootMargin: '80px 0px' });
+  // full-screen menu/booking panel covers the page: stop decoding what nobody can see
+  var covered = 0;
+  window.gsCover = function (on) {
+    covered = Math.max(0, covered + (on ? 1 : -1));
+    if (covered) document.querySelectorAll('video').forEach(function (v) { if (!v.paused && !v.closest('.film-box.sound')) { v.pause(); v.dataset.resume = '1'; } });
+    else document.querySelectorAll('video[data-resume]').forEach(function (v) { v.removeAttribute('data-resume'); playV(v); });
+  };
   function kickVideos() {
+    if (covered) return;
     document.querySelectorAll('video:not([data-src])').forEach(function (v) {
       var r = v.getBoundingClientRect();
-      if (r.width && r.bottom > -600 && r.top < innerHeight + 600) playV(v);
+      if (r.width && r.bottom > 0 && r.top < innerHeight) playV(v);
     });
   }
-  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function (ev) { window.addEventListener(ev, kickVideos, { passive: true }); });
+  // phones that block autoplay (iOS Low Power Mode) allow play() inside a tap
+  ['touchend', 'click'].forEach(function (ev) { window.addEventListener(ev, kickVideos, { passive: true }); });
   document.addEventListener('visibilitychange', function () { if (!document.hidden) kickVideos(); });
   window.addEventListener('pageshow', kickVideos);
   // film: play from the start with sound, back to the silent loop when it ends
@@ -1162,7 +1204,7 @@ a{color:inherit}
   function loadVideos() {
     roots.forEach(function (root) {
       if (!root || root.offsetParent === null && getComputedStyle(root).display === 'none') return;
-      root.querySelectorAll('video[data-src]').forEach(function (v) { vio ? vio.observe(v) : startVideo(v); });
+      root.querySelectorAll('video[data-src]').forEach(function (v) { if (vio) { vload.observe(v); vio.observe(v); } else startVideo(v); });
     });
   }
   loadVideos();
@@ -1195,9 +1237,10 @@ a{color:inherit}
     } else {
       document.querySelectorAll(watched).forEach(function (el) { el.classList.add('in'); });
     }
-    var pars = document.querySelectorAll('[data-par]');
-    var parx = document.querySelectorAll('[data-parx]');
-    var zooms = document.querySelectorAll('[data-zoom]');
+    var vroot = matchMedia('(max-width: 760px)').matches ? '.v-mob ' : '.v-desk ';
+    var pars = document.querySelectorAll(vroot + '[data-par]');
+    var parx = document.querySelectorAll(vroot + '[data-parx]');
+    var zooms = document.querySelectorAll(vroot + '[data-zoom]');
     var progs = document.querySelectorAll('.progress');
     var onScroll = function () {
       var H = window.innerHeight;
@@ -1221,15 +1264,17 @@ a{color:inherit}
       var d = document.documentElement, max = Math.max(1, d.scrollHeight - H);
       progs.forEach(function (pr) { pr.style.transform = 'scaleX(' + Math.min(1, window.scrollY / max).toFixed(4) + ')'; });
     };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) { pars = parx = zooms = []; }
+    var ticking = false, tick = function () { ticking = false; onScroll(); };
     onScroll();
-    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('scroll', function () { if (!ticking) { ticking = true; requestAnimationFrame(tick); } }, { passive: true });
     window.addEventListener('resize', onScroll);
   } catch (e) {}
 
   // mobile booking bar appears once the hero button is out of view
   var bar = document.querySelector('.v-mob .bar');
   if (bar) {
-    var onBar = function () { bar.classList.toggle('show', window.scrollY > 700); };
+    var barOn = null, onBar = function () { var v = window.scrollY > 700; if (v !== barOn) { barOn = v; bar.classList.toggle('show', v); } };
     window.addEventListener('scroll', onBar, { passive: true }); onBar();
   }
 

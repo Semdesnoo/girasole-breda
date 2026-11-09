@@ -29,7 +29,9 @@ ok(dis, 'mondays disabled');
 await ev(`document.querySelector('.js-bk-cal [data-d]:not(:disabled)').click()`); await sleep(300); await shot('bk-date-' + W);
 await ev(`document.querySelector('[data-t]').click()`); await sleep(200);
 ok(!(await ev(`document.querySelector('.js-bk-dt').textContent`)).startsWith('Selecteer'), 'date/time label set');
-await ev(`document.querySelector('[data-k=huis]').click()`); await sleep(300);
+await ev(`document.querySelector('[data-k=huis]').click()`); await sleep(150);
+ok(await ev(`document.querySelector('[data-k=huis]').classList.contains('on') && document.querySelector('[data-k=huis]').getAttribute('aria-pressed')==='true'`), 'menu choice shows as selected');
+await sleep(450);
 ok(await ev(`!document.querySelector('[data-v=form]').hidden`), 'goes to form');
 ok((await ev(`document.querySelector('.bk form [type=submit]').textContent`)) === 'Aanvraag versturen', 'request mode for 8 persons');
 console.log(await ev(`JSON.stringify(Object.fromEntries(new FormData(document.querySelector('.bk form'))))`));
@@ -57,4 +59,19 @@ ws.close();
   await sleep(400);
   ok(await e2(`!document.querySelector('.bk').open`), 'closed after animation');
   ws2.close();
+}
+// choosing a menu first, then changing it from the summary
+{
+  const ws3 = new WebSocket((await (await fetch('http://127.0.0.1:9333/json')).json()).find(t => t.type === 'page').webSocketDebuggerUrl);
+  await new Promise(r => ws3.onopen = r);
+  let i3 = 0; const p3 = {};
+  ws3.onmessage = m => { const x = JSON.parse(m.data); if (p3[x.id]) { p3[x.id](x.result); delete p3[x.id]; } };
+  const e3 = async e => { const r = await new Promise(r => { p3[++i3] = r; ws3.send(JSON.stringify({ id: i3, method: 'Runtime.evaluate', params: { expression: e, returnByValue: true } })); }); return r.result.value; };
+  await e3(`document.querySelector('.bk').open || document.querySelector('${opener}').click()`); await sleep(700);
+  await e3(`document.querySelector('[data-bk-back]').hidden || document.querySelector('[data-bk-back]').click()`); await sleep(200);
+  ok(await e3(`document.querySelectorAll('.bk-menu [data-k]').length === 4 && !!document.querySelector('.bk-menu-t')`), 'four menu choices with heading');
+  await e3(`document.querySelector('.bk-edit')?.click()`); await sleep(200);
+  await e3(`document.querySelector('[data-k="6"]').click()`); await sleep(600);
+  ok(await e3(`!document.querySelector('[data-v=form]').hidden && document.querySelector('.bk form').keuze.value === 'Menu, 6 gangen'`), 'changed choice lands in form: ' + await e3(`document.querySelector('.bk form').keuze.value`));
+  ws3.close();
 }
