@@ -27,7 +27,7 @@ a{color:inherit}
 .paper{background-color:#F4ECDF;background-image:url(media/grain.png);background-size:300px 300px}
 .script{font-family:'Mrs Saint Delafield',cursive;font-weight:400}
 .serif{font-family:'Cormorant Garamond',serif}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;min-height:48px;padding:0 26px;box-sizing:border-box;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border:1px solid #2A1E14;background:#2A1E14;color:#F4ECDF;transition:background-color .45s ease,color .45s ease,border-color .45s ease}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;border-radius:999px;min-height:48px;padding:0 26px;box-sizing:border-box;font-size:13px;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;border:1px solid #2A1E14;background:#2A1E14;color:#F4ECDF;transition:background-color .45s ease,color .45s ease,border-color .45s ease}
 .btn:hover{background:transparent;color:#2A1E14}
 .btn.sun{background:#E8A93A;border-color:#E8A93A;color:#2A1E14}
 .btn.sun:hover{background:#F4ECDF;border-color:#F4ECDF}
@@ -59,9 +59,9 @@ nav a:not(.btn){text-decoration:none}
 .hours .now{font-weight:500}
 
 .mapwrap{background:#1F1610;padding:90px 5vw}
-.map{position:relative;max-width:1240px;margin:0 auto;padding:10px;background:#F4ECDF;box-shadow:0 40px 100px rgba(0,0,0,.45)}
+.map{border-radius:20px;overflow:hidden;position:relative;max-width:1240px;margin:0 auto;padding:10px;background:#F4ECDF;box-shadow:0 40px 100px rgba(0,0,0,.45)}
 .map iframe{display:block;width:100%;height:min(600px,70vh);border:0;filter:sepia(.35) saturate(.85) contrast(.95)}
-.card{position:absolute;left:44px;bottom:44px;width:360px;box-sizing:border-box;padding:34px 32px;background:#F4ECDF;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px rgba(31,22,16,.35);outline:1px solid rgba(42,30,20,.25);outline-offset:-10px}
+.card{border-radius:16px;position:absolute;left:44px;bottom:44px;width:360px;box-sizing:border-box;padding:34px 32px;background:#F4ECDF;display:flex;flex-direction:column;gap:10px;box-shadow:0 24px 60px rgba(31,22,16,.35);outline:1px solid rgba(42,30,20,.25);outline-offset:-10px}
 .card .script{font-size:40px;line-height:.8;color:#B87A0E}
 .card h2{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:30px;white-space:nowrap;line-height:1;text-transform:uppercase}
 .card p{margin:0 0 8px;color:#5E5040;font-size:15px}
