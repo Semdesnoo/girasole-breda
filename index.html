@@ -172,6 +172,32 @@ a{color:inherit}
 .fab i{width:1px;height:24px;background:rgba(42,30,20,.3)}
 .fab svg{color:#2A1E14}
 @media (max-width:760px){.fab-desk{display:none}}
+
+.rev{background:#1F1610;color:#F4ECDF;padding:130px 0 140px;overflow:hidden;background-image:radial-gradient(ellipse at 50% 0%,rgba(232,169,58,.10),transparent 60%)}
+.rev-head{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center;padding:0 5vw}
+.rev-head .script{font-size:52px;line-height:.8;color:#E8A93A}
+.rev-head h2{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(46px,5vw,80px);line-height:.95;text-transform:uppercase;color:#9A8A73}
+.rev-score{display:flex;align-items:center;gap:16px;text-align:left;color:#B9A88F;font-size:14px;margin-top:6px}
+.rev-score .num{font-family:'Cormorant Garamond',serif;font-size:76px;line-height:1;color:#F4ECDF;font-variant-numeric:tabular-nums}
+.rstars{color:#E8A93A;letter-spacing:3px}
+.rev-cta{display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-top:6px}
+.marq{margin-top:80px;mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.marq-track,.marq-dup{display:flex;gap:34px;width:max-content}
+.marq-track{padding:16px 0 16px 34px;animation:marq 80s linear infinite}
+.marq:hover .marq-track,.marq:focus-within .marq-track{animation-play-state:paused}
+@keyframes marq{to{transform:translateX(calc(-50% - 17px))}}
+.rcard{flex:none;width:340px;box-sizing:border-box;margin:0;padding:38px 34px 32px;background:#F4ECDF url(media/grain.png) 0 0/300px;color:#2A1E14;display:flex;flex-direction:column;gap:16px;outline:1px solid rgba(42,30,20,.22);outline-offset:-16px;
+  -webkit-mask:linear-gradient(#000 0 0) 50%/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle,#0000 6px,#000 6.5px) -9px -9px/18px 18px round;
+  mask:linear-gradient(#000 0 0) 50%/calc(100% - 18px) calc(100% - 18px) no-repeat,radial-gradient(circle,#0000 6px,#000 6.5px) -9px -9px/18px 18px round;
+  transform:rotate(-1.5deg);transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.rcard:nth-child(even){transform:rotate(1.2deg) translateY(18px)}
+.rcard:hover{transform:rotate(0) scale(1.03)}
+.rcard .rstars{font-size:15px;color:#B87A0E}
+.rcard blockquote{margin:0;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;line-height:1.25}
+.rcard figcaption{margin-top:auto;display:flex;justify-content:space-between;gap:12px;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.rcard figcaption span{color:#8C7B66}
+@media (max-width:760px){.rev{padding:80px 0 90px}.rev-head{padding:0 20px}.rev-head .script{font-size:44px}.rev-head h2{font-size:44px}.rev-score .num{font-size:60px}.marq{margin-top:50px}.rcard{width:270px;padding:32px 26px 26px}.rcard blockquote{font-size:21px}.marq-track{animation-duration:60s}}
+@media (prefers-reduced-motion: reduce){.marq{overflow-x:auto;mask-image:none}.marq-track{animation:none}.marq-dup{display:none}}
 </style>
 </head>
 <body>
@@ -380,33 +406,14 @@ a{color:inherit}
 <span class="ln" data-parx="1" style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(130px, 19vw, 300px); line-height: 0.85; text-transform: uppercase"><span style="transition-delay: .15s">Sera</span></span>
 </div>
 
-<section id="reviews" style="background: #1F1610; color: #F4ECDF; padding: 130px 5vw">
-<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 64px">
-<div style="flex: 1 1 420px; max-width: 520px; display: flex; flex-direction: column; gap: 28px">
-<span class="lbl rv" style="color: #B9A88F; align-self: flex-start">Reviews</span>
-<div class="rv" style="display: flex; align-items: baseline; gap: 14px"><span data-count="4.6" style="font-family: 'Cormorant Garamond', serif; font-size: 64px; line-height: 1; font-variant-numeric: tabular-nums">4,6</span><span style="color: #B9A88F; font-size: 14px"><span aria-hidden="true" style="color: #E8A93A; letter-spacing: 2px">★★★★★</span><br>468 reviews op Google</span></div>
-<div style="min-height: 190px">
-<template class="tpl-review">
-
-<figure class="fade" style="margin: 0; display: flex; flex-direction: column; gap: 22px">
-<blockquote style="margin: 0; font-size: clamp(22px, 2vw, 28px); line-height: 1.35">“{{r.text}}”</blockquote>
-<figcaption style="font-size: 13px; letter-spacing: .14em; text-transform: uppercase; color: #B9A88F">{{r.name}}, via Google</figcaption>
-</figure>
-
-</template>
+<section id="reviews" class="rev" aria-label="Reviews">
+<div class="rev-head">
+<span class="script rv">Grazie mille</span>
+<h2><span class="ln"><span>Wat onze gasten</span></span><span class="ln"><span style="transition-delay: .12s; color: #F4ECDF">zeggen</span></span></h2>
+<div class="rev-score rv"><span class="num" data-count="4.6">4,6</span><span><span class="rstars" aria-hidden="true">★★★★★</span><br>468 reviews op Google</span></div>
+<div class="rev-cta rv"><a class="btn sun" href="https://www.google.com/maps/search/?api=1&amp;query=Girasole+by+Luca%27s+Kitchen+Sophiastraat+14+Breda" target="_blank" rel="noopener">Alle reviews op Google</a><a class="btn ghost" href="https://www.tripadvisor.com/Restaurant_Review-g188580-d20105167-Reviews-Ristorante_Girasole_By_Luca_s_Kitchen-Breda_North_Brabant_Province.html" target="_blank" rel="noopener">Tripadvisor</a></div>
 </div>
-<div style="display: flex; align-items: center; gap: 10px">
-<button type="button" class="arrow" data-prev aria-label="Vorige review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button>
-<button type="button" class="arrow" data-next aria-label="Volgende review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="6,3 11,8 6,13"></polyline></svg></button>
-<span class="js-revcount" style="margin-left: 10px; font-size: 13px; color: #B9A88F; font-variant-numeric: tabular-nums">1 / 5</span>
-</div>
-</div>
-<h2 style="flex: 1 1 420px; margin: 0; align-self: flex-end; text-align: right; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(56px, 6.6vw, 108px); line-height: 0.92; text-transform: uppercase; color: #9A8A73">
-<span class="ln"><span>Wat onze</span></span>
-<span class="ln"><span style="transition-delay: .12s">gasten</span></span>
-<span class="ln"><span style="transition-delay: .24s; color: #F4ECDF">zeggen</span></span>
-</h2>
-</div>
+<div class="marq"><div class="marq-track"><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“As an italian, I find this restaurant excellent. The food was really good, couldn’t be better.”</blockquote><figcaption>Alessia<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“By far the best Italian restaurant in Breda. Give Luca free rein and star-worthy dishes will come out of the kitchen!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Awesome, authentic Italian kitchen, artisan, family-owned, fine-dine restaurant.”</blockquote><figcaption>Mack<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“We had to drive for more than two hours, but it was worth it. You can taste that it is made with love.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Really nice and cozy restaurant, with delicious Italian food.”</blockquote><figcaption>Linda<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Excellent preparation of dishes, fresh food and high quality. I’ll come back to this restaurant.”</blockquote><figcaption>Roberta<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Mother and daughter were very kind and food was delicious.”</blockquote><figcaption>Karin<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“It is the best pizza in Breda, hands down.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Fresh product and made with passion.”</blockquote><figcaption>Scott<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“THE BEST PASTA! The chef is truly skilled. Highly recommend!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><div class="marq-dup" aria-hidden="true"><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“As an italian, I find this restaurant excellent. The food was really good, couldn’t be better.”</blockquote><figcaption>Alessia<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“By far the best Italian restaurant in Breda. Give Luca free rein and star-worthy dishes will come out of the kitchen!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Awesome, authentic Italian kitchen, artisan, family-owned, fine-dine restaurant.”</blockquote><figcaption>Mack<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“We had to drive for more than two hours, but it was worth it. You can taste that it is made with love.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Really nice and cozy restaurant, with delicious Italian food.”</blockquote><figcaption>Linda<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Excellent preparation of dishes, fresh food and high quality. I’ll come back to this restaurant.”</blockquote><figcaption>Roberta<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Mother and daughter were very kind and food was delicious.”</blockquote><figcaption>Karin<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“It is the best pizza in Breda, hands down.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Fresh product and made with passion.”</blockquote><figcaption>Scott<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“THE BEST PASTA! The chef is truly skilled. Highly recommend!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure></div></div></div>
 </section>
 
 <section id="reserveren" class="paper" style="padding: 140px 5vw 140px">
@@ -642,28 +649,14 @@ a{color:inherit}
 <span class="ln" data-parx="0.5" style="font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: 112px; line-height: 0.85; text-transform: uppercase"><span style="transition-delay: .15s">Sera</span></span>
 </div>
 
-<section id="reviews-m" style="background: #1F1610; color: #F4ECDF; padding: 80px 20px; display: flex; flex-direction: column; gap: 26px">
-<span class="lbl rv" style="color: #B9A88F; align-self: flex-start">Reviews</span>
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 46px; line-height: 0.95; text-transform: uppercase; color: #9A8A73">
-<span class="ln"><span>Wat onze gasten</span></span>
-<span class="ln"><span style="transition-delay: .12s; color: #F4ECDF">zeggen</span></span>
-</h2>
-<div class="rv" style="display: flex; align-items: baseline; gap: 12px"><span data-count="4.6" style="font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1; font-variant-numeric: tabular-nums">4,6</span><span style="color: #B9A88F; font-size: 13px"><span aria-hidden="true" style="color: #E8A93A; letter-spacing: 2px">★★★★★</span><br>468 reviews op Google</span></div>
-<div style="min-height: 200px">
-<template class="tpl-review">
-
-<figure class="fade" style="margin: 0; display: flex; flex-direction: column; gap: 18px">
-<blockquote style="margin: 0; font-size: 22px; line-height: 1.35">“{{r.text}}”</blockquote>
-<figcaption style="font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: #B9A88F">{{r.name}}, via Google</figcaption>
-</figure>
-
-</template>
+<section id="reviews-m" class="rev" aria-label="Reviews">
+<div class="rev-head">
+<span class="script rv">Grazie mille</span>
+<h2><span class="ln"><span>Wat onze gasten</span></span><span class="ln"><span style="transition-delay: .12s; color: #F4ECDF">zeggen</span></span></h2>
+<div class="rev-score rv"><span class="num" data-count="4.6">4,6</span><span><span class="rstars" aria-hidden="true">★★★★★</span><br>468 reviews op Google</span></div>
+<div class="rev-cta rv"><a class="btn sun" href="https://www.google.com/maps/search/?api=1&amp;query=Girasole+by+Luca%27s+Kitchen+Sophiastraat+14+Breda" target="_blank" rel="noopener">Alle reviews op Google</a><a class="btn ghost" href="https://www.tripadvisor.com/Restaurant_Review-g188580-d20105167-Reviews-Ristorante_Girasole_By_Luca_s_Kitchen-Breda_North_Brabant_Province.html" target="_blank" rel="noopener">Tripadvisor</a></div>
 </div>
-<div style="display: flex; align-items: center; gap: 10px">
-<button type="button" class="arrow" data-prev aria-label="Vorige review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="10,3 5,8 10,13"></polyline></svg></button>
-<button type="button" class="arrow" data-next aria-label="Volgende review"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><polyline points="6,3 11,8 6,13"></polyline></svg></button>
-<span class="js-revcount" style="margin-left: 10px; font-size: 13px; color: #B9A88F; font-variant-numeric: tabular-nums">1 / 5</span>
-</div>
+<div class="marq"><div class="marq-track"><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“As an italian, I find this restaurant excellent. The food was really good, couldn’t be better.”</blockquote><figcaption>Alessia<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“By far the best Italian restaurant in Breda. Give Luca free rein and star-worthy dishes will come out of the kitchen!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Awesome, authentic Italian kitchen, artisan, family-owned, fine-dine restaurant.”</blockquote><figcaption>Mack<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“We had to drive for more than two hours, but it was worth it. You can taste that it is made with love.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Really nice and cozy restaurant, with delicious Italian food.”</blockquote><figcaption>Linda<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Excellent preparation of dishes, fresh food and high quality. I’ll come back to this restaurant.”</blockquote><figcaption>Roberta<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Mother and daughter were very kind and food was delicious.”</blockquote><figcaption>Karin<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“It is the best pizza in Breda, hands down.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Fresh product and made with passion.”</blockquote><figcaption>Scott<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“THE BEST PASTA! The chef is truly skilled. Highly recommend!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><div class="marq-dup" aria-hidden="true"><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“As an italian, I find this restaurant excellent. The food was really good, couldn’t be better.”</blockquote><figcaption>Alessia<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“By far the best Italian restaurant in Breda. Give Luca free rein and star-worthy dishes will come out of the kitchen!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Awesome, authentic Italian kitchen, artisan, family-owned, fine-dine restaurant.”</blockquote><figcaption>Mack<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“We had to drive for more than two hours, but it was worth it. You can taste that it is made with love.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Really nice and cozy restaurant, with delicious Italian food.”</blockquote><figcaption>Linda<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Excellent preparation of dishes, fresh food and high quality. I’ll come back to this restaurant.”</blockquote><figcaption>Roberta<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Mother and daughter were very kind and food was delicious.”</blockquote><figcaption>Karin<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“It is the best pizza in Breda, hands down.”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“Fresh product and made with passion.”</blockquote><figcaption>Scott<span>Google</span></figcaption></figure><figure class="rcard"><span class="rstars" role="img" aria-label="5 van 5 sterren">★★★★★</span><blockquote>“THE BEST PASTA! The chef is truly skilled. Highly recommend!”</blockquote><figcaption>Gast<span>Tripadvisor</span></figcaption></figure></div></div></div>
 </section>
 
 <section id="reserveren-m" class="paper" style="padding: 80px 20px 90px; display: flex; flex-direction: column; gap: 34px">
@@ -764,14 +757,7 @@ a{color:inherit}
     ]
   };
   var CATS = [['voor', 'Voorgerechten'], ['pasta', 'Pasta'], ['hoofd', 'Hoofdgerechten'], ['pizza', 'Pizza']];
-  var REVIEWS = [
-    ['Alessia', 'As an italian, I find this restaurant excellent. The food was really good, couldn’t be better.'],
-    ['Mack', 'Awesome, authentic Italian kitchen, artisan, family-owned, fine-dine Restaurant.'],
-    ['Linda', 'Really nice and cozy restaurant, with delicious Italian food.'],
-    ['Karin', 'Mother and daughter were very kind and food was delicious.'],
-    ['Scott', 'Fresh product and made with passion.']
-  ];
-  var state = { cat: 'voor', rev: 0, hold: false };
+  var state = { cat: 'voor' };
   var roots = [document.querySelector('.v-desk'), document.querySelector('.v-mob')];
 
   function esc(t) { return String(t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
@@ -794,31 +780,12 @@ a{color:inherit}
         var hd = (MENU[state.cat] || []).map(function (d, i) { return fill(td.innerHTML, { 'd.name': d[0], 'd.desc': d[1], 'd.price': '€ ' + d[2], 'd.delay': (i * 0.05).toFixed(2) }); }).join('');
         td.insertAdjacentHTML('beforebegin', hd);
       }
-      renderReview(root);
     });
-  }
-
-  function renderReview(root) {
-    var tr = root.querySelector('template.tpl-review');
-    if (!tr) return;
-    var pr = tr.parentNode;
-    Array.prototype.slice.call(pr.children).forEach(function (n) { if (n !== tr) n.remove(); });
-    var r = REVIEWS[state.rev];
-    tr.insertAdjacentHTML('beforebegin', fill(tr.innerHTML, { 'r.name': r[0], 'r.text': r[1] }));
-    var c = root.querySelector('.js-revcount');
-    if (c) c.textContent = (state.rev + 1) + ' / ' + REVIEWS.length;
   }
 
   document.addEventListener('click', function (e) {
     var t = e.target.closest('[data-cat]');
     if (t) { state.cat = t.getAttribute('data-cat'); render(); return; }
-    t = e.target.closest('[data-prev],[data-next]');
-    if (t) {
-      state.hold = true;
-      state.rev = (state.rev + (t.hasAttribute('data-next') ? 1 : -1) + REVIEWS.length) % REVIEWS.length;
-      roots.forEach(function (r) { if (r) renderReview(r); });
-      return;
-    }
     t = e.target.closest('[data-gal]');
     if (t) { var g = t.closest('section').querySelector('.gal'); g.scrollBy({ left: g.clientWidth * 0.8 * t.getAttribute('data-gal'), behavior: 'smooth' }); return; }
     t = e.target.closest('[data-keuze]');
@@ -841,12 +808,6 @@ a{color:inherit}
     if (e.key !== 'Escape') return;
     document.querySelectorAll('.menu-wrap:not([hidden])').forEach(function (w) { w.setAttribute('hidden', ''); document.body.style.overflow = ''; });
   });
-
-  setInterval(function () {
-    if (state.hold) return;
-    state.rev = (state.rev + 1) % REVIEWS.length;
-    roots.forEach(function (r) { if (r) renderReview(r); });
-  }, 7000);
 
   function tick() {
     try {
