@@ -164,6 +164,14 @@ a{color:inherit}
 .pop-x{position:absolute;top:12px;right:12px;z-index:2;width:48px;height:48px;display:flex;align-items:center;justify-content:center;background:none;border:0;color:#F4ECDF;cursor:pointer}
 @media (max-width:760px){.pop-in{aspect-ratio:4/5}.pop-t{font-size:76px;top:14%}.pop-s{bottom:auto;top:54%;right:7%}.pop-b{left:7%;right:auto;bottom:9%;font-size:21px;padding:12px 22px}}
 @media (prefers-reduced-motion: reduce){.pop-d[open]{animation:none}}
+
+.fab{position:fixed;right:24px;bottom:24px;z-index:40;display:inline-flex;align-items:center;gap:16px;min-height:58px;padding:0 22px 0 26px;border-radius:999px;background:#E8A93A;color:#2A1E14;text-decoration:none;font-family:'Instrument Sans','Helvetica Neue',sans-serif;font-size:15px;font-weight:500;letter-spacing:.02em;box-shadow:0 18px 50px rgba(31,22,16,.35);animation:fade .9s cubic-bezier(.2,.7,.2,1) 1.2s both;transition:transform .35s cubic-bezier(.2,.7,.2,1),background-color .35s ease}
+.fab:hover{transform:translateY(-3px);background:#F0BA55}
+.fab:active{transform:scale(.98)}
+.fab .script{font-size:30px;line-height:1;color:#2A1E14;margin-top:4px}
+.fab i{width:1px;height:24px;background:rgba(42,30,20,.3)}
+.fab svg{color:#2A1E14}
+@media (max-width:760px){.fab-desk{display:none}}
 </style>
 </head>
 <body>
@@ -221,6 +229,7 @@ a{color:inherit}
 <a class="fade ul" href="#kaart" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .12s">De kaart</a>
 <a class="fade ul" href="#reviews" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .19s">Reviews</a>
 <a class="fade ul" href="#reserveren" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .26s">Reserveren</a>
+<a class="fade ul" href="contact.html" style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .33s">Contact</a>
 </nav>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; font-size: 14px; color: #B9A88F">
 <span>Sophiastraat 14, Breda</span>
@@ -461,6 +470,7 @@ a{color:inherit}
 </div>
 <div style="padding-top: 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px 24px; font-size: 13px; color: #B9A88F">
 <span>Girasole by Luca's Kitchen, Breda</span>
+<a class="ul" href="contact.html">Contact en route</a>
 </div>
 </footer>
 </div>
@@ -512,6 +522,7 @@ a{color:inherit}
 <a class="fade" href="#kaart-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .12s">De kaart</a>
 <a class="fade" href="#reviews-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .19s">Reviews</a>
 <a class="fade" href="#reserveren-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .26s">Reserveren</a>
+<a class="fade" href="contact.html" style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .26s">Contact</a>
 </nav>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <a class="btn light" href="tel:+31765224437">Bel 076 522 4437</a>
@@ -705,7 +716,7 @@ a{color:inherit}
 <a class="ul" href="tel:+31765224437" style="align-self: flex-start">076 522 4437</a>
 <a class="ul" href="https://www.instagram.com/girasolebylucaskitchen/" style="align-self: flex-start">Instagram</a>
 </div>
-<div style="padding-top: 20px; border-top: 1px solid rgba(244,236,223,0.14); font-size: 13px; color: #B9A88F">Girasole by Luca's Kitchen, Breda</div>
+<div style="padding-top: 20px; border-top: 1px solid rgba(244,236,223,0.14); font-size: 13px; color: #B9A88F; display: flex; justify-content: space-between; gap: 12px">Girasole by Luca's Kitchen, Breda <a class="ul" href="contact.html">Contact</a></div>
 </footer>
 
 <div class="bar" style="position: fixed; left: 14px; right: 14px; bottom: 14px; z-index: 20; display: flex; gap: 8px">
@@ -958,10 +969,17 @@ a{color:inherit}
     });
   });
 
+  // deep links (e.g. from contact.html) land on the mobile copy of a section
+  if (location.hash && matchMedia('(max-width: 760px)').matches) {
+    var hm = document.getElementById(location.hash.slice(1) + '-m');
+    if (hm) setTimeout(function () { hm.scrollIntoView(); }, 50);
+  }
   render();
 })();
 
 </script>
+
+<a class="fab fab-desk" href="#reserveren"><span class="script">Girasole</span><i aria-hidden="true"></i>Reserveer een tafel<i aria-hidden="true"></i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg></a>
 
 <dialog class="pop-d" aria-labelledby="pop-t" autofocus>
 <div class="pop-in">
