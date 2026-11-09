@@ -1,0 +1,21 @@
+// Reload starts at top: URL=<base> W=390 node reload-test.mjs (headless chrome on :9333)
+const BASE = process.env.URL || 'http://127.0.0.1:8767/', W = +process.env.W || 390;
+const ws = new WebSocket((await (await fetch('http://127.0.0.1:9333/json')).json()).find(t => t.type === 'page').webSocketDebuggerUrl);
+await new Promise(r => ws.onopen = r);
+let id = 0; const pend = {};
+ws.onmessage = m => { const x = JSON.parse(m.data); if (pend[x.id]) { pend[x.id](x.result); delete pend[x.id]; } };
+const cdp = (method, params = {}) => new Promise(r => { pend[++id] = r; ws.send(JSON.stringify({ id, method, params })); });
+const ev = async e => (await cdp('Runtime.evaluate', { expression: e, returnByValue: true })).result.value;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const ok = (c, m) => { console.log((c ? 'PASS ' : 'FAIL ') + m); if (!c) process.exitCode = 1; };
+await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: 844, deviceScaleFactor: 2, mobile: W < 700 });
+await cdp('Page.navigate', { url: BASE + 'index.html' }); await sleep(3000);
+await ev(`document.querySelector('.pop-d[open]')?.close(); scrollTo({top:3000,behavior:'instant'})`); await sleep(500);
+await cdp('Page.reload'); await sleep(3500);
+ok((await ev('scrollY')) === 0, 'reload mid-page -> top (scrollY ' + await ev('scrollY') + ')');
+await cdp('Page.navigate', { url: 'about:blank' }); await sleep(300);
+await cdp('Page.navigate', { url: BASE + 'index.html#kaart' }); await sleep(3000);
+const y = await ev('scrollY'); ok(y > 300, 'link to #kaart still jumps there (' + y + ')');
+await cdp('Page.reload'); await sleep(3500);
+ok((await ev('scrollY')) === 0 && !(await ev('location.hash')), 'reload with #kaart -> top, hash removed (' + await ev('location.href') + ')');
+ws.close();

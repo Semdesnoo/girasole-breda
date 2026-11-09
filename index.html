@@ -333,6 +333,18 @@ a{color:inherit}
 @media (max-width:380px){.bk-menu .bk-card b{font-size:19px}}
 .kb,.spin,.marq-track,[data-par],[data-parx]{will-change:transform}
 </style>
+<script>
+// reload always starts at the top of the landing page (drops #section from the URL on reload)
+if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+(function () {
+  var nav = performance.getEntriesByType && performance.getEntriesByType('navigation')[0];
+  var reload = nav ? nav.type === 'reload' : performance.navigation && performance.navigation.type === 1;
+  if (reload && location.hash) history.replaceState(null, '', location.pathname + location.search);
+  var top = function () { if (reload || !location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'instant' }); };
+  window.addEventListener('pageshow', top);
+  window.addEventListener('load', top);
+})();
+</script>
 </head>
 <body>
 <div class="v-desk">
