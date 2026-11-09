@@ -288,6 +288,34 @@ a{color:inherit}
 .faq details[open] summary::after{transform:rotate(45deg)}
 .faq details p{margin:0 0 22px;max-width:60ch;color:#5E5040}
 @media (max-width:760px){.faq{grid-template-columns:1fr;padding:80px 20px;gap:24px}.faq .script{font-size:42px}.faq h2{font-size:44px}.faq summary{font-size:21px}}
+
+.mbtn{display:inline-flex;align-items:center;gap:14px;padding:0;background:none;border:0;cursor:pointer;font:inherit;font-size:12px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#F4ECDF;-webkit-tap-highlight-color:transparent}
+.mbtn.dark{color:#2A1E14}
+.mbtn-o{position:relative;width:58px;height:58px;display:grid;place-items:center}
+.mbtn-ring{position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(#E8A93A 0 7deg,transparent 7deg 22.5deg);-webkit-mask:radial-gradient(circle,transparent 23px,#000 23.5px 28.5px,transparent 29px);mask:radial-gradient(circle,transparent 23px,#000 23.5px 28.5px,transparent 29px);animation:mspin 14s linear infinite;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.mbtn.dark .mbtn-ring{background:repeating-conic-gradient(#B87A0E 0 7deg,transparent 7deg 22.5deg)}
+.mbtn-c{position:relative;width:40px;height:40px;border-radius:50%;background:#E8A93A;display:grid;place-items:center;box-shadow:0 6px 18px rgba(31,22,16,.25);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.mbtn-c i{position:absolute;left:12px;right:12px;height:1.6px;border-radius:2px;background:#2A1E14;transition:transform .5s cubic-bezier(.16,1,.3,1),width .4s ease}
+.mbtn-c i:first-child{transform:translateY(-3.5px)}
+.mbtn-c i:last-child{transform:translateY(3.5px);right:16px}
+.mbtn:hover .mbtn-ring,.mbtn:focus-visible .mbtn-ring{transform:scale(1.12) rotate(45deg)}
+.mbtn:hover .mbtn-c{transform:rotate(180deg) scale(1.06)}
+.mbtn:hover .mbtn-c i:last-child{right:12px}
+.mbtn:active .mbtn-c{transform:scale(.92)}
+.mbtn.x .mbtn-c{animation:mxin .7s cubic-bezier(.16,1,.3,1) .15s both}
+.mbtn.x .mbtn-c i:first-child{transform:rotate(45deg)}
+.mbtn.x .mbtn-c i:last-child{transform:rotate(-45deg);right:12px}
+.mbtn.x:hover .mbtn-c{transform:rotate(90deg) scale(1.06)}
+@keyframes mspin{to{rotate:360deg}}
+@keyframes mxin{from{transform:rotate(-180deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
+.menu-wrap .ovl{animation:mreveal .8s cubic-bezier(.76,0,.24,1) both}
+.menu-wrap.closing .ovl{animation:mhide .55s cubic-bezier(.76,0,.24,1) both}
+@keyframes mreveal{from{clip-path:circle(0 at var(--mx,95%) var(--my,50px))}to{clip-path:circle(150vmax at var(--mx,95%) var(--my,50px))}}
+@keyframes mhide{from{clip-path:circle(150vmax at var(--mx,95%) var(--my,50px))}to{clip-path:circle(0 at var(--mx,95%) var(--my,50px))}}
+.menu-wrap nav a{transition:transform .5s cubic-bezier(.16,1,.3,1),color .35s ease}
+.menu-wrap nav a:hover{transform:translateX(14px);color:#E8A93A}
+@media (max-width:760px){.mbtn{gap:10px;font-size:11px}.mbtn.x .mbtn-l{display:none}.mbtn-o{width:52px;height:52px}.mbtn-ring{-webkit-mask:radial-gradient(circle,transparent 20px,#000 20.5px 25.5px,transparent 26px);mask:radial-gradient(circle,transparent 20px,#000 20.5px 25.5px,transparent 26px)}.mbtn-c{width:36px;height:36px}.mbtn-c i{left:11px;right:11px}.mbtn-c i:last-child{right:14px}}
+@media (prefers-reduced-motion: reduce){.mbtn-ring,.mbtn.x .mbtn-c,.menu-wrap .ovl,.menu-wrap.closing .ovl{animation:none}}
 </style>
 </head>
 <body>
@@ -303,11 +331,9 @@ a{color:inherit}
 </div>
 <div class="paper" style="position: absolute; top: 0; left: 0; bottom: 0; width: 60%; clip-path: ellipse(100% 78% at 0% 50%)"></div>
 
-<header class="drop" style="position: absolute; z-index: 5; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto auto; column-gap: 28px; align-items: center; padding: 26px 5vw">
+<header class="drop" style="position: absolute; z-index: 5; top: 0; left: 0; right: 0; display: grid; grid-template-columns: 1fr auto; column-gap: 28px; align-items: center; padding: 26px 5vw">
 <a href="#top" style="justify-self: start; text-decoration: none; display: flex; align-items: center; gap: 12px; line-height: 1"><span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; letter-spacing: 0.12em">GIRASOLE</span><img class="lk hide-m" style="height: 34px; width: auto" src="media/logo-dark.webp" alt="by Luca's Kitchen" width="900" height="185"></a>
-<button type="button" data-menu aria-label="Menu openen" style="justify-self: end; display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; font: inherit; font-size: 13px; letter-spacing: 0.14em; color: #F4ECDF; cursor: pointer; min-height: 44px; padding: 0 8px">
-<svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><line x1="0" y1="1" x2="18" y2="1"></line><line x1="0" y1="9" x2="18" y2="9"></line></svg>MENU</button>
-<a class="btn sun" href="#reserveren" style="justify-self: end">Reserveren</a>
+<button type="button" class="mbtn" data-menu aria-label="Menu openen"><span class="mbtn-l">Menu</span><span class="mbtn-o" aria-hidden="true"><span class="mbtn-ring"></span><span class="mbtn-c"><i></i><i></i></span></span></button>
 </header>
 
 <p class="fade" style="position: absolute; z-index: 3; top: 150px; left: 5vw; margin: 0; max-width: 250px; font-size: 14px; line-height: 1.55; color: #4D3F30; animation-delay: .5s">Het Italiaanse familierestaurant van chef Luca Malagnino, aan de Sophiastraat in Breda.</p>
@@ -339,14 +365,14 @@ a{color:inherit}
 <div class="ovl" role="dialog" aria-label="Menu" style="position: fixed; inset: 0; z-index: 50; background: #1F1610; color: #F4ECDF; display: flex; flex-direction: column; padding: 26px 5vw 48px">
 <div style="display: flex; justify-content: space-between; align-items: center">
 <span style="display: flex; align-items: center; gap: 14px"><span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; letter-spacing: 0.12em">GIRASOLE</span><img class="lk" style="height: 34px; width: auto" src="media/logo-light.webp" alt="by Luca's Kitchen" width="900" height="185"></span>
-<button type="button" data-menu aria-label="Menu sluiten" style="background: none; border: 0; color: #F4ECDF; font: inherit; font-size: 13px; letter-spacing: 0.14em; cursor: pointer; min-height: 44px">SLUITEN</button>
+<button type="button" class="mbtn x" data-menu aria-label="Menu sluiten"><span class="mbtn-l">Sluiten</span><span class="mbtn-o" aria-hidden="true"><span class="mbtn-ring"></span><span class="mbtn-c"><i></i><i></i></span></span></button>
 </div>
 <nav aria-label="Hoofdmenu" style="margin: auto 0; display: flex; flex-direction: column; gap: 6px">
-<a class="fade ul" href="#menus" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .05s">Menu's</a>
-<a class="fade ul" href="#kaart" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .12s">De kaart</a>
-<a class="fade ul" href="#reviews" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .19s">Reviews</a>
-<a class="fade ul" href="#reserveren" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .26s">Reserveren</a>
-<a class="fade ul" href="contact.html" style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: .33s">Contact</a>
+<a class="fade ul" href="#menus" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: 0.30s">Menu's</a>
+<a class="fade ul" href="#kaart" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: 0.37s">De kaart</a>
+<a class="fade ul" href="#reviews" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: 0.44s">Reviews</a>
+<a class="fade ul" href="#reserveren" data-menu style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: 0.51s">Reserveren</a>
+<a class="fade ul" href="contact.html" style="align-self: flex-start; font-family: 'Cormorant Garamond', serif; font-size: clamp(48px, 7vw, 96px); line-height: 1.05; text-transform: uppercase; animation-delay: 0.58s">Contact</a>
 </nav>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; font-size: 14px; color: #B9A88F">
 <span>Sophiastraat 14, Breda</span>
@@ -603,8 +629,7 @@ a{color:inherit}
 <div class="paper" style="position: absolute; top: 0; left: 0; right: 0; height: 60%; clip-path: ellipse(90% 100% at 50% 0%)"></div>
 <header class="drop" style="position: absolute; z-index: 5; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: 18px 20px">
 <a href="#top-m" aria-label="Girasole, naar boven" style="display: flex; flex-direction: column; align-items: flex-start; gap: 5px; text-decoration: none; line-height: 1"><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px; letter-spacing: 0.12em; line-height: 1">GIRASOLE</span><img class="lk" style="height: 21px; width: auto; margin-left: -2px" src="media/logo-dark.webp" alt="by Luca's Kitchen" width="900" height="185"></a>
-<button type="button" data-menu aria-label="Menu openen" style="display: inline-flex; align-items: center; gap: 10px; background: none; border: 0; font: inherit; font-size: 12px; letter-spacing: 0.14em; color: #2A1E14; cursor: pointer; min-height: 44px; padding: 0">
-<svg width="18" height="10" viewBox="0 0 18 10" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true"><line x1="0" y1="1" x2="18" y2="1"></line><line x1="0" y1="9" x2="18" y2="9"></line></svg>MENU</button>
+<button type="button" class="mbtn dark" data-menu aria-label="Menu openen"><span class="mbtn-l">Menu</span><span class="mbtn-o" aria-hidden="true"><span class="mbtn-ring"></span><span class="mbtn-c"><i></i><i></i></span></span></button>
 </header>
 <div style="position: absolute; z-index: 3; top: 92px; left: 20px; right: 20px; display: flex; flex-direction: column; gap: 18px">
 <span class="script fade" style="font-size: 48px; line-height: 0.6; color: #B87A0E; margin-bottom: -8px; animation-delay: .1s">Benvenuti</span>
@@ -628,15 +653,15 @@ a{color:inherit}
 <div class="menu-wrap" hidden>
 <div class="ovl" role="dialog" aria-label="Menu" style="position: fixed; inset: 0; z-index: 50; background: #1F1610; color: #F4ECDF; display: flex; flex-direction: column; padding: 18px 20px 36px">
 <div style="display: flex; justify-content: space-between; align-items: center">
-<span style="display: flex; align-items: center; gap: 10px"><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px; letter-spacing: 0.12em">GIRASOLE</span><img class="lk" style="height: 24px; width: auto" src="media/logo-light.webp" alt="by Luca's Kitchen" width="900" height="185"></span>
-<button type="button" data-menu aria-label="Menu sluiten" style="background: none; border: 0; color: #F4ECDF; font: inherit; font-size: 12px; letter-spacing: 0.14em; cursor: pointer; min-height: 44px">SLUITEN</button>
+<span style="display: flex; flex-direction: column; align-items: flex-start; gap: 5px"><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px; letter-spacing: 0.12em; line-height: 1">GIRASOLE</span><img class="lk" style="height: 21px; width: auto; margin-left: -2px" src="media/logo-light.webp" alt="by Luca's Kitchen" width="900" height="185"></span>
+<button type="button" class="mbtn x" data-menu aria-label="Menu sluiten"><span class="mbtn-l">Sluiten</span><span class="mbtn-o" aria-hidden="true"><span class="mbtn-ring"></span><span class="mbtn-c"><i></i><i></i></span></span></button>
 </div>
 <nav aria-label="Hoofdmenu" style="margin: auto 0; display: flex; flex-direction: column; gap: 4px">
-<a class="fade" href="#menus-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .05s">Menu's</a>
-<a class="fade" href="#kaart-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .12s">De kaart</a>
-<a class="fade" href="#reviews-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .19s">Reviews</a>
-<a class="fade" href="#reserveren-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .26s">Reserveren</a>
-<a class="fade" href="contact.html" style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: .26s">Contact</a>
+<a class="fade" href="#menus-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: 0.30s">Menu's</a>
+<a class="fade" href="#kaart-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: 0.37s">De kaart</a>
+<a class="fade" href="#reviews-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: 0.44s">Reviews</a>
+<a class="fade" href="#reserveren-m" data-menu style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: 0.51s">Reserveren</a>
+<a class="fade" href="contact.html" style="text-decoration: none; font-family: 'Cormorant Garamond', serif; font-size: 52px; line-height: 1.1; text-transform: uppercase; animation-delay: 0.58s">Contact</a>
 </nav>
 <div style="display: flex; flex-direction: column; gap: 10px">
 <a class="btn light" href="tel:+31765224437">Bel 076 522 4437</a>
@@ -1061,16 +1086,23 @@ a{color:inherit}
     if (t) {
       var root = t.closest('.v-desk, .v-mob');
       var w = root && root.querySelector('.menu-wrap');
-      if (w) {
-        var open = w.hasAttribute('hidden');
-        if (open) w.removeAttribute('hidden'); else w.setAttribute('hidden', '');
-        document.body.style.overflow = open ? 'hidden' : '';
-      }
+      if (w && w.hasAttribute('hidden')) {
+        var b = t.getBoundingClientRect(), o = w.querySelector('.ovl');
+        o.style.setProperty('--mx', (b.right - 29) + 'px'); o.style.setProperty('--my', (b.top + b.height / 2) + 'px');
+        w.removeAttribute('hidden'); document.body.style.overflow = 'hidden';
+        var x = w.querySelector('.mbtn.x'); if (x) x.focus({ preventScroll: true });
+      } else if (w) closeMenu(w);
     }
   });
+  function closeMenu(w) {
+    if (w.classList.contains('closing')) return;
+    var done = function () { w.classList.remove('closing'); w.setAttribute('hidden', ''); document.body.style.overflow = ''; };
+    if (matchMedia('(prefers-reduced-motion: reduce)').matches) return done();
+    w.classList.add('closing'); setTimeout(done, 550);
+  }
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape') return;
-    document.querySelectorAll('.menu-wrap:not([hidden])').forEach(function (w) { w.setAttribute('hidden', ''); document.body.style.overflow = ''; });
+    document.querySelectorAll('.menu-wrap:not([hidden])').forEach(closeMenu);
   });
 
   function tick() {
