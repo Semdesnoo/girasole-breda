@@ -418,7 +418,7 @@ a{color:inherit}
 <span class="script rv">Una serata</span>
 <h2><span class="ln"><span>Een avond</span></span><span class="ln"><span style="transition-delay: .12s">bij Girasole</span></span></h2>
 <p class="rv">Van de eerste slok wijn tot het laatste gerecht. Zo voelt een avond aan tafel bij Luca.</p>
-<div class="film-box rv"><video data-src="media/film.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="none" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
+<div class="film-box rv"><video data-src="media/film.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
 </section>
 <div class="stamp up" aria-hidden="true"></div>
 
@@ -707,7 +707,7 @@ a{color:inherit}
 <span class="script rv">Una serata</span>
 <h2><span class="ln"><span>Een avond</span></span><span class="ln"><span style="transition-delay: .12s">bij Girasole</span></span></h2>
 <p class="rv">Van de eerste slok wijn tot het laatste gerecht. Zo voelt een avond aan tafel bij Luca.</p>
-<div class="film-box rv"><video data-src="media/film-m.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="none" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
+<div class="film-box rv"><video data-src="media/film-m.mp4" poster="media/film.jpg" autoplay muted loop playsinline preload="metadata" aria-label="Film van een avond bij Girasole"></video><button type="button" class="film-play" data-film><svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#2A1E14"></circle><polygon points="10,7.5 17,12 10,16.5" fill="#E8A93A"></polygon></svg>Bekijk met geluid</button></div>
 </section>
 <div class="stamp up" aria-hidden="true"></div>
 
@@ -1128,14 +1128,29 @@ a{color:inherit}
     var d = document.createElement('div'); d.className = 'marq-dup'; d.setAttribute('aria-hidden', 'true');
     d.innerHTML = t.innerHTML; t.appendChild(d);
   });
+  // Videos: load when near the screen and (re)start every time they come into view.
+  // Fallback for phones that block autoplay (iOS Low Power Mode, data saver): start on the first tap or scroll.
+  function playV(v) {
+    if (v.closest('.film-box.sound')) return;
+    v.muted = true; v.defaultMuted = true; v.playsInline = true;
+    if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); }
+  }
   function startVideo(v) {
-    if (!v.hasAttribute('data-src')) return;
-    v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); v.muted = true;
-    var p = v.play(); if (p && p.catch) p.catch(function () {});
+    if (v.hasAttribute('data-src')) { v.src = v.getAttribute('data-src'); v.removeAttribute('data-src'); }
+    playV(v);
   }
   var vio = 'IntersectionObserver' in window && new IntersectionObserver(function (es) {
-    es.forEach(function (en) { if (en.isIntersecting) { startVideo(en.target); vio.unobserve(en.target); } });
-  }, { rootMargin: '400px 0px' });
+    es.forEach(function (en) { if (en.isIntersecting) startVideo(en.target); });
+  }, { rootMargin: '600px 0px' });
+  function kickVideos() {
+    document.querySelectorAll('video:not([data-src])').forEach(function (v) {
+      var r = v.getBoundingClientRect();
+      if (r.width && r.bottom > -600 && r.top < innerHeight + 600) playV(v);
+    });
+  }
+  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function (ev) { window.addEventListener(ev, kickVideos, { passive: true }); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) kickVideos(); });
+  window.addEventListener('pageshow', kickVideos);
   // film: play from the start with sound, back to the silent loop when it ends
   document.addEventListener('click', function (e) {
     var b = e.target.closest('[data-film]'); if (!b) return;

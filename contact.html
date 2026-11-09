@@ -154,6 +154,14 @@ footer{padding:24px 20px 100px}
 <a class="fab" href="index.html#boeken"><span class="script">Girasole</span><i aria-hidden="true"></i>Reserveer een tafel<i aria-hidden="true"></i><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15.5" rx="1.5"></rect><line x1="3.5" y1="10" x2="20.5" y2="10"></line><line x1="8" y1="3" x2="8" y2="7"></line><line x1="16" y1="3" x2="16" y2="7"></line></svg></a>
 
 <script>
+// video: start on first tap/scroll if the phone blocked autoplay (iOS Low Power Mode)
+(function () {
+  var v = document.querySelector('.zaal video'); if (!v) return;
+  var go = function () { v.muted = true; if (v.paused) { var p = v.play(); if (p && p.catch) p.catch(function () {}); } };
+  ['touchstart', 'touchend', 'click', 'scroll'].forEach(function (e) { window.addEventListener(e, go, { passive: true }); });
+  document.addEventListener('visibilitychange', function () { if (!document.hidden) go(); });
+  go();
+})();
 // highlight today's opening hours (Amsterdam time)
 try {
   var wd = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].indexOf(new Date().toLocaleDateString('en-US', { weekday: 'short', timeZone: 'Europe/Amsterdam' }));
