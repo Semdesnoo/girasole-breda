@@ -235,10 +235,6 @@ a{color:inherit}
 .bk-card:hover img{transform:scale(1.04)}
 .bk-card b{display:block;padding:14px 16px 0;font-family:'Cormorant Garamond',serif;font-weight:500;font-size:25px;line-height:1.1}
 .bk-card small{display:block;padding:2px 16px 16px;font-size:14px;color:#876A6C}
-.bk-feat{background:#5B0A19;color:#FDF5E1;padding:10px}
-.bk-feat i{display:block;padding:2px 2px 10px;font-style:normal;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#F5B800}
-.bk-feat b{font-family:'Mrs Saint Delafield',cursive;font-weight:400;font-size:44px;padding:12px 6px 0}
-.bk-feat small{color:#E3D0C9;padding:0 6px 8px}
 .bk h3{margin:4px 0 16px;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:28px;text-align:center;text-transform:uppercase;letter-spacing:.06em}
 .bk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
 .bk-grid button,.bk-cal button,.bk-times button{min-height:50px;padding:0;border:0;background:#F3E6D0;color:#3A0B14;font:inherit;font-weight:500;cursor:pointer;transition:background-color .25s ease}
@@ -347,9 +343,7 @@ a{color:inherit}
 /* rounded controls */
 .bk-row,.bk-grid button,.bk-times button,.bk input{border-radius:12px}
 .bk-cal button{border-radius:10px}
-.bk-card,.bk-feat{border-radius:16px}
-.bk-feat img{border-radius:10px}
-.bk-note,.bk-sum{border-radius:14px}
+.bk-card,.bk-note,.bk-sum{border-radius:14px}
 .bk-mon button,.arrow{border-radius:50%}
 .bk-edit,.pop-b{border-radius:999px}
 .pop-b{outline-offset:4px}
@@ -473,6 +467,7 @@ a{color:inherit}
 #kaart-m .mk-badge{position:relative;left:auto;bottom:auto;width:112px;margin:-86px 26px 0 auto}
 #kaart-m .mk-badge .script{font-size:26px}
 @media (prefers-reduced-motion: reduce){.mk-badge svg{animation:none}}
+.bk-card:disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.6)}
 </style>
 <script>
 // reload always starts at the top of the landing page (drops #section from the URL on reload)
@@ -875,12 +870,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <ol class="bk-steps" aria-label="Stappen"><li data-s="pers"><button type="button" data-step="pers"><span>1</span>Personen</button></li><li data-s="home"><button type="button" data-step="home"><span>2</span>Menu</button></li><li data-s="date"><button type="button" data-step="date"><span>3</span>Datum</button></li><li data-s="form"><button type="button" data-step="form"><span>4</span>Gegevens</button></li></ol>
 <div class="bk-body">
 <div class="bk-v" data-v="home">
-<div class="js-bk-feat"></div>
 <div class="bk-menu"><button type="button" class="bk-card" aria-pressed="false" data-k="kaart" data-l="À la carte"><img src="media/tafel-rond.webp" alt="Ronde tafel met Italiaanse gerechten" loading="lazy"><b>À la carte</b><small>Kies vrij van de kaart van Luca</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="4" data-l="Menu, 4 gangen"><img src="media/pasta.webp" alt="Verse pasta met gamba's van bovenaf" loading="lazy"><b>Menu, 4 gangen</b><small>De kaart van het seizoen, € 74 p.p.</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="6" data-l="Menu, 6 gangen"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" loading="lazy"><b>Menu, 6 gangen</b><small>Het hele verhaal van Luca, € 98 p.p.</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button><button type="button" class="bk-card" aria-pressed="false" data-k="huis" data-l="De Huiskamer"><img src="media/muur.webp" alt="Zwart-witportretten aan de muur van het restaurant" loading="lazy"><b>De Huiskamer</b><small>Eigen ruimte tot 12 gasten, op aanvraag</small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span></button>
 </div>
 </div>
 <div class="bk-v" data-v="pers" hidden>
-<div class="bk-grid"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button><button type="button" data-p="5">5</button><button type="button" data-p="6">6</button><button type="button" data-p="7">7<small>aanvraag</small></button><button type="button" data-p="8">8<small>aanvraag</small></button><button type="button" data-p="9">9<small>aanvraag</small></button><button type="button" data-p="10">10<small>aanvraag</small></button><button type="button" data-p="11">11<small>aanvraag</small></button><button type="button" data-p="12">12<small>aanvraag</small></button></div>
+<div class="bk-grid"><button type="button" data-p="1">1</button><button type="button" data-p="2">2</button><button type="button" data-p="3">3</button><button type="button" data-p="4">4</button><button type="button" data-p="5">5</button><button type="button" data-p="6">6</button><button type="button" data-p="7">7</button><button type="button" data-p="8">8</button><button type="button" data-p="9">9</button><button type="button" data-p="10">10</button><button type="button" data-p="11">11</button><button type="button" data-p="12">12</button></div>
 <p class="bk-note">We sturen je altijd even een mailtje of bellen je om je reservering te bevestigen. Zo werken we graag: als het druk is, zoeken we samen naar de beste oplossing.</p>
 </div>
 <div class="bk-v" data-v="date" hidden>
@@ -894,9 +888,9 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field">
 <input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
 <input type="hidden" name="datum"><input type="hidden" name="tijd"><input type="hidden" name="personen"><input type="hidden" name="keuze">
-<label>Naam<input type="text" name="naam" autocomplete="name" required></label>
+<label>Naam<input type="text" name="naam" autocomplete="name" required minlength="2"></label>
 <label>Telefoonnummer<input type="tel" name="telefoon" autocomplete="tel" required></label>
-<label>E-mail<input type="email" name="email" autocomplete="email"></label>
+<label>E-mail<input type="email" name="email" autocomplete="email" required></label>
 <p class="bk-note js-bk-req" hidden>Dit is een aanvraag. We bellen je om je tafel te bevestigen.</p>
 <button type="submit" class="btn sun">Reservering plaatsen</button>
 </form>
@@ -933,7 +927,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     q('.bk-body').scrollTop = 0;
   }
   function mark() {
-    d.querySelectorAll('[data-k]').forEach(function (c) { var on = c.getAttribute('data-k') === st.k; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on); });
+    d.querySelectorAll('[data-k]').forEach(function (c) { var on = c.getAttribute('data-k') === st.k; c.classList.toggle('on', on); c.setAttribute('aria-pressed', on); c.disabled = st.p === 12 && !on; });
   }
   function next() { show(ORDER[ORDER.indexOf(cur) + 1] || 'form'); }
   function label(dt) { var x = new Date(dt + 'T12:00'); return DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; }
@@ -955,22 +949,16 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     times();
   }
   function slots(date) {
-    var wd = new Date(date + 'T12:00').getDay(), last = (wd === 5 || wd === 6) ? 20 * 60 + 30 : 20 * 60, out = [];
+    var last = 20 * 60, out = [];
     var now = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }).split(':');
     var min = date === today ? +now[0] * 60 + +now[1] + 60 : 0;
-    for (var t = 17 * 60; t <= last; t += 30) if (t >= min) out.push(pad(Math.floor(t / 60)) + ':' + pad(t % 60));
+    for (var t = 17 * 60; t <= last; t += 15) if (t >= min) out.push(pad(Math.floor(t / 60)) + ':' + pad(t % 60));
     return out;
   }
   function times() {
     var w = q('.js-bk-tw');
     if (!st.date) { w.hidden = true; return; }
-    var wd = new Date(st.date + 'T12:00').getDay(), last = (wd === 5 || wd === 6) ? 20 * 60 + 30 : 20 * 60;
-    var now = new Date().toLocaleTimeString('nl-NL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Amsterdam' }).split(':');
-    var min = st.date === today ? +now[0] * 60 + +now[1] + 60 : 0, h = '';
-    for (var t = 17 * 60; t <= last; t += 30) if (t >= min) {
-      var s = pad(Math.floor(t / 60)) + ':' + pad(t % 60);
-      h += '<button type="button" data-t="' + s + '"' + (s === st.time ? ' class="on"' : '') + '>' + s + '</button>';
-    }
+    var h = slots(st.date).map(function (s) { return '<button type="button" data-t="' + s + '"' + (s === st.time ? ' class="on"' : '') + '>' + s + '</button>'; }).join('');
     q('.js-bk-times').innerHTML = h || '<p style="grid-column: 1 / -1; margin: 0; color: #876A6C">Vandaag kun je niet meer online reserveren. Bel ons op 076 522 4437.</p>';
     w.hidden = false;
   }
@@ -1015,21 +1003,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     var a = e.target.closest('[data-bk], a[href*="#reserveren"]');
     if (!a || a.closest('.bk')) return;
     var k = a.getAttribute('data-keuze');
-    if (k) { st.k = k; st.l = KEUZE[k]; }
+    if (k && st.p !== 12) { st.k = k; st.l = KEUZE[k]; }
     open(e);
   });
   if (location.hash === '#boeken' || location.hash.indexOf('#reserveren') === 0) open();
 
-  // featured card from the seasonal popup config
-  fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) {
-    if (!c.actief || (c.van && today < c.van) || (c.tot && today > c.tot)) return;
-    var b = document.createElement('button');
-    b.type = 'button'; b.className = 'bk-card bk-feat';
-    b.setAttribute('data-k', c.id); b.setAttribute('data-l', (c.titel || []).join(' '));
-    b.innerHTML = '<i>Uitgelicht</i><img alt=""><b></b><small></small><span class="bk-chk" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="3,8.5 6.5,12 13,4.5"></polyline></svg></span>'; b.setAttribute('aria-pressed', 'false');
-    b.querySelector('img').src = c.afbeelding; b.querySelector('b').textContent = (c.titel || []).join(' '); b.querySelector('small').textContent = c.tekst || '';
-    q('.js-bk-feat').appendChild(b);
-  }).catch(function () {});
 })();
 </script>
 <script>

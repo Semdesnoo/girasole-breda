@@ -28,7 +28,6 @@ await ev(`document.querySelector('[data-p="12"]').click()`); await sleep(500);
 ok(await ev(`document.querySelector('.bk-menu [data-k=huis]').classList.contains('on')`), '12 personen selects De Huiskamer');
 await ev(`document.querySelector('[data-step=pers]').click()`); await sleep(300);
 await ev(`document.querySelector('[data-p="8"]').click()`); await sleep(500);
-ok(await ev(`!!document.querySelector('.bk-feat')`), 'featured card from popup.json');
 await shot('bk-home-' + W);
 await ev(`document.querySelector('[data-k=huis]').click()`); await sleep(150);
 ok(await ev(`document.querySelector('[data-k=huis]').classList.contains('on') && document.querySelector('[data-k=huis]').getAttribute('aria-pressed')==='true'`), 'menu choice shows as selected');
