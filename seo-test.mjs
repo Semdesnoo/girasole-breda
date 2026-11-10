@@ -1,7 +1,7 @@
 
 // SEO-change check: SHOTS=<dir> URL=<base> W=390 node seo-test.mjs (headless chrome on :9334)
 const S = process.env.SHOTS, BASE = process.env.URL || 'http://127.0.0.1:8767/', W = +process.env.W || 390;
-const tabs = await (await fetch('http://127.0.0.1:9334/json')).json();
+const tabs = await (await fetch('http://127.0.0.1:9333/json')).json();
 const ws = new WebSocket(tabs.find(t => t.type === 'page').webSocketDebuggerUrl);
 await new Promise(r => ws.onopen = r);
 let id = 0; const pend = {};

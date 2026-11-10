@@ -27,7 +27,7 @@ for (const page of ['index.html', 'contact.html']) {
   const top = await state(sel); const playingTop = top.filter(x => !x[1]).length;
   ok(top.length && playingTop === top.length, `${page} top videos play after first tap ${JSON.stringify(top)}`);
   if (page === 'index.html') {
-    for (const s of ['.film-box', '[aria-label="Buona sera"]', W < 700 ? '#kaart-m' : '#kaart']) {
+    for (const s of ['.film-box', '.sole', W < 700 ? '#kaart-m' : '#kaart']) {
       await ev(`document.querySelector('${root} ${s}').scrollIntoView({block:'center'})`); await sleep(2000);
       const v = await ev(`(()=>{const v=document.querySelector('${root} ${s} video');return [(v.currentSrc||'').split('/').pop(), v.paused, v.currentTime>0]})()`);
       ok(v[0] && !v[1], `${s} plays when scrolled to ${JSON.stringify(v)}`);

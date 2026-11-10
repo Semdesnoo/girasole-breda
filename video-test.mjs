@@ -20,7 +20,7 @@ const root = W < 700 ? '.v-mob' : '.v-desk';
 ok(await ev(`document.documentElement.scrollWidth <= innerWidth`), `no horizontal overflow (${W}px)`);
 const pending = await ev(`[...document.querySelectorAll('${root} video')].filter(v=>v.hasAttribute('data-src')).length`);
 ok(pending >= 2, `lazy: ${pending} videos still unloaded at top`);
-for (const [sel, name] of [['.film-box video','film'], ['[aria-label="Buona sera"] video','buona'], ['#kaart' + (W<700?'-m':'') + ' video','kaart']]) {
+for (const [sel, name] of [['.film-box video','film'], ['.sole-core video','buona'], ['#kaart' + (W<700?'-m':'') + ' video','kaart']]) {
   await ev(`document.querySelector('${root} ${sel}').scrollIntoView({block:'center'})`); await sleep(2500);
   const v = await ev(`(()=>{const v=document.querySelector('${root} ${sel}');const r=v.getBoundingClientRect();return {src:v.currentSrc.split('/').pop(),w:v.videoWidth,paused:v.paused,t:v.currentTime,rw:Math.round(r.width)}})()`);
   ok(v.w > 0 && !v.paused && v.t > 0, `${name} plays: ${JSON.stringify(v)}`);
