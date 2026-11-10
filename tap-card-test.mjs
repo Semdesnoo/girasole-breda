@@ -1,0 +1,23 @@
+// mobile: tapping a menu card must not lift it out of the swipe row (top got clipped)
+const ws = new WebSocket((await (await fetch('http://127.0.0.1:9333/json')).json()).find(t => t.type === 'page').webSocketDebuggerUrl);
+await new Promise(r => ws.onopen = r); let id = 0; const pend = {};
+ws.onmessage = m => { const x = JSON.parse(m.data); if (pend[x.id]) { pend[x.id](x.result); delete pend[x.id]; } };
+const cdp = (method, params = {}) => new Promise(r => { pend[++id] = r; ws.send(JSON.stringify({ id, method, params })); });
+const ev = async e => (await cdp('Runtime.evaluate', { expression: e, returnByValue: true })).result.value;
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+await cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 2, mobile: true });
+await cdp('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 5 });
+await cdp('Emulation.setEmitTouchEventsForMouse', { enabled: true, configuration: 'mobile' });
+await cdp('Network.setCacheDisabled', { cacheDisabled: true });
+await cdp('Page.navigate', { url: (process.env.URL || 'http://127.0.0.1:8767/') + 'index.html' }); await sleep(3000);
+await ev(`document.querySelector('.pop-d[open]')?.close(); document.querySelectorAll('.rv,.ln').forEach(e=>e.classList.add('in')); document.querySelector('#menus-m .mc-row').scrollIntoView({block:'center'})`); await sleep(1500);
+const box = () => ev(`(()=>{const c=document.querySelector('#menus-m .mc'),r=document.querySelector('#menus-m .mc-row').getBoundingClientRect(),b=c.getBoundingClientRect();return {top:Math.round(b.top),gap:Math.round(b.top-r.top),x:Math.round(b.left+b.width/2),y:Math.round(b.top+120)}})()`);
+const a = await box();
+await cdp('Input.dispatchTouchEvent', { type: 'touchStart', touchPoints: [{ x: a.x, y: a.y }] });
+await cdp('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] }); await sleep(900);
+const b = await box();
+const r = await cdp('Page.captureScreenshot'); (await import('fs')).writeFileSync((process.env.SHOTS || '.') + '/tapcard.png', Buffer.from(r.data, 'base64'));
+console.log((a.top === b.top ? 'PASS' : 'FAIL') + ' card stays put on tap', JSON.stringify([a.top, b.top]));
+console.log((b.gap >= 10 ? 'PASS' : 'FAIL') + ' room above card inside row', b.gap);
+await cdp('Emulation.setTouchEmulationEnabled', { enabled: false }); await cdp('Emulation.clearDeviceMetricsOverride');
+ws.close();

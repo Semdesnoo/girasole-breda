@@ -53,7 +53,7 @@ a{color:inherit}
 .ul:hover{background-size:100% 1px}
 .zoom{overflow:hidden}
 .zoom img,.zoom video{transition:transform 1.6s cubic-bezier(.2,.7,.2,1)}
-.zoom:hover img,.zoom:hover video{transform:scale(1.05)}
+@media (hover:hover){.zoom:hover img,.zoom:hover video{transform:scale(1.05)}}
 .spin{animation:spin 90s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .kb{animation:kb 24s ease-in-out infinite alternate}
@@ -415,7 +415,7 @@ a{color:inherit}
 .mc-grid{width:100%;max-width:1240px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;align-items:stretch}
 .mc{position:relative;display:flex;flex-direction:column;background:#FFFBF2;border-radius:240px 240px 24px 24px;padding:14px 14px 34px;box-shadow:0 1px 0 rgba(58,11,20,.1),0 40px 70px -40px rgba(58,11,20,.45);transition:translate .6s cubic-bezier(.2,.7,.2,1),box-shadow .6s ease}
 .mc:not(.feat){margin-top:60px}
-.mc:hover{translate:0 -10px;box-shadow:0 1px 0 rgba(58,11,20,.1),0 50px 80px -40px rgba(58,11,20,.55)}
+@media (hover:hover){.mc:hover{translate:0 -10px;box-shadow:0 1px 0 rgba(58,11,20,.1),0 50px 80px -40px rgba(58,11,20,.55)}}
 .mc-img{height:340px;border-radius:226px 226px 14px 14px;overflow:hidden;background:#5B0A19}
 .mc-img img{width:100%;height:100%;object-fit:cover;display:block}
 .mc-price{position:absolute;top:300px;right:26px;z-index:2;width:96px;height:96px;border-radius:50%;background:#F5B800;color:#3A0B14;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:32px;line-height:1;box-shadow:0 0 0 6px #FFFBF2;rotate:-8deg}
@@ -433,7 +433,7 @@ a{color:inherit}
 .mc.feat .mc-k{color:#F5B800}.mc.feat p{color:#E3D0C9}
 .mc.feat .mc-price{box-shadow:0 0 0 6px #5B0A19}
 .mc.feat .btn.sun:hover{background:#FDF5E1;border-color:#FDF5E1}
-.mc-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;width:100%;padding:6px 20px 34px;margin:0 -20px;box-sizing:content-box}
+.mc-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;width:100%;padding:24px 20px 34px;margin:-18px -20px 0;box-sizing:content-box}
 .mc-row::-webkit-scrollbar{display:none}
 .mc-row .mc{flex:0 0 78%;scroll-snap-align:center;margin-top:0}
 .mc-row .mc-img{height:250px}
