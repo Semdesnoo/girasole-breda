@@ -404,6 +404,13 @@ a{color:inherit}
 .rev-head .script{color:#B3262E !important}
 .rev-score{color:#7A5E60 !important}.rev-score .num{color:#5B0A19 !important}
 .rev .btn.ghost{background:#5B0A19;color:#FDF5E1;border-color:#5B0A19}
+
+/* over ons: photos keep wiping in, one over the other */
+.flip{position:relative;overflow:hidden;width:100%}
+.flip img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;clip-path:inset(100% 0 0 0);transform:scale(1.15)}
+.flip img.was{clip-path:inset(0);transform:scale(1);z-index:1}
+.flip img.on{clip-path:inset(0);transform:scale(1);z-index:2;transition:clip-path 1.2s cubic-bezier(.7,0,.2,1),transform 2.4s cubic-bezier(.2,.7,.2,1)}
+@media (prefers-reduced-motion: reduce){.flip img.on{transition:none}}
 </style>
 <script>
 // reload always starts at the top of the landing page (drops #section from the URL on reload)
@@ -473,8 +480,8 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 </h2>
 </div>
 <div style="width: 100%; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center; gap: 40px 56px">
-<div class="cl zoom" data-par="-0.08" style="flex: 0 0 auto; width: 200px; align-self: flex-start"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur van het restaurant" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block"></div>
-<div class="cl zoom" style="flex: 0 1 380px; min-width: 260px"><img src="media/tafel.webp" alt="Gedekte tafel van bovenaf met bloemen en een kaarsje" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block"></div>
+<div class="cl zoom" data-par="-0.08" style="flex: 0 0 auto; width: 200px; align-self: flex-start"><div class="flip" data-flip="0" style="aspect-ratio: 3 / 4"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur van het restaurant" class=on><img src="media/muur.webp" alt="De eetzaal met zwart-witportretten aan de muur"><img src="media/zaal.jpg" alt="De zaal van Girasole"><img src="media/interieur.webp" alt="Het interieur van Girasole"></div></div>
+<div class="cl zoom" style="flex: 0 1 380px; min-width: 260px"><div class="flip" data-flip="1800" style="aspect-ratio: 4 / 5"><img src="media/tafel.webp" alt="Gedekte tafel van bovenaf met bloemen en een kaarsje" class=on><img src="media/plating.jpg" alt="Luca dresseert een gerecht"><img src="media/gerecht.webp" alt="Een gerecht van Luca"><img src="media/pasta.webp" alt="Verse pasta met gamba's"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand"></div></div>
 <div class="rv" style="flex: 0 1 320px; display: flex; flex-direction: column; gap: 18px; padding-bottom: 8px">
 <span style="font-family: 'Cormorant Garamond', serif; font-size: 30px; line-height: 1.1">Chef Luca Malagnino</span>
 <p style="margin: 0; color: #E3D0C9; font-size: 15px">Luca maakt de pasta elke dag vers en schaaft de truffel aan tafel. De kaart gaat mee met het seizoen en er liggen ruim tachtig Italiaanse wijnen klaar. In de zaal zorgen Cristina en Giulia dat je je meteen thuis voelt.</p>
@@ -726,8 +733,8 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 </h2>
 </div>
 <div style="display: grid; grid-template-columns: 0.75fr 1fr; gap: 12px; align-items: end">
-<div class="cl"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur van het restaurant" style="width: 100%; aspect-ratio: 3 / 4; object-fit: cover; display: block"></div>
-<div class="cl"><img src="media/tafel.webp" alt="Gedekte tafel van bovenaf met bloemen en een kaarsje" style="width: 100%; aspect-ratio: 4 / 5; object-fit: cover; display: block"></div>
+<div class="cl"><div class="flip" data-flip="0" style="aspect-ratio: 3 / 4"><img src="media/familiefoto.webp" alt="Oude familiefoto aan de muur van het restaurant" class=on><img src="media/muur.webp" alt="De eetzaal met zwart-witportretten aan de muur"><img src="media/zaal.jpg" alt="De zaal van Girasole"><img src="media/interieur.webp" alt="Het interieur van Girasole"></div></div>
+<div class="cl"><div class="flip" data-flip="1800" style="aspect-ratio: 4 / 5"><img src="media/tafel.webp" alt="Gedekte tafel van bovenaf met bloemen en een kaarsje" class=on><img src="media/plating.jpg" alt="Luca dresseert een gerecht"><img src="media/gerecht.webp" alt="Een gerecht van Luca"><img src="media/pasta.webp" alt="Verse pasta met gamba's"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand"></div></div>
 </div>
 <div class="rv" style="display: flex; flex-direction: column; gap: 14px">
 <span style="font-family: 'Cormorant Garamond', serif; font-size: 28px; line-height: 1.1">Chef Luca Malagnino</span>
@@ -1157,6 +1164,17 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   document.querySelectorAll('.sole-run').forEach(function (r) {
     var fit = function () { r.style.setProperty('--shift', r.children[12].offsetLeft - r.children[0].offsetLeft); };
     fit(); window.addEventListener('resize', fit);
+  });
+  // over ons: rotate the photo stacks (paused off-screen / reduced motion)
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.querySelectorAll('.flip').forEach(function (f) {
+    var im = f.querySelectorAll('img'), i = 0, vis = false;
+    new IntersectionObserver(function (e) { vis = e[0].isIntersecting; }).observe(f);
+    setTimeout(function () { setInterval(function () {
+      if (!vis || document.hidden) return;
+      var n = (i + 1) % im.length;
+      im.forEach(function (x) { x.className = ''; });
+      im[i].className = 'was'; im[n].className = 'on'; i = n;
+    }, 3600); }, +f.dataset.flip);
   });
   // review marquee: the seamless-loop copy is made at runtime so crawlers only see each review once
   document.querySelectorAll('.marq-track').forEach(function (t) {
