@@ -411,6 +411,68 @@ a{color:inherit}
 .flip img.was{clip-path:inset(0);transform:scale(1);z-index:1}
 .flip img.on{clip-path:inset(0);transform:scale(1);z-index:2;transition:clip-path 1.2s cubic-bezier(.7,0,.2,1),transform 2.4s cubic-bezier(.2,.7,.2,1)}
 @media (prefers-reduced-motion: reduce){.flip img.on{transition:none}}
+
+/* menus: arched cards, price medallion, featured middle card */
+.mcs{padding:50px 5vw 150px;display:flex;flex-direction:column;align-items:center;gap:60px}
+.mc-head{display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center}
+.mc-head .script{font-size:48px;line-height:.8;color:#B3262E}
+.mc-head h2{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:clamp(46px,5vw,80px);line-height:.95;text-transform:uppercase}
+.mc-head em{text-transform:none;color:#B3262E}
+.mc-grid{width:100%;max-width:1240px;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:30px;align-items:stretch}
+.mc{position:relative;display:flex;flex-direction:column;background:#FFFBF2;border-radius:240px 240px 24px 24px;padding:14px 14px 34px;box-shadow:0 1px 0 rgba(58,11,20,.1),0 40px 70px -40px rgba(58,11,20,.45);transition:translate .6s cubic-bezier(.2,.7,.2,1),box-shadow .6s ease}
+.mc:not(.feat){margin-top:60px}
+.mc:hover{translate:0 -10px;box-shadow:0 1px 0 rgba(58,11,20,.1),0 50px 80px -40px rgba(58,11,20,.55)}
+.mc-img{height:340px;border-radius:226px 226px 14px 14px;overflow:hidden;background:#5B0A19}
+.mc-img img{width:100%;height:100%;object-fit:cover;display:block}
+.mc-price{position:absolute;top:300px;right:26px;z-index:2;width:96px;height:96px;border-radius:50%;background:#F5B800;color:#3A0B14;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:32px;line-height:1;box-shadow:0 0 0 6px #FFFBF2;rotate:-8deg}
+.mc-price small{font-family:'Instrument Sans',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;margin-bottom:4px}
+.mc-tag{position:absolute;top:34px;left:50%;translate:-50% 0;z-index:2;background:#F5B800;color:#3A0B14;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;padding:8px 16px;border-radius:999px;white-space:nowrap}
+.mc-body{padding:34px 18px 0;display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;flex:1}
+.mc-k{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#B3262E}
+.mc h3{margin:0;font-family:'Cormorant Garamond',serif;font-weight:400;font-size:38px;line-height:1;text-transform:uppercase}
+.mc-dots{display:flex;gap:9px;align-items:center;min-height:14px}
+.mc-dots i{width:9px;height:9px;border-radius:50%;background:#F5B800;box-shadow:0 0 0 3px rgba(245,184,0,.22)}
+.mc-dots b{color:#F5B800;font-weight:400;font-size:18px;line-height:1}
+.mc p{margin:0;font-size:15px;line-height:1.55;color:#6B4A4E;max-width:300px}
+.mc .btn{margin-top:auto}.mc p{margin-bottom:10px}
+.mc.feat{background:#5B0A19;color:#FDF5E1}
+.mc.feat .mc-k{color:#F5B800}.mc.feat p{color:#E3D0C9}
+.mc.feat .mc-price{box-shadow:0 0 0 6px #5B0A19}
+.mc.feat .btn.sun:hover{background:#FDF5E1;border-color:#FDF5E1}
+.mc-row{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;width:100%;padding:6px 20px 34px;margin:0 -20px;box-sizing:content-box}
+.mc-row::-webkit-scrollbar{display:none}
+.mc-row .mc{flex:0 0 78%;scroll-snap-align:center;margin-top:0}
+.mc-row .mc-img{height:250px}
+.mc-row .mc-price{top:212px;width:80px;height:80px;font-size:27px;right:20px}
+.mc-row .mc h3{font-size:31px}
+.mc-row .mc p{font-size:14px}
+.mc-hint{margin:-34px 0 0;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#9A7F7F}
+@media (max-width:760px){.mcs{padding:30px 20px 80px;gap:34px}.mc-head .script{font-size:42px}.mc-head h2{font-size:46px}}
+/* kaart: printed menu card */
+.mk-card{position:relative;background:#FFFBF2;padding:40px 34px 30px;border-radius:8px;margin-top:10px;outline:1px solid rgba(179,38,46,.3);outline-offset:-12px;box-shadow:0 40px 70px -45px rgba(58,11,20,.5)}
+.mk-card.m{margin:0 14px;padding:34px 22px 22px}
+.mk-orn{display:flex;align-items:center;gap:14px;justify-content:center;color:#F5B800;font-size:20px;margin-bottom:18px}
+.mk-orn::before,.mk-orn::after{content:"";width:60px;height:1px;background:rgba(179,38,46,.35)}
+.pills{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:10px}
+.pills.tabs{flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;margin:0 -8px 8px;padding:2px 8px}
+.pills .tab{padding:0 13px;letter-spacing:.08em;font-size:12px;min-height:44px;border:1px solid rgba(58,11,20,.2);border-radius:999px;color:#6B4A4E;white-space:nowrap;flex:none}
+.pills .tab:hover{border-color:#5B0A19;color:#3A0B14}
+.pills .tab[aria-pressed="true"]{background:#5B0A19;border-color:#5B0A19;color:#FDF5E1}
+.mk-list{display:flex;flex-direction:column}
+.dish{padding:16px 0;border-bottom:1px dashed rgba(58,11,20,.16)}
+.dish-top{display:flex;align-items:baseline;gap:12px}
+.dish-n{font-family:'Cormorant Garamond',serif;font-size:23px;line-height:1.15}
+.dish-top i{flex:1;min-width:20px;border-bottom:2px dotted rgba(58,11,20,.28);translate:0 -5px}
+.dish-p{font-family:'Cormorant Garamond',serif;font-size:22px;color:#B3262E;white-space:nowrap;font-variant-numeric:tabular-nums}
+.dish-d{display:block;font-size:14px;color:#876A6C;margin-top:3px}
+.mk-card.m .dish-n{font-size:20px}.mk-card.m .dish-p{font-size:19px}.mk-card.m .dish-d{font-size:13px}
+.mk-badge{position:absolute;z-index:3;left:-56px;bottom:80px;width:150px;aspect-ratio:1;border-radius:50%;background:#F5B800;color:#3A0B14;display:grid;place-items:center;box-shadow:0 24px 50px rgba(58,11,20,.3)}
+.mk-badge svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 22s linear infinite}
+.mk-badge text{font-size:8.6px;font-weight:500;fill:#3A0B14;font-family:'Instrument Sans',sans-serif}
+.mk-badge .script{font-size:34px;line-height:1;color:#5B0A19}
+#kaart-m .mk-badge{position:relative;left:auto;bottom:auto;width:112px;margin:-86px 26px 0 auto}
+#kaart-m .mk-badge .script{font-size:26px}
+@media (prefers-reduced-motion: reduce){.mk-badge svg{animation:none}}
 </style>
 <script>
 // reload always starts at the top of the landing page (drops #section from the URL on reload)
@@ -511,59 +573,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 </section>
 <div class="stamp up" aria-hidden="true"></div>
 
-<section id="menus" class="paper" style="padding: 40px 5vw 140px">
-<div style="max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; gap: 64px">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 22px; text-align: center">
-<span class="script rv" style="font-size: 48px; line-height: 0.8; color: #B3262E">Luca's Kitchen Menu</span>
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: clamp(46px, 5vw, 80px); line-height: 0.95; text-transform: uppercase">
-<span class="ln"><span>Kies hoe lang</span></span>
-<span class="ln"><span style="transition-delay: .12s">je avond duurt</span></span>
-</h2>
-</div>
-<div style="width: 100%; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 22px">
-<article class="rv" style="border: 1px solid rgba(58,11,20,0.18); background: rgba(255,255,255,0.25); display: flex; flex-direction: column">
-<div class="zoom" style="height: 260px; clip-path: ellipse(90% 100% at 50% 0%)"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div style="padding: 26px 24px 28px; display: flex; flex-direction: column; gap: 22px; flex: 1">
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 34px; line-height: 1; text-transform: uppercase">Vier gangen</h3>
-<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px dashed rgba(58,11,20,0.25)">
-<div style="display: flex; gap: 28px">
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">GANGEN</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">4</span></div>
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">PRIJS</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">€&nbsp;74</span></div>
-</div>
-<a class="btn" href="#reserveren" data-keuze="4">Reserveer</a>
-</div>
-<p style="margin: 0; font-size: 15px; color: #6B4A4E">De kaart van het seizoen, gang voor gang. Laat je verrassen door de keuken.</p>
-</div>
-</article>
-<article class="rv" style="border: 1px solid rgba(58,11,20,0.18); background: rgba(255,255,255,0.25); display: flex; flex-direction: column; transition-delay: .1s">
-<div class="zoom" style="height: 260px; clip-path: ellipse(90% 100% at 50% 0%)"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div style="padding: 26px 24px 28px; display: flex; flex-direction: column; gap: 22px; flex: 1">
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 34px; line-height: 1; text-transform: uppercase">Zes gangen</h3>
-<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px dashed rgba(58,11,20,0.25)">
-<div style="display: flex; gap: 28px">
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">GANGEN</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">6</span></div>
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">PRIJS</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">€&nbsp;98</span></div>
-</div>
-<a class="btn" href="#reserveren" data-keuze="6">Reserveer</a>
-</div>
-<p style="margin: 0; font-size: 15px; color: #6B4A4E">Het hele verhaal van Luca op tafel. Ook als proeverij van negen gangen, vraag ernaar.</p>
-</div>
-</article>
-<article class="rv" style="border: 1px solid rgba(58,11,20,0.18); background: rgba(255,255,255,0.25); display: flex; flex-direction: column; transition-delay: .2s">
-<div class="zoom" style="height: 260px; clip-path: ellipse(90% 100% at 50% 0%)"><img src="media/muur.webp" alt="De eetzaal met zwart-witportretten aan de muur" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div style="padding: 26px 24px 28px; display: flex; flex-direction: column; gap: 22px; flex: 1">
-<h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 34px; line-height: 1; text-transform: uppercase">De Huiskamer</h3>
-<div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding-bottom: 20px; border-bottom: 1px dashed rgba(58,11,20,0.25)">
-<div style="display: flex; gap: 28px">
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">GASTEN</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">tot 12</span></div>
-<div style="display: flex; flex-direction: column"><span style="font-size: 11px; letter-spacing: .14em; color: #9A7F7F">VOOR</span><span style="font-family: 'Cormorant Garamond', serif; font-size: 24px">Privé</span></div>
-</div>
-<a class="btn" href="#reserveren" data-keuze="huis">Aanvragen</a>
-</div>
-<p style="margin: 0; font-size: 15px; color: #6B4A4E">Een eigen ruimte voor verjaardagen en zakendiners. Luca verzorgt ook catering en bruiloften.</p>
-</div>
-</article>
-</div>
+<section id="menus" class="paper mcs">
+<div class="mc-head"><span class="script rv">Luca's Kitchen Menu</span><h2><span class="ln"><span>Kies hoe lang</span></span><span class="ln"><span style="transition-delay: .12s">je avond <em>duurt</em></span></span></h2></div>
+<div class="mc-grid"><article class="mc rv" style="transition-delay: 0s"><div class="mc-img zoom"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf"></div><span class="mc-price"><small>4 gangen</small>€&nbsp;74</span><div class="mc-body"><span class="mc-k">Luca's Kitchen Menu</span><h3>Vier gangen</h3><div class="mc-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p>De kaart van het seizoen, gang voor gang. Laat je verrassen door de keuken.</p><a class="btn" href="#reserveren" data-keuze="4">Reserveer</a></div></article>
+<article class="mc rv feat" style="transition-delay: 0.1s"><div class="mc-img zoom"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand"></div><span class="mc-tag">Ook als 9 gangen</span><span class="mc-price"><small>6 gangen</small>€&nbsp;98</span><div class="mc-body"><span class="mc-k">Luca's Kitchen Menu</span><h3>Zes gangen</h3><div class="mc-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><p>Het hele verhaal van Luca op tafel. Ook als proeverij van negen gangen, vraag ernaar.</p><a class="btn sun" href="#reserveren" data-keuze="6">Reserveer</a></div></article>
+<article class="mc rv" style="transition-delay: 0.2s"><div class="mc-img zoom"><img src="media/muur.webp" alt="De eetzaal met zwart-witportretten aan de muur"></div><span class="mc-price"><small>tot</small>12</span><div class="mc-body"><span class="mc-k">Privé dineren</span><h3>De Huiskamer</h3><div class="mc-dots" aria-hidden="true"><b>✿</b></div><p>Een eigen ruimte voor verjaardagen en zakendiners. Luca verzorgt ook catering en bruiloften.</p><a class="btn" href="#reserveren" data-keuze="huis">Aanvragen</a></div></article>
 </div>
 </section>
 
@@ -576,23 +590,16 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <span class="ln"><span style="transition-delay: .12s">van Luca</span></span>
 </h2>
 <p class="rv" style="margin: 0; max-width: 420px; color: #6B4A4E">Verse pasta, elke dag gemaakt. Bijgerechten bij je hoofdgerecht zijn €&nbsp;7,50. Allergieën of wensen? Zet het bij je reservering.</p>
-<div class="rv" role="group" aria-label="Kies een deel van de kaart" style="display: flex; flex-wrap: wrap; gap: 6px 26px; margin-top: 10px; border-bottom: 1px solid rgba(58,11,20,0.14)">
+<div class="mk-card rv"><div class="mk-orn" aria-hidden="true">✿</div><div class="pills" role="group" aria-label="Kies een deel van de kaart">
 <template class="tpl-tab">
 <button type="button" class="tab" data-cat="{{c.key}}" aria-pressed="{{c.pressed}}">{{c.label}}</button>
 </template>
 </div>
-<div style="display: flex; flex-direction: column">
+<div class="mk-list">
 <template class="tpl-dish">
-<div class="fade" style="animation-delay: {{d.delay}}s">
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 24px; padding: 18px 4px; border-bottom: 1px solid rgba(58,11,20,0.12)">
-<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
-<span style="font-size: 16px; font-weight: 500">{{d.name}}</span>
-<span style="font-size: 14px; color: #876A6C">{{d.desc}}</span>
-</div>
-<span style="font-size: 16px; white-space: nowrap; font-variant-numeric: tabular-nums">{{d.price}}</span>
-</div>
-</div>
+<div class="fade dish" style="animation-delay: {{d.delay}}s"><div class="dish-top"><span class="dish-n">{{d.name}}</span><i aria-hidden="true"></i><span class="dish-p">{{d.price}}</span></div><span class="dish-d">{{d.desc}}</span></div>
 </template>
+</div>
 </div>
 <a class="btn" href="https://cdn.website.dish.co/media/90/64/9672356/Menu-restaurant.pdf" style="align-self: flex-start; margin-top: 12px">Volledige kaart <span class="ar" aria-hidden="true">→</span></a>
 </div>
@@ -600,6 +607,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <div class="cl" data-zoom="1" style="height: min(720px, 82vh); border-radius: 999px 999px 999px 999px / 380px 380px 380px 380px; overflow: hidden; background: #5B0A19">
 <video data-src="media/plating.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
+<div class="mk-badge" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="mkc1" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text><textPath href="#mkc1" textLength="236" lengthAdjust="spacing">PASTA FRESCA ° OGNI GIORNO ° FATTA IN CASA °</textPath></text></svg><span class="script">Luca</span></div>
 </div>
 </div>
 </section>
@@ -763,34 +771,12 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 </section>
 <div class="stamp up" aria-hidden="true"></div>
 
-<section id="menus-m" class="paper" style="padding: 24px 20px 90px; display: flex; flex-direction: column; gap: 36px">
-<div style="display: flex; flex-direction: column; align-items: center; gap: 18px; text-align: center">
-<span class="script rv" style="font-size: 42px; line-height: 0.8; color: #B3262E">Luca's Kitchen Menu</span>
-<h2 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 46px; line-height: 0.95; text-transform: uppercase">
-<span class="ln"><span>Kies hoe lang</span></span>
-<span class="ln"><span style="transition-delay: .12s">je avond duurt</span></span>
-</h2>
-</div>
-<article class="rv" style="border: 1px solid rgba(58,11,20,0.18); background: rgba(255,255,255,0.25)">
-<div style="height: 200px; overflow: hidden; clip-path: ellipse(90% 100% at 50% 0%)"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div style="padding: 20px 18px 22px; display: flex; flex-direction: column; gap: 16px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; line-height: 1; text-transform: uppercase">Vier gangen</h3><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px">€&nbsp;74</span></div>
-<p style="margin: 0; font-size: 14px; color: #6B4A4E">De kaart van het seizoen, gang voor gang.</p>
-<a class="btn" href="#reserveren-m" data-keuze="4">Reserveer dit menu</a>
-</div>
-</article>
-<article class="rv" style="border: 1px solid rgba(58,11,20,0.18); background: rgba(255,255,255,0.25)">
-<div style="height: 200px; overflow: hidden; clip-path: ellipse(90% 100% at 50% 0%)"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand" style="width: 100%; height: 100%; object-fit: cover; display: block"></div>
-<div style="padding: 20px 18px 22px; display: flex; flex-direction: column; gap: 16px">
-<div style="display: flex; justify-content: space-between; align-items: baseline"><h3 style="margin: 0; font-family: 'Cormorant Garamond', serif; font-weight: 400; font-size: 30px; line-height: 1; text-transform: uppercase">Zes gangen</h3><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px">€&nbsp;98</span></div>
-<p style="margin: 0; font-size: 14px; color: #6B4A4E">Het hele verhaal van Luca op tafel. Ook als proeverij van negen gangen.</p>
-<a class="btn" href="#reserveren-m" data-keuze="6">Reserveer dit menu</a>
-</div>
-</article>
-<a class="rv" href="#reserveren-m" data-keuze="huis" style="text-decoration: none; display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 20px 0; border-top: 1px solid rgba(58,11,20,0.18); border-bottom: 1px solid rgba(58,11,20,0.18)">
-<span style="display: flex; flex-direction: column"><span style="font-family: 'Cormorant Garamond', serif; font-size: 26px; text-transform: uppercase; line-height: 1.1">De Huiskamer</span><span style="font-size: 14px; color: #6B4A4E">Eigen ruimte tot 12 gasten</span></span>
-<span aria-hidden="true" style="font-size: 20px">→</span>
-</a>
+<section id="menus-m" class="paper mcs">
+<div class="mc-head"><span class="script rv">Luca's Kitchen Menu</span><h2><span class="ln"><span>Kies hoe lang</span></span><span class="ln"><span style="transition-delay: .12s">je avond <em>duurt</em></span></span></h2></div>
+<div class="mc-row"><article class="mc rv" style="transition-delay: 0s"><div class="mc-img zoom"><img src="media/pasta.webp" alt="Pasta en gamba's van bovenaf"></div><span class="mc-price"><small>4 gangen</small>€&nbsp;74</span><div class="mc-body"><span class="mc-k">Luca's Kitchen Menu</span><h3>Vier gangen</h3><div class="mc-dots" aria-hidden="true"><i></i><i></i><i></i><i></i></div><p>De kaart van het seizoen, gang voor gang. Laat je verrassen door de keuken.</p><a class="btn" href="#reserveren-m" data-keuze="4">Reserveer</a></div></article>
+<article class="mc rv feat" style="transition-delay: 0.1s"><div class="mc-img zoom"><img src="media/bord.webp" alt="Tonijngerecht op een bord met gouden rand"></div><span class="mc-tag">Ook als 9 gangen</span><span class="mc-price"><small>6 gangen</small>€&nbsp;98</span><div class="mc-body"><span class="mc-k">Luca's Kitchen Menu</span><h3>Zes gangen</h3><div class="mc-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div><p>Het hele verhaal van Luca op tafel. Ook als proeverij van negen gangen, vraag ernaar.</p><a class="btn sun" href="#reserveren-m" data-keuze="6">Reserveer</a></div></article>
+<article class="mc rv" style="transition-delay: 0.2s"><div class="mc-img zoom"><img src="media/muur.webp" alt="De eetzaal met zwart-witportretten aan de muur"></div><span class="mc-price"><small>tot</small>12</span><div class="mc-body"><span class="mc-k">Privé dineren</span><h3>De Huiskamer</h3><div class="mc-dots" aria-hidden="true"><b>✿</b></div><p>Een eigen ruimte voor verjaardagen en zakendiners. Luca verzorgt ook catering en bruiloften.</p><a class="btn" href="#reserveren-m" data-keuze="huis">Aanvragen</a></div></article>
+</div><p class="mc-hint" aria-hidden="true">Swipe voor meer →</p>
 </section>
 
 <section id="kaart-m" class="paper" style="padding: 10px 0 90px; display: flex; flex-direction: column; gap: 26px">
@@ -805,25 +791,19 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <div class="cl" data-zoom="1" style="margin: 0 20px; height: 300px; border-radius: 200px 200px 0 0; overflow: hidden; background: #5B0A19">
 <video data-src="media/plating-m.mp4" poster="media/plating.jpg" autoplay="" muted="" loop="" playsinline="" aria-hidden="true" style="width: 100%; height: 100%; object-fit: cover; display: block"></video>
 </div>
-<div class="tabs" role="group" aria-label="Kies een deel van de kaart" style="display: flex; gap: 22px; overflow-x: auto; padding: 0 20px; border-bottom: 1px solid rgba(58,11,20,0.14); margin: 0 20px; padding: 0">
+<div class="mk-badge" aria-hidden="true"><svg viewBox="0 0 100 100"><defs><path id="mkc2" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0"/></defs><text><textPath href="#mkc2" textLength="236" lengthAdjust="spacing">PASTA FRESCA ° OGNI GIORNO ° FATTA IN CASA °</textPath></text></svg><span class="script">Luca</span></div>
+<div class="mk-card m"><div class="mk-orn" aria-hidden="true">✿</div><div class="pills tabs" role="group" aria-label="Kies een deel van de kaart">
 <template class="tpl-tab">
 <button type="button" class="tab" data-cat="{{c.key}}" aria-pressed="{{c.pressed}}">{{c.label}}</button>
 </template>
 </div>
-<div style="padding: 0 20px; display: flex; flex-direction: column">
+<div class="mk-list">
 <template class="tpl-dish">
-<div class="fade" style="animation-delay: {{d.delay}}s">
-<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 16px; padding: 15px 0; border-bottom: 1px solid rgba(58,11,20,0.12)">
-<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
-<span style="font-size: 15px; font-weight: 500">{{d.name}}</span>
-<span style="font-size: 13px; color: #876A6C">{{d.desc}}</span>
-</div>
-<span style="font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums">{{d.price}}</span>
-</div>
-</div>
+<div class="fade dish" style="animation-delay: {{d.delay}}s"><div class="dish-top"><span class="dish-n">{{d.name}}</span><i aria-hidden="true"></i><span class="dish-p">{{d.price}}</span></div><span class="dish-d">{{d.desc}}</span></div>
 </template>
-<a class="btn" href="https://cdn.website.dish.co/media/90/64/9672356/Menu-restaurant.pdf" style="margin-top: 22px">Volledige kaart</a>
 </div>
+</div>
+<a class="btn" href="https://cdn.website.dish.co/media/90/64/9672356/Menu-restaurant.pdf" style="margin: 0 20px">Volledige kaart</a>
 </section>
 
 <section class="sole" aria-labelledby="sole-t-m">
