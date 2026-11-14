@@ -170,16 +170,19 @@ details.card[open]>summary{margin-bottom:16px}
   var dayLabel = function (d) { var x = new Date(d + 'T12:00'); return (d === today ? 'Vandaag, ' : '') + DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; };
 
   function toast(t, bad) { var e = q('.js-toast'); e.textContent = t; e.className = 'toast js-toast on' + (bad ? ' bad' : ''); clearTimeout(toast.t); toast.t = setTimeout(function () { e.className = 'toast js-toast'; }, 2600); }
-  function api(path, opt) {
-    opt = opt || {};
-    return fetch(API + path, { method: opt.method || 'GET', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + pin }, body: opt.body ? JSON.stringify(opt.body) : undefined })
-      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (r.status === 401) { logout(d.error); throw new Error(d.error); } if (!r.ok) throw new Error(d.error || 'Fout ' + r.status); return d; }); });
+  // all admin calls are text/plain POSTs with the PIN in the body (Google Apps Script allows no custom headers)
+  function api(action, extra) {
+    if (!API) return Promise.reject(new Error('De app is nog niet gekoppeld aan Google'));
+    var body = Object.assign({ action: action, pin: pin }, extra || {});
+    return fetch(API, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) { if (d.auth === false) { logout(d.error); throw new Error(d.error); } if (d.error) throw new Error(d.error); return d; });
   }
 
   // login
   q('.js-login-form').addEventListener('submit', function (e) {
     e.preventDefault(); pin = e.target.pin.value.trim();
-    api('/api/check').then(start).catch(function (err) { q('.js-login-err').textContent = err.message === 'Failed to fetch' ? 'Geen verbinding met de server' : err.message; });
+    api('check').then(start).catch(function (err) { q('.js-login-err').textContent = err.message === 'Failed to fetch' ? 'Geen verbinding met de server' : err.message; });
   });
   function logout(msg) { pin = ''; sessionStorage.removeItem('gs-pin'); q('.js-app').hidden = true; q('.js-login').hidden = false; q('.js-login-err').textContent = msg || ''; q('.js-login-form').pin.value = ''; }
   q('.js-logout').addEventListener('click', function () { logout(); });
@@ -204,7 +207,7 @@ details.card[open]>summary{margin-bottom:16px}
 
   // reservations
   function loadRes(quiet) {
-    api('/api/reserveringen').then(function (r) {
+    api('lijst').then(function (d) { var r = d.lijst;
       var before = S.res.filter(function (x) { return x.status === 'nieuw'; }).length, now = r.filter(function (x) { return x.status === 'nieuw'; }).length;
       S.res = r; renderRes();
       if (quiet && now > before) toast('Nieuwe reservering binnen');
@@ -241,8 +244,8 @@ details.card[open]>summary{margin-bottom:16px}
     var b = e.target.closest('[data-st]'); if (!b) return;
     if (b.dataset.st === 'afgewezen' && !confirm('Deze reservering afwijzen? Laat het de gast ook even weten.')) return;
     b.disabled = true;
-    api('/api/reserveringen/' + b.dataset.id, { method: 'PATCH', body: { status: b.dataset.st } }).then(function () {
-      S.res.forEach(function (x) { if (x.id === +b.dataset.id) x.status = b.dataset.st; }); renderRes();
+    api('status', { id: b.dataset.id, status: b.dataset.st }).then(function () {
+      S.res.forEach(function (x) { if (String(x.id) === b.dataset.id) x.status = b.dataset.st; }); renderRes();
       toast(b.dataset.st === 'bevestigd' ? 'Bevestigd' : 'Afgewezen');
     }).catch(function (err) { b.disabled = false; toast(err.message, true); });
   });
@@ -254,7 +257,7 @@ details.card[open]>summary{margin-bottom:16px}
 
   // site content (menu + acties)
   function loadSite() {
-    fetch(API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+    fetch(API + '?action=site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
       S.menu = d.menu || { voor: [], pasta: [], hoofd: [], pizza: [] }; S.acties = d.acties || []; S.dirty = false;
       renderActs(); renderMenu();
     }).catch(function () { toast('Geen verbinding met de server', true); });
@@ -316,16 +319,16 @@ details.card[open]>summary{margin-bottom:16px}
   q('.js-save').addEventListener('click', function () {
     var b = this; b.disabled = true;
     var req = S.tab === 'menu'
-      ? api('/api/menu', { method: 'PUT', body: S.menu })
-      : api('/api/acties', { method: 'PUT', body: S.acties.map(function (a) { var c = Object.assign({}, a); delete c._open; c.titel = c.titel.filter(Boolean); return c; }) });
+      ? api('menu', { data: S.menu })
+      : api('acties', { data: S.acties.map(function (a) { var c = Object.assign({}, a); delete c._open; c.titel = c.titel.filter(Boolean); return c; }) });
     req.then(function () { S.dirty = false; toast('Opgeslagen. De website is bijgewerkt.'); if (S.tab === 'act') { keepOpen(); var o = S.acties.map(function (a) { return a._open; }); loadSiteKeep(o); } })
       .catch(function (err) { toast(err.message, true); })
       .then(function () { b.disabled = false; });
   });
-  function loadSiteKeep(open) { fetch(API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { S.acties = (d.acties || []).map(function (a, i) { a._open = open[i]; return a; }); renderActs(); }); }
+  function loadSiteKeep(open) { fetch(API + '?action=site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { S.acties = (d.acties || []).map(function (a, i) { a._open = open[i]; return a; }); renderActs(); }); }
   window.addEventListener('beforeunload', function (e) { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
 
-  if (pin) api('/api/check').then(start).catch(function () {});
+  if (pin) api('check').then(start).catch(function () {});
 })();
 </script>
 </body>

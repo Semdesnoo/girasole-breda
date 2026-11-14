@@ -1,5 +1,5 @@
 // Browser flow: website booking -> visible in beheer app; app menu edit -> visible on website.
-// Needs: wrangler dev on :8787, http.server on :8767, headless Chrome on :9333.
+// Needs: node api/dev-server.mjs on :8787, http.server on :8767, headless Chrome on :9333.
 const SH = process.env.SHOTS || '.', PIN = process.env.PIN || '246810', W = +(process.env.W || 390);
 const ws = new WebSocket((await (await fetch('http://127.0.0.1:9333/json')).json()).find(t => t.type === 'page').webSocketDebuggerUrl);
 await new Promise(r => ws.onopen = r); let id = 0; const pend = {};
@@ -55,6 +55,6 @@ await ev(`document.querySelector('.pop-d[open]')?.close(); document.querySelecto
 ok(await ev(`[...document.querySelectorAll('.dish')].some(d=>d.textContent.includes('Margherita')&&d.textContent.includes('15,50'))`), 'website shows price from app');
 
 // restore price
-await ev(`fetch('http://127.0.0.1:8787/api/site').then(r=>r.json()).then(d=>{d.menu.pizza[0][2]='14,50';return fetch('http://127.0.0.1:8787/api/menu',{method:'PUT',headers:{'content-type':'application/json',authorization:'Bearer ${PIN}'},body:JSON.stringify(d.menu)})}).then(r=>r.status)`);
+await ev(`fetch('http://127.0.0.1:8787?action=site').then(r=>r.json()).then(d=>{d.menu.pizza[0][2]='14,50';return fetch('http://127.0.0.1:8787',{method:'POST',headers:{'content-type':'text/plain'},body:JSON.stringify({action:'menu',pin:'${PIN}',data:d.menu})})}).then(r=>r.status)`);
 await cdp('Emulation.clearDeviceMetricsOverride');
 console.log(fails ? `${fails} FAILED` : 'ALL PASS'); ws.close(); process.exit(fails ? 1 : 0);

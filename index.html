@@ -497,7 +497,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <script>
 // live content from the Girasole app (menu + acties); null when the API isn't configured or unreachable
 window.GS_API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://127.0.0.1:8787' : document.documentElement.dataset.api;
-window.GS_SITE = window.GS_API ? fetch(GS_API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }) : Promise.resolve(null);
+window.GS_SITE = window.GS_API ? fetch(GS_API + '?action=site', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) { return d && !d.error ? d : null; }).catch(function () { return null; }) : Promise.resolve(null);
 </script>
 <div class="v-desk">
 
@@ -1281,9 +1281,11 @@ window.GS_SITE = window.GS_API ? fetch(GS_API + '/api/site', { cache: 'no-store'
       var err = form.querySelector('.form-err');
       if (err) err.remove();
       var data = Object.fromEntries(new FormData(form));
-      data.personen = parseInt(data.personen, 10);
+      data.personen = parseInt(data.personen, 10); data.action = 'reserveer';
       (GS_API
-        ? fetch(GS_API + '/api/reserveringen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        // text/plain keeps it a "simple" request: Google Apps Script has no CORS preflight
+        ? fetch(GS_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
+            .then(function (r) { return r.json().then(function (d) { if (d.error) throw new Error(d.error); return { ok: true }; }); })
         : fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
       ).then(function (res) {
         if (!res.ok) return res.json().catch(function () { return {}; }).then(function (d) { throw new Error(d.error || ''); });

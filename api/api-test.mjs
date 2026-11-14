@@ -1,58 +1,54 @@
-// End-to-end check of the Girasole API against `wrangler dev` (default http://127.0.0.1:8787).
-// Usage: PIN=246810 node api/api-test.mjs
-import { checkBooking } from './worker.js';
-
+// End-to-end check of api/Code.gs via the local stand-in (api/dev-server.mjs) or a real
+// Apps Script /exec URL.  Usage: PIN=246810 node api/api-test.mjs   (API=<exec url> for the real one)
 const A = process.env.API || 'http://127.0.0.1:8787', PIN = process.env.PIN || '246810';
-const ORIGIN = 'http://127.0.0.1:8767';
+const LOCAL = A.startsWith('http://127.0.0.1');
 let fails = 0;
 const ok = (c, n, x = '') => { if (!c) fails++; console.log((c ? 'PASS ' : 'FAIL ') + n, x); };
-const call = async (path, { method = 'GET', body, pin } = {}) => {
-  const r = await fetch(A + path, { method, headers: { 'content-type': 'application/json', origin: ORIGIN, ...(pin ? { authorization: 'Bearer ' + pin } : {}) }, body: body ? JSON.stringify(body) : undefined });
-  return { s: r.status, d: await r.json().catch(() => null), cors: r.headers.get('access-control-allow-origin') };
-};
+const post = async body => (await fetch(A, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })).json();
+const get = async q => (await fetch(A + q)).json();
 const iso = d => d.toISOString().slice(0, 10);
-const future = () => { const d = new Date(); d.setUTCDate(d.getUTCDate() + 9); while (d.getUTCDay() === 1) d.setUTCDate(d.getUTCDate() + 1); return iso(d); };
+const day = n => { const d = new Date(); d.setUTCDate(d.getUTCDate() + n); while (d.getUTCDay() === 1) d.setUTCDate(d.getUTCDate() + 1); return iso(d); };
+const monday = () => { const d = new Date(); d.setUTCDate(d.getUTCDate() + 3); while (d.getUTCDay() !== 1) d.setUTCDate(d.getUTCDate() + 1); return iso(d); };
+const good = { action: 'reserveer', dag: day(9), tijd: '19:15', personen: 4, keuze: 'À la carte', naam: 'Anna', telefoon: '0612345678', email: 'a@b.nl' };
 
-// pure validation
-const now = '2026-11-10', good = { dag: '2026-11-12', tijd: '19:15', personen: 4, naam: 'Anna', telefoon: '06 1234 5678', email: 'a@b.nl' };
-ok(checkBooking(good, now) === null, 'valid booking accepted');
-ok(checkBooking({ ...good, tijd: '20:15' }, now), 'after 20:00 rejected');
-ok(checkBooking({ ...good, tijd: '18:10' }, now), 'non-quarter time rejected');
-ok(checkBooking({ ...good, dag: '2026-11-16' }, now), 'monday rejected');
-ok(checkBooking({ ...good, dag: '2026-11-09' }, now), 'past rejected');
-ok(checkBooking({ ...good, personen: 13 }, now), '13 persons rejected');
-ok(checkBooking({ ...good, email: 'nope' }, now), 'bad email rejected');
+const site = await get('?action=site');
+ok(site.menu && site.menu.voor.length > 0 && site.acties.length > 0, 'site content (menu + acties)', site.menu && site.menu.voor.length);
 
-// live API
-const site = await call('/api/site');
-ok(site.s === 200 && site.d.menu && site.d.menu.voor.length > 0 && site.cors === ORIGIN, 'site content + CORS', site.d && site.d.menu && site.d.menu.voor.length);
-ok((await call('/api/reserveringen')).s === 401, 'list without PIN refused');
-ok((await call('/api/check', { pin: '000000' })).s === 401, 'wrong PIN refused');
-ok((await call('/api/reserveringen', { method: 'POST', body: { ...good, dag: future(), tijd: '21:00' } })).s === 400, 'API rejects 21:00');
-const dag = future();
-const b = await call('/api/reserveringen', { method: 'POST', body: { ...good, dag, naam: 'Test <script>', personen: '4' } });
-ok(b.s === 201 && b.d.id, 'booking stored', JSON.stringify(b.d));
-const list = await call('/api/reserveringen', { pin: PIN });
-const mine = list.d.find(x => x.id === b.d.id);
-ok(mine && mine.status === 'nieuw' && mine.personen === 4 && mine.dag === dag, 'booking visible in app');
-ok((await call('/api/reserveringen/' + b.d.id, { method: 'PATCH', pin: PIN, body: { status: 'bevestigd' } })).s === 200, 'confirm booking');
-ok((await call('/api/reserveringen', { pin: PIN })).d.find(x => x.id === b.d.id).status === 'bevestigd', 'status saved');
-ok((await call('/api/reserveringen/' + b.d.id, { method: 'PATCH', pin: PIN, body: { status: 'weg' } })).s === 400, 'bad status refused');
+for (const [bad, name] of [[{ tijd: '20:15' }, 'after 20:00'], [{ tijd: '18:10' }, 'non-quarter time'], [{ dag: monday() }, 'monday'],
+  [{ dag: '2020-01-01' }, 'past date'], [{ personen: 13 }, '13 persons'], [{ email: 'nope' }, 'bad email'], [{ telefoon: 'abc' }, 'bad phone']])
+  ok((await post({ ...good, ...bad })).error, name + ' rejected');
 
-const menu = site.d.menu;
-ok((await call('/api/menu', { method: 'PUT', pin: PIN, body: { ...menu, pizza: [['Test', '', '€ 12']] } })).s === 400, 'bad price refused');
-const pizza = [...menu.pizza, ['Pizza Test', 'Alleen voor de test', '12,50']];
-ok((await call('/api/menu', { method: 'PUT', pin: PIN, body: { ...menu, pizza } })).s === 200, 'menu saved');
-ok((await call('/api/site')).d.menu.pizza.some(d => d[0] === 'Pizza Test'), 'site shows new dish');
-ok((await call('/api/menu', { method: 'PUT', pin: PIN, body: menu })).s === 200, 'menu restored');
+ok((await post({ action: 'lijst' })).auth === false, 'list without PIN refused');
+ok((await post({ action: 'check', pin: '000000' })).auth === false, 'wrong PIN refused');
 
-const acties = site.d.acties;
-ok((await call('/api/acties', { method: 'PUT', pin: PIN, body: [{ titel: [] }] })).s === 400, 'actie without title refused');
-const pasen = { actief: true, van: '2027-03-20', tot: '2027-04-05', titel: ['Buona', 'Pasqua'], tekst: 'Pasen bij Luca.', knop: 'Reserveer', afbeelding: 'media/../../x.jpg' };
-ok((await call('/api/acties', { method: 'PUT', pin: PIN, body: [...acties, pasen] })).s === 200, 'actie saved');
-const saved = (await call('/api/site')).d.acties.find(a => a.titel[1] === 'Pasqua');
-ok(saved && saved.afbeelding === 'media/interieur.webp' && saved.id, 'path-traversal image replaced, id assigned');
-ok((await call('/api/acties', { method: 'PUT', pin: PIN, body: acties })).s === 200, 'acties restored');
+const b = await post({ ...good, naam: 'Test <b>', personen: '4' });
+ok(b.ok && b.id, 'booking stored', JSON.stringify(b));
+const mine = (await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id);
+ok(mine && mine.status === 'nieuw' && mine.personen === 4 && mine.dag === good.dag && mine.tijd === '19:15' && mine.telefoon === '0612345678', 'booking listed with exact values', JSON.stringify(mine));
+ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'bevestigd' })).ok, 'confirm booking');
+ok((await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id).status === 'bevestigd', 'status saved');
+ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'weg' })).error, 'bad status refused');
+if (LOCAL) {
+  const m = await (await fetch(A + '/__mails')).json();
+  ok(m.length && m.at(-1).to === 'restaurant@example.nl' && m.at(-1).replyTo === 'a@b.nl' && /Test &lt;b&gt;/.test(m.at(-1).htmlBody), 'owner mailed, reply-to guest, html escaped');
+}
 
+const menu = site.menu;
+ok((await post({ action: 'menu', pin: PIN, data: { ...menu, pizza: [['Test', '', '€ 12']] } })).error, 'bad price refused');
+ok((await post({ action: 'menu', pin: PIN, data: { ...menu, pizza: [...menu.pizza, ['Pizza Test', 'Alleen voor de test', '12,50']] } })).ok, 'menu saved');
+ok((await get('?action=site')).menu.pizza.some(d => d[0] === 'Pizza Test'), 'site shows new dish');
+ok((await post({ action: 'menu', pin: PIN, data: menu })).ok, 'menu restored');
+
+const acties = site.acties;
+ok((await post({ action: 'acties', pin: PIN, data: [{ titel: [] }] })).error, 'actie without title refused');
+ok((await post({ action: 'acties', pin: PIN, data: [...acties, { actief: true, van: '2027-03-20', tot: '2027-04-05', titel: ['Buona', 'Pasqua'], tekst: 'Pasen', afbeelding: 'media/../../x.jpg' }] })).ok, 'actie saved');
+const saved = (await get('?action=site')).acties.find(a => a.titel[1] === 'Pasqua');
+ok(saved && saved.afbeelding === 'media/interieur.webp' && saved.id, 'unsafe image path replaced, id assigned');
+ok((await post({ action: 'acties', pin: PIN, data: acties })).ok, 'acties restored');
+
+if (LOCAL && process.env.LOCKOUT) { // locks the stand-in for 15 min, so opt-in
+  for (let i = 0; i < 7; i++) await post({ action: 'check', pin: '111111' });
+  ok(/Te veel/.test((await post({ action: 'check', pin: PIN })).error), 'locked after 8 wrong PINs');
+}
 console.log(fails ? `${fails} FAILED` : 'ALL PASS');
 process.exit(fails ? 1 : 0);
