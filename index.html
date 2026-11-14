@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl">
+<html lang="nl" data-api="">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -494,6 +494,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 </script>
 </head>
 <body>
+<script>
+// live content from the Girasole app (menu + acties); null when the API isn't configured or unreachable
+window.GS_API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://127.0.0.1:8787' : document.documentElement.dataset.api;
+window.GS_SITE = window.GS_API ? fetch(GS_API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }) : Promise.resolve(null);
+</script>
 <div class="v-desk">
 
 <div data-gr="1" style="background: #FDF5E1; color: #3A0B14; font-family: 'Instrument Sans', 'Helvetica Neue', sans-serif; font-size: 16px; line-height: 1.6; overflow: hidden">
@@ -886,7 +891,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 <div class="bk-sum"><b class="js-bk-k"></b><span class="js-bk-s"></span><button type="button" class="bk-edit" data-go="home">Wijzig</button></div>
 <form name="reservering" method="POST" data-netlify="true" netlify-honeypot="bot-field">
 <input type="hidden" name="form-name" value="reservering"><p hidden><label>Niet invullen <input name="bot-field"></label></p>
-<input type="hidden" name="datum"><input type="hidden" name="tijd"><input type="hidden" name="personen"><input type="hidden" name="keuze">
+<input type="hidden" name="dag"><input type="hidden" name="datum"><input type="hidden" name="tijd"><input type="hidden" name="personen"><input type="hidden" name="keuze">
 <label>Naam<input type="text" name="naam" autocomplete="name" required minlength="2"></label>
 <label>Telefoonnummer<input type="tel" name="telefoon" autocomplete="tel" required></label>
 <label>E-mail<input type="email" name="email" autocomplete="email" required></label>
@@ -966,6 +971,7 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     q('.js-bk-k').textContent = st.l;
     q('.js-bk-s').textContent = label(st.date) + ' om ' + st.time + ', ' + st.p + (st.p === 1 ? ' persoon' : ' personen');
     f.datum.value = label(st.date) + ' ' + st.date.slice(0, 4);
+    f.dag.value = st.date;
     f.tijd.value = st.time;
     f.personen.value = st.p + (req ? ' (aanvraag)' : '');
     f.keuze.value = st.l;
@@ -1274,20 +1280,23 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
       if (btn) btn.disabled = true;
       var err = form.querySelector('.form-err');
       if (err) err.remove();
-      fetch('/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(new FormData(form)).toString()
-      }).then(function (res) {
-        if (!res.ok) throw new Error(res.status);
+      var data = Object.fromEntries(new FormData(form));
+      data.personen = parseInt(data.personen, 10);
+      (GS_API
+        ? fetch(GS_API + '/api/reserveringen', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) })
+        : fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
+      ).then(function (res) {
+        if (!res.ok) return res.json().catch(function () { return {}; }).then(function (d) { throw new Error(d.error || ''); });
         var sec = form.closest('section');
         form.setAttribute('hidden', '');
         form.style.display = 'none';
         var th = sec && sec.querySelector('.js-thanks');
         if (th) th.removeAttribute('hidden');
-      }).catch(function () {
+      }).catch(function (err) {
         if (btn) btn.disabled = false;
-        form.insertAdjacentHTML('beforeend', '<p class="form-err">Er ging iets mis. Bel ons even op 076 522 4437.</p>');
+        var p = document.createElement('p'); p.className = 'form-err';
+        p.textContent = (err && err.message ? err.message + '. ' : 'Er ging iets mis. ') + 'Lukt het niet? Bel ons op 076 522 4437.';
+        form.appendChild(p);
       });
     });
   });
@@ -1298,6 +1307,11 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
     if (hm) setTimeout(function () { hm.scrollIntoView(); }, 50);
   }
   render();
+  GS_SITE.then(function (d) {
+    if (!d || !d.menu) return;
+    Object.keys(MENU).forEach(function (k) { if (Array.isArray(d.menu[k])) MENU[k] = d.menu[k]; });
+    render();
+  });
 })();
 
 </script>
@@ -1317,9 +1331,13 @@ if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 (function () {
   var d = document.querySelector('.pop-d');
   if (!d || !d.showModal) return;
-  fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) {
-    var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' }); // yyyy-mm-dd
-    if (!c.actief || (c.van && today < c.van) || (c.tot && today > c.tot)) return;
+  var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' }); // yyyy-mm-dd
+  var live = function (c) { return c && c.actief && !(c.van && today < c.van) && !(c.tot && today > c.tot); };
+  GS_SITE.then(function (d) {
+    if (d && d.acties) return d.acties.filter(live)[0];
+    return fetch('popup.json', { cache: 'no-store' }).then(function (r) { return r.json(); });
+  }).then(function (c) {
+    if (!live(c)) return;
     var key = 'popup-gezien-' + c.id;
     try { if (localStorage.getItem(key)) return; } catch (e) {}
     var t = d.querySelector('.pop-t');

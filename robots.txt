@@ -1,4 +1,6 @@
 User-agent: *
+Disallow: /girasole-breda/beheer/
+Disallow: /beheer/
 Allow: /
 
 User-agent: Googlebot

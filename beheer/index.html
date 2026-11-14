@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="nl" data-api="">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#5B0A19">
+<title>Girasole · Beheer</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="../favicon.png">
+<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Instrument+Sans:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+:root{--wine:#5B0A19;--ink:#3A0B14;--cream:#FDF5E1;--card:#FFFBF2;--sun:#F5B800;--red:#B3262E;--muted:#876A6C;--line:rgba(58,11,20,.14)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream) url(../media/grain.png);background-size:300px;color:var(--ink);font:15px/1.5 'Instrument Sans',system-ui,sans-serif;-webkit-tap-highlight-color:transparent;min-height:100dvh}
+h1,h2,h3{font-family:'Cormorant Garamond',serif;font-weight:400;margin:0}
+.script{font-family:'Mrs Saint Delafield',cursive;color:var(--red)}
+button,input,textarea,select{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:46px;padding:0 20px;border-radius:999px;border:1px solid var(--ink);background:var(--ink);color:var(--cream);font-size:13px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;text-decoration:none}
+.btn.sun{background:var(--sun);border-color:var(--sun);color:var(--ink)}
+.btn.line{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn:disabled{opacity:.5}
+input,textarea,select{width:100%;padding:12px 14px;border:1px solid rgba(58,11,20,.22);border-radius:12px;background:var(--card);outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--wine);box-shadow:0 0 0 3px rgba(91,10,25,.12)}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+label>input,label>textarea,label>select{text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink)}
+[hidden]{display:none!important}
+
+/* login */
+.login{min-height:100dvh;display:grid;place-items:center;padding:24px;background:var(--wine);color:var(--cream)}
+.login form{width:min(360px,100%);display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
+.login h1{font-size:40px;letter-spacing:.16em}
+.login .script{font-size:46px;color:var(--sun);line-height:.6;margin-top:6px}
+.login input{text-align:center;font-size:26px;letter-spacing:.5em;background:rgba(253,245,225,.08);border-color:rgba(253,245,225,.3);color:var(--cream)}
+.login .err{color:#FFD7D7;min-height:22px;margin:0;font-size:14px}
+
+/* app shell */
+header.top{position:sticky;top:0;z-index:5;display:flex;align-items:center;justify-content:space-between;padding:calc(12px + env(safe-area-inset-top)) 20px 12px;background:var(--wine);color:var(--cream)}
+header.top h1{font-size:22px;letter-spacing:.16em}
+header.top small{display:block;font-family:'Mrs Saint Delafield',cursive;font-size:22px;color:var(--sun);line-height:.5;margin-top:4px}
+header.top button{background:none;border:0;color:#E3D0C9;font-size:13px;cursor:pointer;padding:10px}
+main{max-width:860px;margin:0 auto;padding:22px 18px calc(110px + env(safe-area-inset-bottom))}
+body.saving main{padding-bottom:calc(180px + env(safe-area-inset-bottom))}
+.sec-h{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:18px}
+.sec-h h2{font-size:38px;line-height:1;text-transform:uppercase}
+nav.tabs{position:fixed;z-index:6;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(3,1fr);background:var(--card);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+nav.tabs button{border:0;background:none;padding:10px 4px 12px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:12px;color:var(--muted);cursor:pointer;position:relative}
+nav.tabs button svg{width:24px;height:24px}
+nav.tabs button[aria-current="true"]{color:var(--wine);font-weight:600}
+nav.tabs button[aria-current="true"]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--sun)}
+.dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;line-height:18px;font-weight:600}
+
+/* filters / pills */
+.pills{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 18px;padding:0 18px}
+.pills button{flex:none;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:13px}
+.pills button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--cream)}
+
+/* reservations */
+.day{margin:26px 0 10px;display:flex;align-items:baseline;gap:10px}
+.day h3{font-size:24px}
+.day span{color:var(--muted);font-size:13px}
+.res{background:var(--card);border-radius:18px;padding:16px 16px 14px;margin-bottom:10px;box-shadow:0 1px 0 var(--line),0 18px 30px -24px rgba(58,11,20,.5);border-left:5px solid var(--sun)}
+.res.bevestigd{border-left-color:#2E7D4F}.res.afgewezen{border-left-color:#bbb;opacity:.6}
+.res-top{display:flex;align-items:center;gap:12px}
+.res-t{font-family:'Cormorant Garamond',serif;font-size:30px;line-height:1;min-width:66px}
+.res-n{flex:1;min-width:0}
+.res-n b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.res-n span{font-size:13px;color:var(--muted)}
+.badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--sun);color:var(--ink);white-space:nowrap}
+.badge.bevestigd{background:#DDEFE3;color:#1F5A37}.badge.afgewezen{background:#eee;color:#777}
+.res-x{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.res-x .btn{min-height:40px;padding:0 14px;font-size:12px;flex:1}
+.empty{text-align:center;padding:60px 20px;color:var(--muted)}
+.empty .script{font-size:44px;display:block;line-height:1}
+
+/* cards / forms */
+.card{background:var(--card);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 1px 0 var(--line),0 24px 40px -30px rgba(58,11,20,.5)}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+input[type=date]{min-width:0;padding:12px 10px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.switch{display:flex;flex-direction:row;align-items:center;justify-content:space-between;gap:12px;text-transform:none;letter-spacing:0;font-size:15px;color:var(--ink)}
+.switch input{appearance:none;width:52px;height:30px;border-radius:15px;background:#d9cbc6;position:relative;cursor:pointer;flex:none;padding:0;border:0;transition:background .2s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.switch input:checked{background:var(--wine)}.switch input:checked::after{transform:translateX(22px)}
+.act-h{display:flex;gap:12px;align-items:center}
+.act-img{width:64px;height:64px;border-radius:14px;object-fit:cover;flex:none}
+.act-h h3{font-size:24px;line-height:1.05}
+.act-h small{display:block;color:var(--muted);font-size:13px}
+.live{display:inline-block;white-space:nowrap;font-family:'Instrument Sans',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#1F5A37;background:#DDEFE3;padding:3px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.photos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.photos button{padding:0;border:3px solid transparent;border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:1;background:none}
+.photos button[aria-pressed="true"]{border-color:var(--sun)}
+.photos img{width:100%;height:100%;object-fit:cover;display:block}
+details.card>summary{list-style:none;cursor:pointer}
+details.card>summary::-webkit-details-marker{display:none}
+details.card[open]>summary{margin-bottom:16px}
+.dish{display:grid;grid-template-columns:minmax(0,1fr) 84px 40px;gap:8px;align-items:start;padding:12px 0;border-bottom:1px dashed var(--line)}
+.dish .full{grid-column:1/3}
+.dish input{padding:10px 12px}
+.del{width:40px;height:44px;border:0;background:none;color:var(--red);cursor:pointer;font-size:20px;border-radius:10px}
+.del:hover{background:rgba(179,38,46,.08)}
+.savebar{position:fixed;z-index:7;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center}
+.savebar .btn{box-shadow:0 14px 30px rgba(58,11,20,.3);flex:0 1 360px}
+.toast{position:fixed;z-index:9;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-20px);opacity:0;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:999px;font-size:14px;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1;transform:translate(-50%,0)}.toast.bad{background:var(--red)}
+@media (min-width:760px){nav.tabs{top:0;bottom:auto;left:auto;right:20px;width:420px;background:none;border:0;padding-top:env(safe-area-inset-top)}nav.tabs button{color:#E3D0C9}nav.tabs button[aria-current="true"]{color:var(--cream)}main{padding-bottom:110px}.savebar{bottom:20px}header.top{padding-right:460px}}
+</style>
+</head>
+<body>
+
+<section class="login js-login">
+<form class="js-login-form" autocomplete="off">
+<h1>GIRASOLE</h1><span class="script">Beheer</span>
+<p style="margin:10px 0 0;color:#E3D0C9">Vul de pincode van het restaurant in</p>
+<input type="password" inputmode="numeric" autocomplete="current-password" name="pin" aria-label="Pincode" required minlength="6" maxlength="12">
+<p class="err js-login-err" role="alert"></p>
+<button class="btn sun" style="width:100%">Inloggen</button>
+</form>
+</section>
+
+<div class="js-app" hidden>
+<header class="top"><div><h1>GIRASOLE</h1><small>by Luca's Kitchen</small></div><button type="button" class="js-logout">Uitloggen</button></header>
+
+<main>
+<section data-tab="res">
+<div class="sec-h"><h2>Reserveringen</h2><button class="btn line js-refresh" type="button" aria-label="Vernieuwen">↻</button></div>
+<div class="pills js-res-filter" role="group" aria-label="Filter">
+<button type="button" data-f="nieuw" aria-pressed="false">Nieuw</button><button type="button" data-f="vandaag" aria-pressed="false">Vandaag</button><button type="button" data-f="komend" aria-pressed="true">Komend</button><button type="button" data-f="alles" aria-pressed="false">Alles</button>
+</div>
+<div class="js-res"></div>
+</section>
+
+<section data-tab="act" hidden>
+<div class="sec-h"><h2>Acties</h2><button class="btn sun js-add-act" type="button">+ Nieuwe actie</button></div>
+<p style="margin:-6px 0 18px;color:var(--muted)">Een actie verschijnt als pop-up op de website, alleen tussen de datums die je kiest. Bijvoorbeeld kerst of Pasen.</p>
+<div class="js-acts"></div>
+</section>
+
+<section data-tab="menu" hidden>
+<div class="sec-h"><h2>Menukaart</h2></div>
+<div class="pills js-cats" role="group" aria-label="Onderdeel van de kaart"></div>
+<div class="card"><div class="js-dishes"></div><button class="btn line js-add-dish" type="button" style="width:100%;margin-top:14px">+ Gerecht toevoegen</button></div>
+<p style="color:var(--muted);font-size:13px">Prijs zonder €-teken, bijvoorbeeld <b>24</b> of <b>18,50</b>.</p>
+</section>
+</main>
+
+<div class="savebar js-savebar" hidden><button class="btn sun js-save" type="button">Opslaan en online zetten</button></div>
+
+<nav class="tabs" aria-label="Onderdelen">
+<button type="button" data-go="res" aria-current="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Reserveringen<span class="dot js-dot" hidden></span></button>
+<button type="button" data-go="act" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>Acties</button>
+<button type="button" data-go="menu" aria-current="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6 3v18M4 3v5a2 2 0 0 0 4 0V3M17 21V3c-2 1-3 4-3 7h3"/></svg>Menukaart</button>
+</nav>
+</div>
+<div class="toast js-toast" role="status"></div>
+
+<script>
+(function () {
+  var API = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) ? 'http://127.0.0.1:8787' : (document.documentElement.dataset.api || '');
+  var q = function (s) { return document.querySelector(s); };
+  var esc = function (t) { return String(t == null ? '' : t).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); };
+  var pin = sessionStorage.getItem('gs-pin') || '';
+  var S = { tab: 'res', f: 'komend', res: [], menu: null, acties: [], cat: 'voor', dirty: false };
+  var CATS = [['voor', 'Voorgerechten'], ['pasta', 'Pasta'], ['hoofd', 'Hoofdgerechten'], ['pizza', 'Pizza']];
+  var PHOTOS = ['interieur.webp', 'tafel.webp', 'muur.webp', 'pasta.webp', 'bord.webp', 'gerecht.webp', 'familiefoto.webp', 'film.jpg'];
+  var DG = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'], MN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+  var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+  var dayLabel = function (d) { var x = new Date(d + 'T12:00'); return (d === today ? 'Vandaag, ' : '') + DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; };
+
+  function toast(t, bad) { var e = q('.js-toast'); e.textContent = t; e.className = 'toast js-toast on' + (bad ? ' bad' : ''); clearTimeout(toast.t); toast.t = setTimeout(function () { e.className = 'toast js-toast'; }, 2600); }
+  function api(path, opt) {
+    opt = opt || {};
+    return fetch(API + path, { method: opt.method || 'GET', headers: { 'content-type': 'application/json', authorization: 'Bearer ' + pin }, body: opt.body ? JSON.stringify(opt.body) : undefined })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { if (r.status === 401) { logout(d.error); throw new Error(d.error); } if (!r.ok) throw new Error(d.error || 'Fout ' + r.status); return d; }); });
+  }
+
+  // login
+  q('.js-login-form').addEventListener('submit', function (e) {
+    e.preventDefault(); pin = e.target.pin.value.trim();
+    api('/api/check').then(start).catch(function (err) { q('.js-login-err').textContent = err.message === 'Failed to fetch' ? 'Geen verbinding met de server' : err.message; });
+  });
+  function logout(msg) { pin = ''; sessionStorage.removeItem('gs-pin'); q('.js-app').hidden = true; q('.js-login').hidden = false; q('.js-login-err').textContent = msg || ''; q('.js-login-form').pin.value = ''; }
+  q('.js-logout').addEventListener('click', function () { logout(); });
+  function start() {
+    sessionStorage.setItem('gs-pin', pin);
+    q('.js-login').hidden = true; q('.js-app').hidden = false;
+    loadRes(); loadSite();
+    clearInterval(start.t); start.t = setInterval(function () { if (!document.hidden) loadRes(true); }, 30000);
+  }
+
+  // tabs
+  function go(t) {
+    if (S.dirty && t !== S.tab && !confirm('Je hebt wijzigingen die nog niet zijn opgeslagen. Toch weggaan?')) return;
+    if (t !== S.tab) { S.dirty = false; if (S.tab !== 'res') loadSite(); }
+    S.tab = t;
+    document.querySelectorAll('[data-tab]').forEach(function (s) { s.hidden = s.dataset.tab !== t; });
+    document.querySelectorAll('[data-go]').forEach(function (b) { b.setAttribute('aria-current', b.dataset.go === t); });
+    q('.js-savebar').hidden = t === 'res'; document.body.classList.toggle('saving', t !== 'res'); window.scrollTo(0, 0);
+  }
+  document.querySelectorAll('[data-go]').forEach(function (b) { b.addEventListener('click', function () { go(b.dataset.go); }); });
+  function dirty() { S.dirty = true; }
+
+  // reservations
+  function loadRes(quiet) {
+    api('/api/reserveringen').then(function (r) {
+      var before = S.res.filter(function (x) { return x.status === 'nieuw'; }).length, now = r.filter(function (x) { return x.status === 'nieuw'; }).length;
+      S.res = r; renderRes();
+      if (quiet && now > before) toast('Nieuwe reservering binnen');
+    }).catch(function (e) { if (!quiet) toast(e.message, true); });
+  }
+  function renderRes() {
+    var n = S.res.filter(function (x) { return x.status === 'nieuw'; }).length, dot = q('.js-dot');
+    dot.hidden = !n; dot.textContent = n;
+    var list = S.res.filter(function (x) {
+      if (S.f === 'nieuw') return x.status === 'nieuw';
+      if (S.f === 'vandaag') return x.dag === today;
+      if (S.f === 'komend') return x.dag >= today;
+      return true;
+    });
+    if (S.f === 'alles') list = list.slice().reverse();
+    if (!list.length) { q('.js-res').innerHTML = '<div class="empty"><span class="script">Tutto tranquillo</span>Geen reserveringen in deze lijst.</div>'; return; }
+    var h = '', last = '';
+    list.forEach(function (x) {
+      if (x.dag !== last) {
+        last = x.dag;
+        var tot = list.filter(function (y) { return y.dag === x.dag && y.status !== 'afgewezen'; }).reduce(function (s, y) { return s + y.personen; }, 0);
+        h += '<div class="day"><h3>' + esc(dayLabel(x.dag)) + '</h3><span>' + tot + ' gasten</span></div>';
+      }
+      var lbl = { nieuw: 'Nieuw', bevestigd: 'Bevestigd', afgewezen: 'Afgewezen' }[x.status];
+      h += '<article class="res ' + x.status + '"><div class="res-top"><span class="res-t">' + esc(x.tijd) + '</span><div class="res-n"><b>' + esc(x.naam) + '</b><span>' + x.personen + (x.personen === 1 ? ' persoon' : ' personen') + ' · ' + esc(x.keuze) + '</span></div><span class="badge ' + x.status + '">' + lbl + '</span></div>'
+        + '<div class="res-x"><a class="btn line" href="tel:' + esc(x.telefoon.replace(/[^0-9+]/g, '')) + '">Bellen</a><a class="btn line" href="mailto:' + esc(x.email) + '?subject=' + encodeURIComponent('Je reservering bij Girasole') + '">Mailen</a>'
+        + (x.status !== 'bevestigd' ? '<button class="btn" data-st="bevestigd" data-id="' + x.id + '">Bevestigen</button>' : '')
+        + (x.status !== 'afgewezen' ? '<button class="btn line" data-st="afgewezen" data-id="' + x.id + '">Afwijzen</button>' : '')
+        + '</div></article>';
+    });
+    q('.js-res').innerHTML = h;
+  }
+  q('.js-res').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-st]'); if (!b) return;
+    if (b.dataset.st === 'afgewezen' && !confirm('Deze reservering afwijzen? Laat het de gast ook even weten.')) return;
+    b.disabled = true;
+    api('/api/reserveringen/' + b.dataset.id, { method: 'PATCH', body: { status: b.dataset.st } }).then(function () {
+      S.res.forEach(function (x) { if (x.id === +b.dataset.id) x.status = b.dataset.st; }); renderRes();
+      toast(b.dataset.st === 'bevestigd' ? 'Bevestigd' : 'Afgewezen');
+    }).catch(function (err) { b.disabled = false; toast(err.message, true); });
+  });
+  q('.js-res-filter').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-f]'); if (!b) return; S.f = b.dataset.f;
+    this.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); renderRes();
+  });
+  q('.js-refresh').addEventListener('click', function () { loadRes(); toast('Bijgewerkt'); });
+
+  // site content (menu + acties)
+  function loadSite() {
+    fetch(API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
+      S.menu = d.menu || { voor: [], pasta: [], hoofd: [], pizza: [] }; S.acties = d.acties || []; S.dirty = false;
+      renderActs(); renderMenu();
+    }).catch(function () { toast('Geen verbinding met de server', true); });
+  }
+
+  function live(a) { return a.actief && (!a.van || today >= a.van) && (!a.tot || today <= a.tot); }
+  function renderActs() {
+    if (!S.acties.length) { q('.js-acts').innerHTML = '<div class="empty"><span class="script">Nessuna azione</span>Nog geen acties. Maak er een aan met de gele knop.</div>'; return; }
+    q('.js-acts').innerHTML = S.acties.map(function (a, i) {
+      return '<details class="card" data-i="' + i + '"' + (a._open ? ' open' : '') + '><summary class="act-h"><img class="act-img" src="../' + esc(a.afbeelding) + '" alt=""><div style="flex:1"><h3>' + esc(a.titel.join(' ') || 'Nieuwe actie') + (live(a) ? '<span class="live">Nu online</span>' : '') + '</h3><small>' + (a.van ? esc(a.van) : '…') + ' t/m ' + (a.tot ? esc(a.tot) : '…') + (a.actief ? '' : ' · uit') + '</small></div></summary>'
+        + '<div class="stack">'
+        + '<label class="switch">Tonen op de website<input type="checkbox" data-k="actief"' + (a.actief ? ' checked' : '') + '></label>'
+        + '<div class="grid2"><label>Titel<input data-k="t0" value="' + esc(a.titel[0] || '') + '" maxlength="40" placeholder="Natale"></label><label>Tweede regel<input data-k="t1" value="' + esc(a.titel[1] || '') + '" maxlength="40" placeholder="a Girasole"></label></div>'
+        + '<label>Tekst<textarea data-k="tekst" rows="3" maxlength="300">' + esc(a.tekst) + '</textarea></label>'
+        + '<div class="grid2"><label>Vanaf<input type="date" data-k="van" value="' + esc(a.van) + '"></label><label>Tot en met<input type="date" data-k="tot" value="' + esc(a.tot) + '"></label></div>'
+        + '<label>Tekst op de knop<input data-k="knop" value="' + esc(a.knop) + '" maxlength="40"></label>'
+        + '<div><label style="margin-bottom:8px">Foto</label><div class="photos">' + PHOTOS.map(function (p) { return '<button type="button" data-photo="media/' + p + '" aria-pressed="' + (a.afbeelding === 'media/' + p) + '"><img src="../media/' + p + '" alt="" loading="lazy"></button>'; }).join('') + '</div></div>'
+        + '<button type="button" class="btn line js-del-act" style="color:var(--red)">Actie verwijderen</button>'
+        + '</div></details>';
+    }).join('');
+  }
+  q('.js-acts').addEventListener('input', function (e) {
+    var c = e.target.closest('[data-i]'), k = e.target.dataset.k; if (!c || !k) return;
+    var a = S.acties[+c.dataset.i];
+    if (k === 't0') a.titel[0] = e.target.value; else if (k === 't1') a.titel[1] = e.target.value;
+    else if (k === 'actief') a.actief = e.target.checked; else a[k] = e.target.value;
+    dirty();
+  });
+  q('.js-acts').addEventListener('click', function (e) {
+    var c = e.target.closest('[data-i]'); if (!c) return;
+    var i = +c.dataset.i, p = e.target.closest('[data-photo]');
+    if (p) { S.acties[i].afbeelding = p.dataset.photo; c.querySelectorAll('[data-photo]').forEach(function (b) { b.setAttribute('aria-pressed', b === p); }); c.querySelector('.act-img').src = '../' + p.dataset.photo; dirty(); }
+    if (e.target.closest('.js-del-act') && confirm('Deze actie verwijderen?')) { S.acties.splice(i, 1); keepOpen(); renderActs(); dirty(); }
+  });
+  q('.js-acts').addEventListener('toggle', function (e) { var c = e.target.closest('[data-i]'); if (c) S.acties[+c.dataset.i]._open = c.open; }, true);
+  function keepOpen() { document.querySelectorAll('.js-acts [data-i]').forEach(function (c) { if (S.acties[+c.dataset.i]) S.acties[+c.dataset.i]._open = c.open; }); }
+  q('.js-add-act').addEventListener('click', function () {
+    keepOpen();
+    S.acties.unshift({ id: '', actief: true, van: today, tot: '', titel: ['', ''], tekst: '', knop: 'Reserveer nu', link: '#reserveren', afbeelding: 'media/interieur.webp', _open: true });
+    renderActs(); dirty(); q('.js-acts [data-k="t0"]').focus();
+  });
+
+  function renderMenu() {
+    q('.js-cats').innerHTML = CATS.map(function (c) { return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + (c[0] === S.cat) + '">' + c[1] + ' (' + (S.menu[c[0]] || []).length + ')</button>'; }).join('');
+    var list = S.menu[S.cat] || (S.menu[S.cat] = []);
+    q('.js-dishes').innerHTML = list.length ? list.map(function (d, i) {
+      return '<div class="dish" data-d="' + i + '"><input data-k="0" value="' + esc(d[0]) + '" placeholder="Naam van het gerecht" aria-label="Naam" maxlength="80"><input data-k="2" value="' + esc(d[2]) + '" placeholder="Prijs" aria-label="Prijs in euro" inputmode="decimal" maxlength="6"><button type="button" class="del" aria-label="Verwijderen">×</button><input class="full" data-k="1" value="' + esc(d[1]) + '" placeholder="Omschrijving" aria-label="Omschrijving" maxlength="160"></div>';
+    }).join('') : '<p class="empty" style="padding:24px">Nog geen gerechten in dit onderdeel.</p>';
+  }
+  q('.js-cats').addEventListener('click', function (e) { var b = e.target.closest('[data-cat]'); if (b) { S.cat = b.dataset.cat; renderMenu(); } });
+  q('.js-dishes').addEventListener('input', function (e) { var r = e.target.closest('[data-d]'); if (!r) return; S.menu[S.cat][+r.dataset.d][+e.target.dataset.k] = e.target.value; dirty(); });
+  q('.js-dishes').addEventListener('click', function (e) {
+    var r = e.target.closest('[data-d]'); if (!r || !e.target.closest('.del')) return;
+    var d = S.menu[S.cat][+r.dataset.d];
+    if (confirm('"' + (d[0] || 'Dit gerecht') + '" van de kaart halen?')) { S.menu[S.cat].splice(+r.dataset.d, 1); renderMenu(); dirty(); }
+  });
+  q('.js-add-dish').addEventListener('click', function () { S.menu[S.cat].push(['', '', '']); renderMenu(); dirty(); var rows = document.querySelectorAll('.js-dishes [data-d]'); rows[rows.length - 1].querySelector('input').focus(); });
+
+  q('.js-save').addEventListener('click', function () {
+    var b = this; b.disabled = true;
+    var req = S.tab === 'menu'
+      ? api('/api/menu', { method: 'PUT', body: S.menu })
+      : api('/api/acties', { method: 'PUT', body: S.acties.map(function (a) { var c = Object.assign({}, a); delete c._open; c.titel = c.titel.filter(Boolean); return c; }) });
+    req.then(function () { S.dirty = false; toast('Opgeslagen. De website is bijgewerkt.'); if (S.tab === 'act') { keepOpen(); var o = S.acties.map(function (a) { return a._open; }); loadSiteKeep(o); } })
+      .catch(function (err) { toast(err.message, true); })
+      .then(function () { b.disabled = false; });
+  });
+  function loadSiteKeep(open) { fetch(API + '/api/site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { S.acties = (d.acties || []).map(function (a, i) { a._open = open[i]; return a; }); renderActs(); }); }
+  window.addEventListener('beforeunload', function (e) { if (S.dirty) { e.preventDefault(); e.returnValue = ''; } });
+
+  if (pin) api('/api/check').then(start).catch(function () {});
+})();
+</script>
+</body>
+</html>

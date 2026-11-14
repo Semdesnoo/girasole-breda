@@ -1,0 +1,16 @@
+name = "girasole-api"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+ORIGINS = "https://semdesnoo.github.io,http://127.0.0.1:8767"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "girasole"
+database_id = "LOCAL-ONLY-replace-after-wrangler-d1-create"
+
+[triggers]
+crons = ["0 4 * * *"]
+
+# Secrets (never in this file): npx wrangler secret put PIN | RESEND_KEY | MAIL_TO
