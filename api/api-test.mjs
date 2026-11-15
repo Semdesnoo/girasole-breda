@@ -32,7 +32,7 @@ if (LOCAL) {
   const m = await (await fetch(A + '/__mails')).json();
   const own = m.findLast(x => x.to === 'restaurant@example.nl'), guest = m.findLast(x => x.to === 'a@b.nl');
   ok(own && own.replyTo === 'a@b.nl' && /Test &lt;b&gt;/.test(own.htmlBody) && !/<b>Test/.test(own.htmlBody), 'owner mailed, reply-to guest, html escaped');
-  ok(guest && guest.replyTo === 'restaurant@example.nl' && /we bellen je nog even/i.test(guest.htmlBody) && /4 gasten/.test(guest.htmlBody), 'guest gets confirmation with call notice');
+  ok(guest && guest.replyTo === 'restaurant@example.nl' && /we bellen je even, of sturen je een mailtje/i.test(guest.htmlBody) && /logo-mail\.png/.test(guest.htmlBody) && /4 gasten/.test(guest.htmlBody), 'guest gets confirmation with call notice');
 }
 
 const menu = site.menu;

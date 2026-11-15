@@ -298,9 +298,8 @@ function page(preheader, rows) {
     '<div style="display:none;max-height:0;overflow:hidden">' + esc(preheader) + '</div>' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3E6D0"><tr><td align="center" style="padding:24px 12px">' +
     '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;border-radius:18px;overflow:hidden;text-align:center;color:#3A0B14">' +
-    '<tr><td style="background:#5B0A19;padding:34px 20px 28px">' +
-    '<div style="' + F + 'font-size:34px;letter-spacing:9px;color:#FDF5E1;padding-left:9px">GIRASOLE</div>' +
-    '<div style="' + F + 'font-style:italic;font-size:16px;color:#F5B800;margin-top:6px">by Luca&#39;s Kitchen</div></td></tr>' +
+    '<tr><td style="background:#FDF5E1;padding:30px 20px 26px;border-bottom:4px solid #5B0A19">' +
+    '<a href="' + SITE + '"><img src="' + SITE + 'media/logo-mail.png" width="300" alt="GIRASOLE by Luca&#39;s Kitchen" style="display:inline-block;width:300px;max-width:85%;height:auto;border:0"></a></td></tr>' +
     rows +
     '<tr><td style="background:#3A0B14;padding:22px;' + S + 'font-size:12px;line-height:1.7;color:#D6C3BD">Girasole by Luca&#39;s Kitchen · Sophiastraat 14, 4811 EK Breda<br>' +
     '<a href="tel:+31765224437" style="color:#F5B800;text-decoration:none">076 522 4437</a> · <a href="' + SITE + '" style="color:#F5B800;text-decoration:none">girasole website</a></td></tr>' +
@@ -314,13 +313,14 @@ function details(b) {
 }
 
 function mailGast(b, id, replyTo) {
-  var html = page('We bellen je nog even om je tafel te bevestigen.',
+  var html = page('We bellen of mailen je nog even om je tafel te bevestigen.',
     block('<div style="' + F + 'font-style:italic;font-size:30px;color:#B3262E">Grazie, ' + esc(b.naam.split(' ')[0]) + '!</div>' +
       '<p style="' + S + 'font-size:15px;line-height:1.6;color:#6B4A4E;margin:12px 0 0">We hebben je aanvraag goed ontvangen.</p>') +
     block(details(b)) +
-    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we bellen je nog even</div>' +
-      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we je hebben gebeld. ' +
-      'Zo weten we zeker dat er een plek voor je klaarstaat. Houd je telefoon daarom even in de gaten, we nemen zo snel mogelijk contact met je op.</p>', '#FDF0C9') +
+    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we nemen nog even contact op</div>' +
+      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we contact met je hebben gehad. ' +
+      'We bellen je even, of sturen je een mailtje als we je niet te pakken krijgen. Zo weten we zeker dat er een plek voor je klaarstaat. ' +
+      'Houd je telefoon en je mail daarom even in de gaten, we laten zo snel mogelijk van ons horen.</p>', '#FDF0C9') +
     block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Iets wijzigen?</div>' +
       '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Kun je toch niet, of komen jullie met meer of minder personen? Bel ons even of beantwoord deze mail, dan passen we het graag aan.</p>' +
       btn('tel:+31765224437', 'Bel ons', true) + btn('https://maps.google.com/?q=Sophiastraat+14+4811+EK+Breda', 'Route', false)) +
