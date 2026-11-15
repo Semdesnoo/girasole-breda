@@ -1311,6 +1311,7 @@ window.GS_SITE = window.GS_API ? fetch(GS_API + '?action=site', { cache: 'no-sto
   render();
   GS_SITE.then(function (d) {
     if (!d || !d.menu) return;
+    if (d.kaartPdf && /^https:\/\/drive\.google\.com\//.test(d.kaartPdf.url)) document.querySelectorAll('a[href*="Menu-restaurant.pdf"]').forEach(function (a) { a.href = d.kaartPdf.url; a.target = '_blank'; a.rel = 'noopener'; });
     Object.keys(MENU).forEach(function (k) { if (Array.isArray(d.menu[k])) MENU[k] = d.menu[k]; });
     render();
   });

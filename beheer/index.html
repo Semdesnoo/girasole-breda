@@ -103,11 +103,17 @@ details.card[open]>summary{margin-bottom:16px}
 .dish input{padding:10px 12px}
 .del{width:40px;height:44px;border:0;background:none;color:var(--red);cursor:pointer;font-size:20px;border-radius:10px}
 .del:hover{background:rgba(179,38,46,.08)}
+.pdf-h{display:flex;gap:14px;align-items:center;color:var(--wine)}
+.pdf-h h3{font-size:24px;line-height:1.1;color:var(--ink)}
+.pdf-h small{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+.pdf-x{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pdf-x .btn{flex:1 1 140px}
+.sub-h{font-size:26px;margin:26px 0 8px}
 .savebar{position:fixed;z-index:7;left:16px;right:16px;bottom:calc(76px + env(safe-area-inset-bottom));display:flex;gap:10px;justify-content:center}
 .savebar .btn{box-shadow:0 14px 30px rgba(58,11,20,.3);flex:0 1 360px}
 .toast{position:fixed;z-index:9;left:50%;top:calc(76px + env(safe-area-inset-top));transform:translate(-50%,-20px);opacity:0;background:var(--ink);color:var(--cream);padding:12px 20px;border-radius:999px;font-size:14px;transition:.3s;pointer-events:none;max-width:90vw;text-align:center}
 .toast.on{opacity:1;transform:translate(-50%,0)}.toast.bad{background:var(--red)}
-@media (min-width:760px){nav.tabs{top:0;bottom:auto;left:auto;right:20px;width:420px;background:none;border:0;padding-top:env(safe-area-inset-top)}nav.tabs button{color:#E3D0C9}nav.tabs button[aria-current="true"]{color:var(--cream)}main{padding-bottom:110px}.savebar{bottom:20px}header.top{padding-right:460px}}
+@media (min-width:760px){nav.tabs{top:0;bottom:auto;left:auto;right:20px;width:420px;background:none;border:0;padding-top:env(safe-area-inset-top)}nav.tabs button{color:#E3D0C9}nav.tabs button[aria-current="true"]{color:var(--cream)}main{padding-bottom:110px}.savebar{bottom:20px}header.top{padding-right:20px}nav.tabs{right:150px}}
 </style>
 </head>
 <body>
@@ -142,6 +148,13 @@ details.card[open]>summary{margin-bottom:16px}
 
 <section data-tab="menu" hidden>
 <div class="sec-h"><h2>Menukaart</h2></div>
+<div class="card pdf">
+<div class="pdf-h"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h4"/></svg>
+<div style="flex:1;min-width:0"><h3>Volledige kaart (PDF)</h3><small class="js-pdf-info">Gasten openen dit bestand met de knop "Volledige kaart" op de website.</small></div></div>
+<div class="pdf-x"><label class="btn sun"><input type="file" accept="application/pdf,.pdf" class="js-pdf" hidden>Nieuwe PDF uploaden</label><a class="btn line js-pdf-open" target="_blank" rel="noopener" hidden>Bekijken</a><button class="btn line js-pdf-del" type="button" hidden>Verwijderen</button></div>
+</div>
+<h3 class="sub-h">Gerechten op de website</h3>
+<p style="margin:-4px 0 14px;color:var(--muted);font-size:14px">Deze gerechten staan op de kaart op de website. Pas ze hier zelf aan.</p>
 <div class="pills js-cats" role="group" aria-label="Onderdeel van de kaart"></div>
 <div class="card"><div class="js-dishes"></div><button class="btn line js-add-dish" type="button" style="width:100%;margin-top:14px">+ Gerecht toevoegen</button></div>
 <p style="color:var(--muted);font-size:13px">Prijs zonder €-teken, bijvoorbeeld <b>24</b> of <b>18,50</b>.</p>
@@ -261,7 +274,7 @@ details.card[open]>summary{margin-bottom:16px}
   // site content (menu + acties)
   function loadSite() {
     fetch(API + '?action=site', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) {
-      S.menu = d.menu || { voor: [], pasta: [], hoofd: [], pizza: [] }; S.acties = d.acties || []; S.dirty = false;
+      S.menu = d.menu || { voor: [], pasta: [], hoofd: [], pizza: [] }; S.acties = d.acties || []; S.dirty = false; renderPdf(d.kaartPdf);
       renderActs(); renderMenu();
     }).catch(function () { toast('Geen verbinding met de server', true); });
   }
@@ -310,6 +323,29 @@ details.card[open]>summary{margin-bottom:16px}
       return '<div class="dish" data-d="' + i + '"><input data-k="0" value="' + esc(d[0]) + '" placeholder="Naam van het gerecht" aria-label="Naam" maxlength="80"><input data-k="2" value="' + esc(d[2]) + '" placeholder="Prijs" aria-label="Prijs in euro" inputmode="decimal" maxlength="6"><button type="button" class="del" aria-label="Verwijderen">×</button><input class="full" data-k="1" value="' + esc(d[1]) + '" placeholder="Omschrijving" aria-label="Omschrijving" maxlength="160"></div>';
     }).join('') : '<p class="empty" style="padding:24px">Nog geen gerechten in dit onderdeel.</p>';
   }
+  function renderPdf(p) {
+    q('.js-pdf-info').textContent = p ? p.naam + ' · geüpload op ' + p.datum : 'Nog geen eigen PDF: de website toont de standaardkaart.';
+    q('.js-pdf-open').hidden = q('.js-pdf-del').hidden = !p;
+    if (p) q('.js-pdf-open').href = p.url;
+  }
+  q('.js-pdf').addEventListener('change', function () {
+    var f = this.files[0], input = this; if (!f) return;
+    if (!/\.pdf$/i.test(f.name) && f.type !== 'application/pdf') { toast('Kies een PDF-bestand', true); input.value = ''; return; }
+    if (f.size > 10 * 1024 * 1024) { toast('Het bestand is te groot (max 10 MB)', true); input.value = ''; return; }
+    var r = new FileReader();
+    q('.js-pdf-info').textContent = 'Bezig met uploaden…';
+    r.onload = function () {
+      api('kaartpdf', { data: String(r.result).split(',')[1], naam: f.name })
+        .then(function (d) { renderPdf(d.kaartPdf); toast('De nieuwe kaart staat op de website'); })
+        .catch(function (e) { toast(e.message, true); loadSite(); })
+        .then(function () { input.value = ''; });
+    };
+    r.readAsDataURL(f);
+  });
+  q('.js-pdf-del').addEventListener('click', function () {
+    if (!confirm('De PDF verwijderen? De website toont dan weer de standaardkaart.')) return;
+    api('kaartpdf', { verwijder: true }).then(function () { renderPdf(null); toast('Verwijderd'); }).catch(function (e) { toast(e.message, true); });
+  });
   q('.js-cats').addEventListener('click', function (e) { var b = e.target.closest('[data-cat]'); if (b) { S.cat = b.dataset.cat; renderMenu(); } });
   q('.js-dishes').addEventListener('input', function (e) { var r = e.target.closest('[data-d]'); if (!r) return; S.menu[S.cat][+r.dataset.d][+e.target.dataset.k] = e.target.value; dirty(); });
   q('.js-dishes').addEventListener('click', function (e) {

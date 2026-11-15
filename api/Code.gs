@@ -8,7 +8,7 @@
  */
 
 // run once from the editor to grant permissions and create the spreadsheet
-function setup() { resSheet(); tab('Instellingen', ['sleutel', 'waarde']); Logger.log(book().getUrl()); }
+function setup() { resSheet(); tab('Instellingen', ['sleutel', 'waarde']); DriveApp.getRootFolder(); Logger.log(book().getUrl()); }
 
 var CATS = ['voor', 'pasta', 'hoofd', 'pizza'];
 var STATUS = ['nieuw', 'bevestigd', 'afgewezen'];
@@ -423,9 +423,29 @@ function guestEdit(raw) {
   return { ok: true, status: 'gewijzigd' };
 }
 
+// ---- full menu as PDF (uploaded in the app, shown as "Volledige kaart" on the site) ----
+function kaartPdf(raw) {
+  var old = getSetting('kaartPdf');
+  if (raw.verwijder === true) {
+    if (old && old.id) try { DriveApp.getFileById(old.id).setTrashed(true); } catch (x) {}
+    putSetting('kaartPdf', null); return { ok: true, kaartPdf: null };
+  }
+  var b64 = String(raw.data || '');
+  if (b64.length > 14000000) return { error: 'Het bestand is te groot (max 10 MB).' };
+  var bytes; try { bytes = Utilities.base64Decode(b64); } catch (x) { return { error: 'Dit bestand kan niet gelezen worden.' }; }
+  if (bytes.length < 5 || String.fromCharCode(bytes[0], bytes[1], bytes[2], bytes[3]) !== '%PDF') return { error: 'Alleen PDF-bestanden zijn toegestaan.' };
+  var naam = str(raw.naam, 80).replace(/[^\w .()-]/g, '') || 'Menukaart.pdf';
+  var file = DriveApp.createFile(Utilities.newBlob(bytes, 'application/pdf', 'Girasole - ' + naam));
+  file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+  if (old && old.id) try { DriveApp.getFileById(old.id).setTrashed(true); } catch (x) {}
+  var info = { id: file.getId(), naam: naam, datum: today(), url: 'https://drive.google.com/file/d/' + file.getId() + '/view' };
+  putSetting('kaartPdf', info);
+  return { ok: true, kaartPdf: info };
+}
+
 // ---- endpoints ----
 function doGet(e) {
-  if ((e.parameter || {}).action === 'site') return out({ menu: getSetting('menu'), acties: getSetting('acties') });
+  if ((e.parameter || {}).action === 'site') return out({ menu: getSetting('menu'), acties: getSetting('acties'), kaartPdf: getSetting('kaartPdf') });
   return out({ error: 'Onbekende actie' });
 }
 
@@ -471,6 +491,7 @@ function handle(raw) {
     if (!menu) return { error: 'Menu klopt niet. Controleer de prijzen (bijv. 24 of 18,50).' };
     putSetting('menu', menu); return { ok: true };
   }
+  if (raw.action === 'kaartpdf') return kaartPdf(raw);
   if (raw.action === 'acties') {
     var acties = cleanActies(raw.data);
     if (!acties) return { error: 'Elke actie heeft minstens een titel nodig.' };

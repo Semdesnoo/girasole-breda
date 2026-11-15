@@ -57,6 +57,16 @@ if (LOCAL) { // guest self-service via the secret link in the mail
   ok((await post({ action: 'wijzig', id, t, dag: good.dag, tijd: '19:00', personen: 2, keuze: 'À la carte' })).error, 'no changes after cancel');
 }
 
+if (LOCAL) { // full-menu PDF upload
+  const pdf = Buffer.from('%PDF-1.4 test').toString('base64');
+  ok((await post({ action: 'kaartpdf', data: pdf, naam: 'kaart.pdf' })).auth === false, 'pdf upload needs PIN');
+  ok((await post({ action: 'kaartpdf', pin: PIN, data: Buffer.from('<html>').toString('base64'), naam: 'x.pdf' })).error, 'non-pdf refused');
+  const up = await post({ action: 'kaartpdf', pin: PIN, data: pdf, naam: 'Kaart winter.pdf' });
+  ok(up.ok && /^https:\/\/drive\.google\.com\/file\/d\//.test(up.kaartPdf.url), 'pdf uploaded', up.kaartPdf && up.kaartPdf.url);
+  ok((await get('?action=site')).kaartPdf.naam === 'Kaart winter.pdf', 'site gets pdf link');
+  ok((await post({ action: 'kaartpdf', pin: PIN, verwijder: true })).ok && (await get('?action=site')).kaartPdf === null, 'pdf removed');
+}
+
 const menu = site.menu;
 ok((await post({ action: 'menu', pin: PIN, data: { ...menu, pizza: [['Test', '', '€ 12']] } })).error, 'bad price refused');
 ok((await post({ action: 'menu', pin: PIN, data: { ...menu, pizza: [...menu.pizza, ['Pizza Test', 'Alleen voor de test', '12,50']] } })).ok, 'menu saved');
