@@ -6,7 +6,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import vm from 'node:vm';
 
-const sheets = {}, mails = [], cache = {};
+const sheets = {}, mails = [], cache = {}, props = {};
 function Sheet(name) {
   const rows = [];
   const range = (r, c, nr = 1, nc = 1) => ({
@@ -29,12 +29,13 @@ const fmt = (d, tz, f) => {
 };
 const ctx = vm.createContext({
   console, JSON, Math, Date, String, Array, Object, isNaN, parseInt,
-  SpreadsheetApp: { getActiveSpreadsheet: () => ({ getSheetByName: n => sheets[n] || null, insertSheet: n => (sheets[n] = Sheet(n)) }) },
+  SpreadsheetApp: (() => { const ss = { getSheetByName: n => sheets[n] || null, insertSheet: n => (sheets[n] = Sheet(n)), getId: () => 'local', getUrl: () => 'local' }; return { create: () => ss, openById: () => ss }; })(),
+  Logger: { log() {} },
   ContentService: { MimeType: { JSON: 'json' }, createTextOutput: s => ({ s, setMimeType() { return this; } }) },
   Utilities: { formatDate: fmt },
   CacheService: { getScriptCache: () => ({ get: k => (cache[k] && cache[k].t > Date.now() ? cache[k].v : null), put: (k, v, ttl) => { cache[k] = { v, t: Date.now() + ttl * 1000 }; } }) },
   LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
-  PropertiesService: { getScriptProperties: () => ({ getProperty: k => process.env[k] || null }) },
+  PropertiesService: { getScriptProperties: () => ({ getProperty: k => props[k] ?? process.env[k] ?? null, setProperty: (k, v) => { props[k] = v; } }) },
   Session: { getEffectiveUser: () => ({ getEmail: () => 'restaurant@example.nl' }) },
   MailApp: { sendEmail: m => mails.push(m) },
 });

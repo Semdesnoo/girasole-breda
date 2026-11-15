@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="nl" data-api="">
+<html lang="nl" data-api="https://script.google.com/macros/s/AKfycbzIU7miVX4exXqFyNk0Lv0--f_6sL_Ezd_06NkSCfbBIQvlrzZSO-CP0i9KQvmMpCy2/exec">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -33,7 +33,7 @@ label>input,label>textarea,label>select{text-transform:none;letter-spacing:0;fon
 .login form{width:min(360px,100%);display:flex;flex-direction:column;align-items:center;gap:18px;text-align:center}
 .login h1{font-size:40px;letter-spacing:.16em}
 .login .script{font-size:46px;color:var(--sun);line-height:.6;margin-top:6px}
-.login input{text-align:center;font-size:26px;letter-spacing:.5em;background:rgba(253,245,225,.08);border-color:rgba(253,245,225,.3);color:var(--cream)}
+.login input{text-align:center;font-size:22px;letter-spacing:.2em;background:rgba(253,245,225,.08);border-color:rgba(253,245,225,.3);color:var(--cream)}
 .login .err{color:#FFD7D7;min-height:22px;margin:0;font-size:14px}
 
 /* app shell */
@@ -113,8 +113,8 @@ details.card[open]>summary{margin-bottom:16px}
 <section class="login js-login">
 <form class="js-login-form" autocomplete="off">
 <h1>GIRASOLE</h1><span class="script">Beheer</span>
-<p style="margin:10px 0 0;color:#E3D0C9">Vul de pincode van het restaurant in</p>
-<input type="password" inputmode="numeric" autocomplete="current-password" name="pin" aria-label="Pincode" required minlength="6" maxlength="12">
+<p style="margin:10px 0 0;color:#E3D0C9">Vul de inlogcode van het restaurant in</p>
+<input type="password" autocomplete="current-password" name="pin" aria-label="Inlogcode" required minlength="6" maxlength="40">
 <p class="err js-login-err" role="alert"></p>
 <button class="btn sun" style="width:100%">Inloggen</button>
 </form>

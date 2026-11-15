@@ -4,8 +4,11 @@
  * Bij elke reservering stuurt Gmail een mail naar de eigenaar van dit script.
  *
  * Instellen: zie de uitleg in api/GOOGLE-INSTELLEN.md
- * Pincode: Projectinstellingen > Scripteigenschappen > PIN (6-12 cijfers).
+ * Inlogcode: Projectinstellingen > Scripteigenschappen > PIN (minstens 6 tekens, letters en cijfers mag).
  */
+
+// run once from the editor to grant permissions and create the spreadsheet
+function setup() { resSheet(); tab('Instellingen', ['sleutel', 'waarde']); Logger.log(book().getUrl()); }
 
 var CATS = ['voor', 'pasta', 'hoofd', 'pizza'];
 var STATUS = ['nieuw', 'bevestigd', 'afgewezen'];
@@ -171,7 +174,14 @@ function out(data) {
 function str(v, max) { return (typeof v === 'string' ? v.trim() : '').slice(0, max); }
 function today() { return Utilities.formatDate(new Date(), 'Europe/Amsterdam', 'yyyy-MM-dd'); }
 
-function book() { return SpreadsheetApp.getActiveSpreadsheet(); }
+// standalone script: creates its own spreadsheet on first use and remembers it
+function book() {
+  var props = PropertiesService.getScriptProperties(), id = props.getProperty('SHEET_ID');
+  if (id) return SpreadsheetApp.openById(id);
+  var ss = SpreadsheetApp.create('Girasole reserveringen');
+  props.setProperty('SHEET_ID', ss.getId());
+  return ss;
+}
 function tab(name, header) {
   var sh = book().getSheetByName(name);
   if (!sh) {
@@ -245,8 +255,8 @@ function count(key) { return +(CacheService.getScriptCache().get(key) || 0); }
 
 function pinError(pin) {
   var real = String(PropertiesService.getScriptProperties().getProperty('PIN') || '');
-  if (!/^\d{6,12}$/.test(real) || /^(\d)\1+$/.test(real) || '0123456789'.indexOf(real) >= 0 || '9876543210'.indexOf(real) >= 0)
-    return 'De pincode is nog niet (goed) ingesteld in Google. Kies 6-12 cijfers, niet 000000 of 123456.';
+  if (real.length < 6 || real.length > 40 || /^(.)\1+$/.test(real) || '0123456789'.indexOf(real) >= 0 || '9876543210'.indexOf(real) >= 0)
+    return 'De inlogcode is nog niet (goed) ingesteld in Google. Kies minstens 6 tekens, niet 000000 of 123456.';
   if (count('pinfail') >= 8) return 'Te veel pogingen. Probeer het over 15 minuten opnieuw.';
   if (String(pin || '') === real) return null;
   bump('pinfail', 900);
