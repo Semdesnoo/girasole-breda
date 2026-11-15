@@ -342,7 +342,8 @@ function mailGast(b, id, token, replyTo, kind, was) {
   var head = {
     nieuw: ['Grazie, ' + first + '!', 'We hebben je aanvraag goed ontvangen.'],
     gewijzigd: ['Je wijziging is binnen', 'Dank je, ' + first + '. Dit is je nieuwe aanvraag.'],
-    geannuleerd: ['Je reservering is geannuleerd', 'Jammer dat je er niet bij kunt zijn, ' + first + '. Hopelijk tot een andere keer!']
+    geannuleerd: ['Je reservering is geannuleerd', 'Jammer dat je er niet bij kunt zijn, ' + first + '. Hopelijk tot een andere keer!'],
+    bevestigd: ['Tot snel, ' + first + '!', 'Goed nieuws: je reservering is bevestigd. Je tafel staat voor je klaar.']
   }[kind];
   var rows = block('<div style="' + F + 'font-style:italic;font-size:30px;color:#B3262E">' + head[0] + '</div>' +
     '<p style="' + S + 'font-size:15px;line-height:1.6;color:#6B4A4E;margin:12px 0 0">' + head[1] + '</p>');
@@ -352,11 +353,11 @@ function mailGast(b, id, token, replyTo, kind, was) {
       block('<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Toch komen? Je bent altijd welkom om opnieuw te reserveren.</p>' +
         btn(SITE + '#reserveren', 'Opnieuw reserveren', true));
   } else {
-    rows += block(details(b, kind === 'gewijzigd' ? 'Je nieuwe reservering' : '') + (was ? '<div style="' + S + 'font-size:13px;color:#9A7F7F;margin-top:12px">Was: <span style="text-decoration:line-through">' + esc(was) + '</span></div>' : '')) +
-      block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we nemen nog even contact op</div>' +
+    rows += block(details(b, kind === 'gewijzigd' ? 'Je nieuwe reservering' : kind === 'bevestigd' ? 'Bevestigd' : '') + (was ? '<div style="' + S + 'font-size:13px;color:#9A7F7F;margin-top:12px">Was: <span style="text-decoration:line-through">' + esc(was) + '</span></div>' : '')) +
+      (kind === 'bevestigd' ? '' : block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we nemen nog even contact op</div>' +
         '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we contact met je hebben gehad. ' +
         'We bellen je even, of sturen je een mailtje als we je niet te pakken krijgen. Zo weten we zeker dat er een plek voor je klaarstaat. ' +
-        'Houd je telefoon en je mail daarom even in de gaten, we laten zo snel mogelijk van ons horen.</p>', '#FDF0C9') +
+        'Houd je telefoon en je mail daarom even in de gaten, we laten zo snel mogelijk van ons horen.</p>', '#FDF0C9')) +
       block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Iets wijzigen?</div>' +
         '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Andere dag, tijd of aantal personen? Of kun je toch niet? Pas je reservering hier zelf aan, of bel ons even.</p>' +
         btn(link, 'Wijzig reservering', true) + btn('tel:+31765224437', 'Bel ons', false));
@@ -367,10 +368,11 @@ function mailGast(b, id, token, replyTo, kind, was) {
   var subject = {
     nieuw: 'Je reserveringsaanvraag bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd,
     gewijzigd: 'Je wijziging bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd,
-    geannuleerd: 'Je reservering bij Girasole is geannuleerd'
+    geannuleerd: 'Je reservering bij Girasole is geannuleerd',
+    bevestigd: 'Je reservering bij Girasole is bevestigd: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd
   }[kind];
   MailApp.sendEmail({ to: b.email, replyTo: replyTo, name: "Girasole by Luca's Kitchen", subject: subject,
-    htmlBody: page(kind === 'geannuleerd' ? 'Je reservering is geannuleerd.' : 'We bellen of mailen je nog even om je tafel te bevestigen.', rows) });
+    htmlBody: page({ geannuleerd: 'Je reservering is geannuleerd.', bevestigd: 'Je tafel staat voor je klaar.' }[kind] || 'We bellen of mailen je nog even om je tafel te bevestigen.', rows) });
 }
 
 function mailEigenaar(b, id, to, kind, was) {
@@ -499,7 +501,17 @@ function handle(raw) {
   if (raw.action === 'status') {
     if (STATUS.indexOf(raw.status) < 0) return { error: 'Ongeldige status' };
     var sh = resSheet(), ids = sh.getRange(1, 1, sh.getLastRow(), 1).getValues();
-    for (var i = 1; i < ids.length; i++) if (String(ids[i][0]) === String(raw.id)) { sh.getRange(i + 1, COLS.indexOf('status') + 1).setValue(raw.status); return { ok: true }; }
+    for (var i = 1; i < ids.length; i++) if (String(ids[i][0]) === String(raw.id)) {
+      var r = rowObj(sh.getRange(i + 1, 1, 1, COLS.length).getValues()[0]);
+      sh.getRange(i + 1, COLS.indexOf('status') + 1).setValue(raw.status);
+      // guest gets a confirmation mail once per confirm (again after a change, never twice for one click)
+      var mailed = false;
+      if (raw.status === 'bevestigd' && r.status !== 'bevestigd' && r.email) {
+        var owner = PropertiesService.getScriptProperties().getProperty('MAIL_TO') || Session.getEffectiveUser().getEmail();
+        try { mailGast(r, r.id, r.token, owner, 'bevestigd'); mailed = true; } catch (x) {}
+      }
+      return { ok: true, gemaild: mailed };
+    }
     return { error: 'Reservering niet gevonden' };
   }
   if (raw.action === 'menu') {

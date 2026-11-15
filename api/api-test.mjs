@@ -35,12 +35,19 @@ const b = await post({ ...good, naam: 'Test <b>', personen: '4' });
 ok(b.ok && b.id, 'booking stored', JSON.stringify(b));
 const mine = (await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id);
 ok(mine && !('token' in mine) && mine.status === 'nieuw' && mine.personen === 4 && mine.dag === good.dag && mine.tijd === '19:15' && mine.telefoon === '0612345678', 'booking listed with exact values', JSON.stringify(mine));
+const nMail = LOCAL && (await get('/__mails')).length;
 ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'bevestigd' })).ok, 'confirm booking');
+if (LOCAL) {
+  const m = (await get('/__mails')).slice(nMail);
+  ok(m.length === 1 && m[0].to === good.email && /bevestigd/.test(m[0].subject) && !/Let op/.test(m[0].htmlBody) && /wijzig\.html\?id=/.test(m[0].htmlBody), 'guest gets confirmation mail', m.map(x => x.subject).join(' | '));
+  await post({ action: 'status', pin: PIN, id: b.id, status: 'bevestigd' });
+  ok((await get('/__mails')).length === nMail + 1, 'confirming twice sends no second mail');
+}
 ok((await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id).status === 'bevestigd', 'status saved');
 ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'weg' })).error, 'bad status refused');
 if (LOCAL) {
   const m = await (await fetch(A + '/__mails')).json();
-  const own = m.findLast(x => x.to === 'restaurant@example.nl'), guest = m.findLast(x => x.to === 'a@b.nl');
+  const own = m.findLast(x => x.to === 'restaurant@example.nl'), guest = m.findLast(x => x.to === 'a@b.nl' && /aanvraag/.test(x.subject));
   ok(own && own.replyTo === 'a@b.nl' && /Test &lt;b&gt;/.test(own.htmlBody) && !/<b>Test/.test(own.htmlBody), 'owner mailed, reply-to guest, html escaped');
   ok(guest && guest.replyTo === 'restaurant@example.nl' && /we bellen je even, of sturen je een mailtje/i.test(guest.htmlBody) && /logo-mail\.png/.test(guest.htmlBody) && /4 gasten/.test(guest.htmlBody), 'guest gets confirmation with call notice');
 }

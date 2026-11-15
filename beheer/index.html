@@ -323,9 +323,9 @@ label>input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
     var b = e.target.closest('[data-st]'); if (!b) return;
     if (b.dataset.st === 'afgewezen' && !confirm('Deze reservering afwijzen? Laat het de gast ook even weten.')) return;
     b.disabled = true;
-    api('status', { id: b.dataset.id, status: b.dataset.st }).then(function () {
+    api('status', { id: b.dataset.id, status: b.dataset.st }).then(function (d) {
       S.res.forEach(function (x) { if (String(x.id) === b.dataset.id) x.status = b.dataset.st; }); renderRes();
-      toast(b.dataset.st === 'bevestigd' ? 'Bevestigd' : 'Afgewezen');
+      toast(b.dataset.st === 'bevestigd' ? (d && d.gemaild ? 'Bevestigd · de gast krijgt een mail' : 'Bevestigd') : 'Afgewezen');
     }).catch(function (err) { b.disabled = false; toast(err.message, true); });
   });
   q('.js-res-filter').addEventListener('click', function (e) {
