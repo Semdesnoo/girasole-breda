@@ -312,7 +312,7 @@ function handle(raw) {
     if (err) return { error: err };
     bump('res', 3600);
     var id = String(Date.now());
-    resSheet().appendRow([id, new Date().toISOString(), b.dag, b.tijd, b.personen, b.keuze, b.naam, b.telefoon, b.email, 'nieuw']);
+    resSheet().appendRow([id, new Date().toISOString(), "'" + b.dag, "'" + b.tijd, b.personen, b.keuze, "'" + b.naam, "'" + b.telefoon, b.email, 'nieuw']);
     try { mailOwner(b); } catch (x) {} // a mail hiccup must not lose the booking
     return { ok: true, id: id };
   }

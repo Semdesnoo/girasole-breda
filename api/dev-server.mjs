@@ -19,7 +19,7 @@ function Sheet(name) {
     name, rows,
     getRange: (a, ...rest) => typeof a === 'string' ? range(1, 1) : range(a, ...rest),
     getDataRange() { const nc = Math.max(1, ...rows.map(r => r.length)); return range(1, 1, rows.length, nc); },
-    appendRow(r) { rows.push(r.map(x => typeof x === 'number' ? x : String(x))); },
+    appendRow(r) { rows.push(r.map(x => typeof x === 'number' ? x : String(x).replace(/^'/, ''))); }, // Sheets drops the text-forcing apostrophe
     getLastRow: () => rows.length, setFrozenRows() {},
   };
 }
