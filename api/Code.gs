@@ -274,18 +274,81 @@ function rowsToList() {
   return list.sort(function (a, b) { return (a.dag + a.tijd) < (b.dag + b.tijd) ? -1 : 1; });
 }
 
-function mailOwner(b) {
-  var to = PropertiesService.getScriptProperties().getProperty('MAIL_TO') || Session.getEffectiveUser().getEmail();
-  if (!to) return;
-  var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
-  var rows = [['Datum', b.dag], ['Tijd', b.tijd], ['Personen', b.personen], ['Keuze', b.keuze], ['Naam', b.naam], ['Telefoon', b.telefoon], ['E-mail', b.email]];
-  MailApp.sendEmail({
-    to: to, replyTo: b.email, name: 'Girasole website',
-    subject: 'Nieuwe reservering: ' + b.personen + 'p op ' + b.dag + ' om ' + b.tijd,
-    htmlBody: '<h2 style="font-family:Georgia,serif;color:#5B0A19">Nieuwe reservering</h2><table cellpadding="6">' +
-      rows.map(function (r) { return '<tr><td style="color:#876A6C">' + r[0] + '</td><td><b>' + esc(r[1]) + '</b></td></tr>'; }).join('') +
-      '</table><p>Bevestig of wijs af in de Girasole-app.</p>'
-  });
+// ---- mails (table layout + inline styles: works in Outlook, Gmail and phone apps) ----
+var SITE = 'https://semdesnoo.github.io/girasole-breda/';
+var DAGEN = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'];
+var MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function langeDatum(dag) {
+  var x = new Date(dag + 'T12:00:00Z'), d = DAGEN[x.getUTCDay()];
+  return d.charAt(0).toUpperCase() + d.slice(1) + ' ' + x.getUTCDate() + ' ' + MAANDEN[x.getUTCMonth()] + ' ' + x.getUTCFullYear();
+}
+function gasten(n) { return n + (n === 1 ? ' gast' : ' gasten'); }
+
+var F = "font-family:Georgia,'Times New Roman',serif;", S = 'font-family:Helvetica,Arial,sans-serif;';
+function block(inner, bg) {
+  return '<tr><td style="background:' + (bg || '#FFFBF2') + ';padding:30px 34px;border-top:1px solid #EFE2CC">' + inner + '</td></tr>';
+}
+function btn(href, label, solid) {
+  return '<a href="' + href + '" style="display:inline-block;' + S + 'font-size:13px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:13px 24px;border-radius:999px;margin:4px;' +
+    (solid ? 'background:#F5B800;color:#3A0B14;' : 'border:1px solid #5B0A19;color:#5B0A19;') + '">' + label + '</a>';
+}
+function page(preheader, rows) {
+  return '<!doctype html><html><body style="margin:0;padding:0;background:#F3E6D0">' +
+    '<div style="display:none;max-height:0;overflow:hidden">' + esc(preheader) + '</div>' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F3E6D0"><tr><td align="center" style="padding:24px 12px">' +
+    '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;border-radius:18px;overflow:hidden;text-align:center;color:#3A0B14">' +
+    '<tr><td style="background:#5B0A19;padding:34px 20px 28px">' +
+    '<div style="' + F + 'font-size:34px;letter-spacing:9px;color:#FDF5E1;padding-left:9px">GIRASOLE</div>' +
+    '<div style="' + F + 'font-style:italic;font-size:16px;color:#F5B800;margin-top:6px">by Luca&#39;s Kitchen</div></td></tr>' +
+    rows +
+    '<tr><td style="background:#3A0B14;padding:22px;' + S + 'font-size:12px;line-height:1.7;color:#D6C3BD">Girasole by Luca&#39;s Kitchen · Sophiastraat 14, 4811 EK Breda<br>' +
+    '<a href="tel:+31765224437" style="color:#F5B800;text-decoration:none">076 522 4437</a> · <a href="' + SITE + '" style="color:#F5B800;text-decoration:none">girasole website</a></td></tr>' +
+    '</table></td></tr></table></body></html>';
+}
+function details(b) {
+  return '<div style="' + S + 'font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#B3262E">Je reservering</div>' +
+    '<div style="' + F + 'font-size:28px;margin:12px 0 6px">' + esc(langeDatum(b.dag)) + '</div>' +
+    '<div style="' + S + 'font-size:17px;font-weight:bold">' + gasten(b.personen) + ' · ' + esc(b.tijd) + ' uur</div>' +
+    '<div style="' + S + 'font-size:15px;color:#6B4A4E;margin-top:6px">' + esc(b.keuze) + '</div>';
+}
+
+function mailGast(b, id, replyTo) {
+  var html = page('We bellen je nog even om je tafel te bevestigen.',
+    block('<div style="' + F + 'font-style:italic;font-size:30px;color:#B3262E">Grazie, ' + esc(b.naam.split(' ')[0]) + '!</div>' +
+      '<p style="' + S + 'font-size:15px;line-height:1.6;color:#6B4A4E;margin:12px 0 0">We hebben je aanvraag goed ontvangen.</p>') +
+    block(details(b)) +
+    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we bellen je nog even</div>' +
+      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we je hebben gebeld. ' +
+      'Zo weten we zeker dat er een plek voor je klaarstaat. Houd je telefoon daarom even in de gaten, we nemen zo snel mogelijk contact met je op.</p>', '#FDF0C9') +
+    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Iets wijzigen?</div>' +
+      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Kun je toch niet, of komen jullie met meer of minder personen? Bel ons even of beantwoord deze mail, dan passen we het graag aan.</p>' +
+      btn('tel:+31765224437', 'Bel ons', true) + btn('https://maps.google.com/?q=Sophiastraat+14+4811+EK+Breda', 'Route', false)) +
+    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Openingstijden</div>' +
+      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0">Dinsdag t/m zondag vanaf 17:00<br>Maandag gesloten</p>' +
+      '<p style="' + S + 'font-size:12px;color:#9A7F7F;margin:18px 0 0">Aanvraagnummer ' + esc(id) + '</p>'));
+  MailApp.sendEmail({ to: b.email, replyTo: replyTo, name: "Girasole by Luca's Kitchen",
+    subject: 'Je reserveringsaanvraag bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd, htmlBody: html });
+}
+
+function mailEigenaar(b, id, to) {
+  var tel = b.telefoon.replace(/[^0-9+]/g, '');
+  var row = function (k, v) { return '<tr><td style="' + S + 'font-size:13px;color:#876A6C;padding:8px 0;text-align:left;border-bottom:1px dashed #EFE2CC">' + k + '</td><td style="' + S + 'font-size:15px;font-weight:bold;padding:8px 0;text-align:right;border-bottom:1px dashed #EFE2CC">' + v + '</td></tr>'; };
+  var html = page(gasten(b.personen) + ' op ' + langeDatum(b.dag) + ' om ' + b.tijd,
+    block('<div style="display:inline-block;background:#F5B800;color:#3A0B14;' + S + 'font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:999px">Nieuwe reservering</div>' + '<div style="height:18px"></div>' + details(b)) +
+    block('<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
+      row('Naam', esc(b.naam)) + row('Telefoon', '<a href="tel:' + esc(tel) + '" style="color:#5B0A19">' + esc(b.telefoon) + '</a>') +
+      row('E-mail', '<a href="mailto:' + esc(b.email) + '" style="color:#5B0A19">' + esc(b.email) + '</a>') + row('Aanvraagnummer', esc(id)) + '</table>') +
+    block('<p style="' + S + 'font-size:15px;line-height:1.6;color:#4E2A30;margin:0 0 16px">Bel de gast om de tafel te bevestigen en zet de reservering daarna op <b>Bevestigd</b> in de app.</p>' +
+      btn('tel:' + esc(tel), 'Bel ' + esc(b.naam.split(' ')[0]), true) + btn(SITE + 'beheer/', 'Open de app', false), '#FDF0C9'));
+  MailApp.sendEmail({ to: to, replyTo: b.email, name: 'Girasole reserveringen',
+    subject: 'Nieuwe reservering: ' + gasten(b.personen) + ', ' + langeDatum(b.dag).toLowerCase() + ' om ' + b.tijd, htmlBody: html });
+}
+
+function mails(b, id) {
+  var owner = PropertiesService.getScriptProperties().getProperty('MAIL_TO') || Session.getEffectiveUser().getEmail();
+  try { if (owner) mailEigenaar(b, id, owner); } catch (x) {}
+  try { mailGast(b, id, owner); } catch (x) {}
 }
 
 // ---- endpoints ----
@@ -313,7 +376,7 @@ function handle(raw) {
     bump('res', 3600);
     var id = String(Date.now());
     resSheet().appendRow([id, new Date().toISOString(), "'" + b.dag, "'" + b.tijd, b.personen, b.keuze, "'" + b.naam, "'" + b.telefoon, b.email, 'nieuw']);
-    try { mailOwner(b); } catch (x) {} // a mail hiccup must not lose the booking
+    mails(b, id); // each mail is wrapped in try: a mail hiccup must not lose the booking
     return { ok: true, id: id };
   }
 
