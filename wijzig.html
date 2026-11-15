@@ -111,7 +111,7 @@ label{position:relative}
   var f = q('.js-form');
   function call(body) {
     body.id = id; body.t = t;
-    return fetch(API, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); });
+    return fetch(API, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).then(function (r) { return r.json().catch(function () { throw new Error('De reserveringsservice is even niet bereikbaar. Bel ons op 076 522 4437.'); }); });
   }
   function fail(msg) { q('.js-loading').hidden = true; f.hidden = true; q('.js-fail').hidden = false; q('.js-fail-t').textContent = msg; }
   function done(h, txt) { f.hidden = true; q('.js-done').hidden = false; q('.js-done-h').textContent = h; q('.js-done-t').textContent = txt; }

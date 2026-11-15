@@ -1285,7 +1285,7 @@ window.GS_SITE = window.GS_API ? fetch(GS_API + '?action=site', { cache: 'no-sto
       (GS_API
         // text/plain keeps it a "simple" request: Google Apps Script has no CORS preflight
         ? fetch(GS_API, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(data) })
-            .then(function (r) { return r.json().then(function (d) { if (d.error) throw new Error(d.error); return { ok: true }; }); })
+            .then(function (r) { return r.json().catch(function () { throw new Error(''); }).then(function (d) { if (d.error) throw new Error(d.error); return { ok: true }; }); })
         : fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(new FormData(form)).toString() })
       ).then(function (res) {
         if (!res.ok) return res.json().catch(function () { return {}; }).then(function (d) { throw new Error(d.error || ''); });

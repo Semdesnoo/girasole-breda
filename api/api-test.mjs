@@ -11,6 +11,16 @@ const day = n => { const d = new Date(); d.setUTCDate(d.getUTCDate() + n); while
 const monday = () => { const d = new Date(); d.setUTCDate(d.getUTCDate() + 3); while (d.getUTCDay() !== 1) d.setUTCDate(d.getUTCDate() + 1); return iso(d); };
 const good = { action: 'reserveer', dag: day(9), tijd: '19:15', personen: 4, keuze: 'À la carte', naam: 'Anna', telefoon: '0612345678', email: 'a@b.nl' };
 
+{ // scopes are fixed in appsscript.json; a new Google service in Code.gs would force every owner to re-authorize
+  const fs = await import('node:fs'), src = fs.readFileSync(new URL('./Code.gs', import.meta.url), 'utf8');
+  const scopes = JSON.parse(fs.readFileSync(new URL('./appsscript.json', import.meta.url), 'utf8')).oauthScopes.join(' ');
+  const need = { SpreadsheetApp: 'auth/spreadsheets', MailApp: 'auth/script.send_mail', DriveApp: 'auth/drive', ScriptApp: 'auth/script.scriptapp', Session: 'auth/userinfo.email' };
+  const free = ['Utilities', 'PropertiesService', 'CacheService', 'LockService', 'ContentService', 'Logger', 'HtmlService'];
+  const used = [...new Set(src.match(/\b[A-Z][A-Za-z]+(?=\.[a-z])/g))].filter(x => /App$|Service$|^Session$|^Utilities$|^Logger$/.test(x));
+  const bad = used.filter(x => !free.includes(x) && !(need[x] && scopes.includes(need[x])));
+  ok(!bad.length, 'every Google service is covered by appsscript.json scopes', bad.join(',') || used.join(','));
+}
+if (LOCAL) { const st = await get('/__setup'); ok(st.ok && st.triggers.length === 1, 'setup runs, exactly one daily check trigger', JSON.stringify(st)); }
 const site = await get('?action=site');
 ok(site.menu && site.menu.voor.length > 0 && site.acties.length > 0, 'site content (menu + acties)', site.menu && site.menu.voor.length);
 

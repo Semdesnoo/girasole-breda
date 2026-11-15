@@ -40,7 +40,9 @@ const ctx = vm.createContext({
   LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
   PropertiesService: { getScriptProperties: () => ({ getProperty: k => props[k] ?? process.env[k] ?? null, setProperty: (k, v) => { props[k] = v; } }) },
   Session: { getEffectiveUser: () => ({ getEmail: () => 'restaurant@example.nl' }) },
-  MailApp: { sendEmail: m => mails.push(m) },
+  MailApp: { sendEmail: m => mails.push(m), getRemainingDailyQuota: () => 100 },
+  ScriptApp: (() => { const trig = []; return { trig, getProjectTriggers: () => trig.map(h => ({ getHandlerFunction: () => h })), deleteTrigger: x => trig.splice(trig.indexOf(x.getHandlerFunction()), 1),
+    newTrigger: h => ({ timeBased: () => ({ everyDays: () => ({ atHour: () => ({ create: () => trig.push(h) }) }) }) }) }; })(),
 });
 vm.runInContext(fs.readFileSync(new URL('./Code.gs', import.meta.url), 'utf8'), ctx);
 
@@ -48,6 +50,7 @@ const send = (res, code, body) => { res.writeHead(code, { 'content-type': 'appli
 http.createServer((req, res) => {
   const u = new URL(req.url, 'http://x');
   if (u.pathname === '/__mails') return send(res, 200, mails);
+  if (u.pathname === '/__setup') { try { ctx.setup(); ctx.setup(); return send(res, 200, { ok: true, triggers: ctx.ScriptApp.trig }); } catch (e) { return send(res, 200, { error: e.message }); } }
   if (u.pathname === '/__sheet') return send(res, 200, (sheets.Reserveringen || { rows: [] }).rows);
   if (req.method === 'OPTIONS') return send(res, 405, { error: 'Apps Script has no preflight; use text/plain POST without custom headers' });
   if (req.method === 'GET') return send(res, 200, ctx.doGet({ parameter: Object.fromEntries(u.searchParams) }).s);

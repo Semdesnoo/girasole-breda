@@ -1,39 +1,42 @@
-# Girasole-app koppelen aan Google (eenmalig, ±10 minuten)
+# Reserveringen koppelen aan Google (eenmalig, ±10 minuten per klant)
 
-Alles is gratis. Je hebt alleen het Gmail-account van het restaurant nodig.
-De reserveringen komen in een Google Spreadsheet, en bij elke reservering stuurt Gmail een mail.
+Gratis. Nodig: het Google-account van het restaurant. Reserveringen komen in een Google Spreadsheet die het script zelf maakt; Gmail verstuurt de mails (max. 100 per dag).
 
-## 1. Spreadsheet maken
-1. Log in met de Gmail van het restaurant en ga naar **https://sheets.new**.
-2. Geef het bestand de naam **Girasole reserveringen**.
+## Waarom dit daarna blijft werken
+- Alle toestemmingen staan vast in `appsscript.json`. Google vraagt ze **één keer** bij `setup`, en nooit opnieuw zolang die lijst niet verandert.
+- `api-test.mjs` faalt als iemand in `Code.gs` een Google-dienst gebruikt die niet in die lijst staat. Zo kan een update nooit stiekem om nieuwe toestemming vragen.
+- `setup` zet een dagelijkse controle (06:00). Gaat er ooit iets mis (toestemming ingetrokken, spreadsheet weg), dan mailt Google de eigenaar automatisch een foutmelding.
+- Nieuwe versie uitrollen = zelfde web-app-link, geen nieuwe toestemming.
 
-## 2. Het script plakken
-1. In de spreadsheet: **Extensies → Apps Script**.
-2. Haal de voorbeeldtekst (`function myFunction…`) helemaal weg.
-3. Open op de computer het bestand `C:\Claude Code\girasole-breda\api\Code.gs`, kopieer **alles** en plak het in Apps Script.
-4. Klik op het **diskette-icoon** (Opslaan).
+Toestemming verdwijnt alleen als de eigenaar hem zelf intrekt (myaccount.google.com → Beveiliging → Apps van derden) of het account verwijderd wordt. Dan: stap 4 opnieuw.
 
-## 3. Pincode instellen (alleen jij weet hem)
-1. Klik links op het **tandwiel (Projectinstellingen)**.
-2. Onderaan bij **Scripteigenschappen**: **Scripteigenschap toevoegen**.
-   - Eigenschap: `PIN`
-   - Waarde: jouw code van 6 tot 12 cijfers (niet 000000, 123456 of iets wat makkelijk te raden is)
-3. Optioneel, als de mails naar een ander adres moeten dan dit Gmail-account: voeg `MAIL_TO` toe met dat e-mailadres.
-4. **Scripteigenschappen opslaan**.
+## 1. Project maken
+Ingelogd met het restaurant-account: ga naar **https://script.google.com** → **Nieuw project**.
 
-## 4. Online zetten
-1. Rechtsboven: **Implementeren → Nieuwe implementatie**.
-2. Klik op het tandwiel naast "Type selecteren" en kies **Web-app**.
-3. Vul in:
-   - Uitvoeren als: **Ik**
-   - Wie heeft toegang: **Iedereen**
-4. **Implementeren**. Google vraagt toestemming:
-   **Toegang autoriseren** → kies het restaurant-account → bij "Google heeft deze app niet geverifieerd":
-   **Geavanceerd → Ga naar … (niet veilig)** → **Toestaan**.
-   (Dat is normaal: het is je eigen script, Google kent het alleen nog niet.)
-5. Kopieer de **URL van de web-app** (eindigt op `/exec`) en stuur die door.
-   Die link is niet geheim: zonder pincode kun je er alleen het menu mee lezen en een reservering plaatsen.
+## 2. Manifest met de vaste toestemmingen
+1. **Projectinstellingen** (tandwiel) → vink aan: **Het manifestbestand appsscript.json tonen in de editor**.
+2. Terug naar **Editor** → open `appsscript.json` → vervang alles door de inhoud van `api/appsscript.json` → opslaan.
 
-## Later iets aanpassen aan het script?
-Plak de nieuwe `Code.gs`, sla op en kies **Implementeren → Implementaties beheren → potlood → Versie: Nieuwe versie → Implementeren**.
-De link blijft dan hetzelfde.
+## 3. Code
+Open `Code.gs` → vervang alles door de inhoud van `api/Code.gs` → opslaan.
+
+## 4. Eenmalige toestemming
+1. Kies bovenin de functie **setup** → **Uitvoeren**.
+2. **Toegang autoriseren** → kies het restaurant-account → bij "Google heeft deze app niet geverifieerd": **Geavanceerd → Ga naar … (niet veilig)** → **Alles selecteren** → **Doorgaan**.
+   (Normaal: het is het eigen script van het restaurant.)
+3. Het logboek eindigt met **Uitvoering voltooid** en de link naar de spreadsheet.
+
+## 5. Inlogcode voor de beheer-app (alleen de eigenaar weet hem)
+**Projectinstellingen → Scripteigenschappen → Scripteigenschap toevoegen**:
+- `PIN`: 6 tot 40 tekens, letters en cijfers mag; geen 123456/abcdef/000000.
+- Optioneel `MAIL_TO`: als de mails naar een ander adres moeten dan dit Google-account.
+
+## 6. Online zetten
+1. **Implementeren → Nieuwe implementatie** → tandwiel → **Web-app**.
+2. Uitvoeren als: **Ik**. Wie heeft toegang: **Iedereen**. → **Implementeren**.
+3. Kopieer de **web-app-URL** (eindigt op `/exec`) en zet hem in `data-api` van `index.html`, `beheer/index.html` en `wijzig.html`.
+   De link is niet geheim: zonder inlogcode kun je alleen het menu lezen en reserveren.
+
+## Later iets aanpassen
+Plak de nieuwe `Code.gs`, sla op → **Implementeren → Implementaties beheren → potlood → Versie: Nieuwe versie → Implementeren**. Link blijft gelijk, geen nieuwe toestemming.
+Alleen als `appsscript.json` ooit een scope bijkrijgt: daarna één keer **setup** uitvoeren (stap 4).

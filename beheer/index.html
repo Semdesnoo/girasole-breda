@@ -223,7 +223,7 @@ label>input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
     if (!API) return Promise.reject(new Error('De app is nog niet gekoppeld aan Google'));
     var body = Object.assign({ action: action, pin: pin }, extra || {});
     return fetch(API, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) })
-      .then(function (r) { return r.json(); })
+      .then(function (r) { return r.json().catch(function () { throw new Error('De Google-koppeling heeft opnieuw toestemming nodig: open Apps Script en klik op Uitvoeren bij setup.'); }); })
       .then(function (d) { if (d.auth === false) { logout(d.error); throw new Error(d.error); } if (d.error) throw new Error(d.error); return d; });
   }
 

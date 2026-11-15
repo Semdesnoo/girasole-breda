@@ -7,8 +7,24 @@
  * Inlogcode: Projectinstellingen > Scripteigenschappen > PIN (minstens 6 tekens, letters en cijfers mag).
  */
 
-// run once from the editor to grant permissions and create the spreadsheet
-function setup() { resSheet(); tab('Instellingen', ['sleutel', 'waarde']); DriveApp.getRootFolder(); Logger.log(book().getUrl()); }
+// Run ONCE from the editor at installation. It asks Google for every permission the script will
+// ever need (fixed list in appsscript.json), creates the spreadsheet and installs the daily check.
+// Rule: never use a Google service outside appsscript.json "oauthScopes", or the owner must re-authorize.
+function setup() {
+  controle();
+  ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'controle') ScriptApp.deleteTrigger(t); });
+  ScriptApp.newTrigger('controle').timeBased().everyDays(1).atHour(6).create();
+  Logger.log('Klaar. Spreadsheet: ' + book().getUrl());
+}
+// Daily self-test. If anything breaks (permission revoked, sheet gone), this run fails and Google
+// itself mails the account owner a failure report, so problems never go unnoticed.
+function controle() {
+  resSheet(); tab('Instellingen', ['sleutel', 'waarde']);
+  DriveApp.getRootFolder();
+  MailApp.getRemainingDailyQuota();
+  var real = String(PropertiesService.getScriptProperties().getProperty('PIN') || '');
+  if (real.length < 6) throw new Error('De inlogcode (PIN) is nog niet ingesteld in Projectinstellingen > Scripteigenschappen.');
+}
 
 var CATS = ['voor', 'pasta', 'hoofd', 'pizza'];
 var STATUS = ['nieuw', 'bevestigd', 'afgewezen'];
