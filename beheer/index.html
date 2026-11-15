@@ -53,6 +53,28 @@ nav.tabs button[aria-current="true"]::before{content:"";position:absolute;top:0;
 .dot{position:absolute;top:6px;left:calc(50% + 8px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--red);color:#fff;font-size:11px;line-height:18px;font-weight:600}
 
 /* filters / pills */
+.cal{padding:16px 14px 12px}
+.cal-h{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.cal-h h3{flex:1;font-size:26px;text-transform:capitalize;text-align:center}
+.cal-nav{width:44px;height:44px;border-radius:50%;border:1px solid var(--line);background:none;font-size:24px;line-height:1;cursor:pointer;color:var(--wine)}
+.cal-today{min-height:44px;padding:0 16px;font-size:12px}
+.cal-g{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal-g .wd{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-align:center;padding:4px 0}
+.cal-g button{position:relative;min-height:68px;border:1px solid var(--line);border-radius:12px;background:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;padding:4px 2px}
+.cal-g button .d{position:absolute;top:5px;left:7px;font-size:12px;color:var(--muted)}
+.cal-g button .n{font-family:'Cormorant Garamond',serif;font-size:28px;line-height:1;color:var(--wine);margin-top:8px}
+.cal-g button .g{font-size:11px;color:var(--muted)}
+.cal-g button .new{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.cal-g button.has{background:#FFF6DA;border-color:rgba(245,184,0,.6)}
+.cal-g button.out{opacity:.35}
+.cal-g button.closed{background:repeating-linear-gradient(135deg,#F6EEE0 0 6px,#FBF6EC 6px 12px);cursor:default}
+.cal-g button.today .d{background:var(--sun);color:var(--ink);border-radius:999px;padding:1px 6px;left:4px;font-weight:600}
+.cal-g button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine)}
+.cal-g button[aria-pressed="true"] .n,.cal-g button[aria-pressed="true"] .d{color:var(--cream)}.cal-g button[aria-pressed="true"] .g{color:#E3D0C9}
+.cal-k{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;margin:10px 0 0;font-size:12px;color:var(--muted)}
+.cal-k i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.cal-k b{font-family:'Cormorant Garamond',serif;font-size:17px;color:var(--wine);font-weight:400;margin-right:4px}.k-c{background:repeating-linear-gradient(135deg,#EADFCB 0 3px,#FBF6EC 3px 6px);border:1px solid var(--line)}.k-new{background:var(--red);border-radius:50%!important}
+@media (max-width:560px){.cal-h h3{white-space:nowrap}.cal{padding:14px 10px 10px}.cal-g{gap:3px}.cal-g button{min-height:54px;border-radius:9px}.cal-g button .n{font-size:22px;margin-top:10px}.cal-g button .g{display:none}.cal-h h3{font-size:19px}.cal-today{padding:0 12px}}
 .pills{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:0 -18px 18px;padding:0 18px}
 .pills button{flex:none;min-height:40px;padding:0 16px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer;font-size:13px}
 .pills button[aria-pressed="true"]{background:var(--wine);border-color:var(--wine);color:var(--cream)}
@@ -134,6 +156,11 @@ details.card[open]>summary{margin-bottom:16px}
 <main>
 <section data-tab="res">
 <div class="sec-h"><h2>Reserveringen</h2><button class="btn line js-refresh" type="button" aria-label="Vernieuwen">↻</button></div>
+<div class="card cal">
+<div class="cal-h"><button type="button" class="cal-nav" data-cm="-1" aria-label="Vorige maand">‹</button><h3 class="js-cal-t"></h3><button type="button" class="cal-nav" data-cm="1" aria-label="Volgende maand">›</button><button type="button" class="btn line cal-today" data-cal-today>Vandaag</button></div>
+<div class="cal-g js-cal" role="grid" aria-label="Maandoverzicht"></div>
+<p class="cal-k"><span><b>4</b> = aantal reserveringen</span><span><i class="k-new"></i>nog bellen</span><span><i class="k-c"></i>gesloten</span></p>
+</div>
 <div class="pills js-res-filter" role="group" aria-label="Filter">
 <button type="button" data-f="nieuw" aria-pressed="false">Nieuw</button><button type="button" data-f="vandaag" aria-pressed="false">Vandaag</button><button type="button" data-f="komend" aria-pressed="true">Komend</button><button type="button" data-f="alles" aria-pressed="false">Alles</button>
 </div>
@@ -229,17 +256,46 @@ details.card[open]>summary{margin-bottom:16px}
     }).catch(function (e) { if (!quiet) toast(e.message, true); });
   }
   function todo(x) { return x.status === 'nieuw' || x.status === 'gewijzigd'; }
+  function active(x) { return x.status !== 'afgewezen' && x.status !== 'geannuleerd'; }
+  var C = { y: +today.slice(0, 4), m: +today.slice(5, 7) - 1 };
+  var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+  function renderCal() {
+    var first = new Date(C.y, C.m, 1), off = (first.getDay() + 6) % 7, h = '';
+    ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].forEach(function (w) { h += '<span class="wd">' + w + '</span>'; });
+    var start = new Date(C.y, C.m, 1 - off);
+    for (var i = 0; i < 42; i++) {
+      var dt = new Date(start.getFullYear(), start.getMonth(), start.getDate() + i);
+      if (i >= 35 && dt.getMonth() !== C.m) break;
+      var d = dt.getFullYear() + '-' + p2(dt.getMonth() + 1) + '-' + p2(dt.getDate());
+      var on = S.res.filter(function (x) { return x.dag === d && active(x); });
+      var gs = on.reduce(function (s, x) { return s + x.personen; }, 0), nw = on.some(todo);
+      var cls = [dt.getMonth() !== C.m ? 'out' : '', dt.getDay() === 1 && !on.length ? 'closed' : '', on.length ? 'has' : '', d === today ? 'today' : ''].join(' ');
+      h += '<button type="button" class="' + cls + '" data-day="' + d + '" aria-pressed="' + (S.f === 'dag' && S.day === d) + '" aria-label="' + esc(dayLabel(d)) + ': ' + on.length + ' reserveringen, ' + gs + ' gasten">' +
+        '<span class="d">' + dt.getDate() + '</span>' + (on.length ? '<span class="n">' + on.length + '</span><span class="g">' + gs + ' gasten</span>' : '') + (nw ? '<span class="new"></span>' : '') + '</button>';
+    }
+    q('.js-cal').innerHTML = h;
+    q('.js-cal-t').textContent = MN[C.m] + ' ' + C.y;
+  }
+  function pickDay(d) {
+    S.f = 'dag'; S.day = d; C.y = +d.slice(0, 4); C.m = +d.slice(5, 7) - 1;
+    q('.js-res-filter').querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x.dataset.f === 'vandaag' && d === today); });
+    renderRes();
+  }
+  q('.js-cal').addEventListener('click', function (e) { var b = e.target.closest('[data-day]'); if (b) { pickDay(b.dataset.day); q('.js-res').scrollIntoView({ behavior: 'smooth', block: 'start' }); } });
+  document.querySelectorAll('[data-cm]').forEach(function (b) { b.addEventListener('click', function () { var m = C.m + +b.dataset.cm; C.y += Math.floor(m / 12); C.m = (m + 12) % 12; renderCal(); }); });
+  q('[data-cal-today]').addEventListener('click', function () { pickDay(today); });
   function renderRes() {
     var n = S.res.filter(todo).length, dot = q('.js-dot');
     dot.hidden = !n; dot.textContent = n;
+    renderCal();
     var list = S.res.filter(function (x) {
       if (S.f === 'nieuw') return todo(x);
-      if (S.f === 'vandaag') return x.dag === today;
+      if (S.f === 'dag') return x.dag === S.day;
       if (S.f === 'komend') return x.dag >= today;
       return true;
     });
     if (S.f === 'alles') list = list.slice().reverse();
-    if (!list.length) { q('.js-res').innerHTML = '<div class="empty"><span class="script">Tutto tranquillo</span>Geen reserveringen in deze lijst.</div>'; return; }
+    if (!list.length) { q('.js-res').innerHTML = '<div class="empty"><span class="script">Tutto tranquillo</span>' + (S.f === 'dag' ? 'Geen reserveringen op ' + esc(dayLabel(S.day)) + '.' : 'Geen reserveringen in deze lijst.') + '</div>'; return; }
     var h = '', last = '';
     list.forEach(function (x) {
       if (x.dag !== last) {
@@ -266,7 +322,9 @@ details.card[open]>summary{margin-bottom:16px}
     }).catch(function (err) { b.disabled = false; toast(err.message, true); });
   });
   q('.js-res-filter').addEventListener('click', function (e) {
-    var b = e.target.closest('[data-f]'); if (!b) return; S.f = b.dataset.f;
+    var b = e.target.closest('[data-f]'); if (!b) return;
+    if (b.dataset.f === 'vandaag') return pickDay(today);
+    S.f = b.dataset.f;
     this.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', x === b); }); renderRes();
   });
   q('.js-refresh').addEventListener('click', function () { loadRes(); toast('Bijgewerkt'); });
