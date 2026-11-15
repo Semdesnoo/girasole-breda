@@ -20,6 +20,10 @@ await cdp('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, devic
 await cdp('Page.navigate', { url: `http://127.0.0.1:8767/wijzig.html?id=${mid}&t=${t}` }); await sleep(2500);
 ok(await ev(`!document.querySelector('.js-form').hidden && document.querySelector('.js-now').textContent.includes('19:00')`), 'page loads current booking');
 await shot('wijzig-form');
+const box = await ev(`['dag','tijd','personen','keuze'].map(n=>{const r=document.querySelector('.js-form [name='+n+']').getBoundingClientRect();return [Math.round(r.left),Math.round(r.top),Math.round(r.width),Math.round(r.height)]})`);
+const [fd, ti, p, k] = box, edge = await ev(`Math.round(document.querySelector('.in').getBoundingClientRect().right - 26)`);
+ok(box.every(b => b[2] === fd[2] && b[3] === fd[3]) && fd[1] === ti[1] && p[1] === k[1] && fd[0] === p[0] && ti[0] === k[0] && ti[0] + ti[2] <= edge + 1 && fd[0] + fd[2] < ti[0],
+  'fields equal size, aligned in two columns, inside the card', JSON.stringify(box));
 await ev(`(()=>{const f=document.querySelector('.js-form');f.tijd.value='20:00';f.personen.value='4';f.personen.dispatchEvent(new Event('change'));f.requestSubmit()})()`); await sleep(1500);
 ok(await ev(`!document.querySelector('.js-done').hidden`), 'change submitted from page');
 await shot('wijzig-done');
