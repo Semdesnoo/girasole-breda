@@ -64,6 +64,7 @@ nav.tabs button[aria-current="true"]::before{content:"";position:absolute;top:0;
 .cal-g button .d{position:absolute;top:5px;left:7px;font-size:12px;color:var(--muted)}
 .cal-g button .n{font-family:'Cormorant Garamond',serif;font-size:28px;line-height:1;color:var(--wine);margin-top:8px}
 .cal-g button .g{font-size:11px;color:var(--muted)}
+.cal-g button .n.zero{color:#D8CBC4}
 .cal-g button .new{position:absolute;top:6px;right:6px;width:9px;height:9px;border-radius:50%;background:var(--red)}
 .cal-g button.has{background:#FFF6DA;border-color:rgba(245,184,0,.6)}
 .cal-g button.out{opacity:.35}
@@ -277,7 +278,7 @@ label>input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
       var gs = on.reduce(function (s, x) { return s + x.personen; }, 0), nw = on.some(todo);
       var cls = [dt.getMonth() !== C.m ? 'out' : '', dt.getDay() === 1 && !on.length ? 'closed' : '', on.length ? 'has' : '', d === today ? 'today' : ''].join(' ');
       h += '<button type="button" class="' + cls + '" data-day="' + d + '" aria-pressed="' + (S.f === 'dag' && S.day === d) + '" aria-label="' + esc(dayLabel(d)) + ': ' + on.length + ' reserveringen, ' + gs + ' gasten">' +
-        '<span class="d">' + dt.getDate() + '</span>' + (on.length ? '<span class="n">' + on.length + '</span><span class="g">' + gs + ' gasten</span>' : '') + (nw ? '<span class="new"></span>' : '') + '</button>';
+        '<span class="d">' + dt.getDate() + '</span>' + (on.length ? '<span class="n">' + on.length + '</span><span class="g">' + gs + ' gasten</span>' : dt.getMonth() === C.m && dt.getDay() !== 1 ? '<span class="n zero">0</span>' : '') + (nw ? '<span class="new"></span>' : '') + '</button>';
     }
     q('.js-cal').innerHTML = h;
     q('.js-cal-t').textContent = MN[C.m] + ' ' + C.y;

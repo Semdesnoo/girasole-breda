@@ -20,6 +20,7 @@ await post({ ...g, dag: day, tijd: '19:30', personen: 5, naam: 'Kal Twee' });
 const list = (await post({ action: 'lijst', pin: PIN })).lijst.filter(x => x.dag === day && x.status !== 'afgewezen' && x.status !== 'geannuleerd');
 const want = [list.length, list.reduce((s, x) => s + x.personen, 0)];
 
+await cdp('Network.setCacheDisabled', { cacheDisabled: true });
 await cdp('Emulation.setDeviceMetricsOverride', { width: W, height: 1000, deviceScaleFactor: 1, mobile: W < 700 });
 await cdp('Page.navigate', { url: 'http://127.0.0.1:8767/beheer/' }); await sleep(1800);
 if (await ev(`!document.querySelector('.js-login').hidden`)) { await ev(`(()=>{const f=document.querySelector('.js-login-form');f.pin.value=${JSON.stringify(PIN)};f.requestSubmit()})()`); }
@@ -28,6 +29,7 @@ for (let i = 0; i < 20 && !(await ev(`!!document.querySelector('.res')`)); i++) 
 if (day.slice(0, 7) !== today.slice(0, 7)) { await ev(`document.querySelector('[data-cm="1"]').click()`); await sleep(300); }
 const cell = await ev(`(()=>{const b=document.querySelector('[data-day="${day}"]');return b&&[b.querySelector('.n')?.textContent, b.querySelector('.g')?.textContent, !!b.querySelector('.new')]})()`);
 ok(cell && +cell[0] === want[0] && cell[1] === want[1] + ' gasten' && cell[2], 'day cell shows count, guests, new-dot', JSON.stringify(cell) + ' want ' + want);
+ok(await ev(`[...document.querySelectorAll('.cal-g button:not(.out):not(.closed)')].every(b=>/^[0-9]+$/.test(b.querySelector('.n')?.textContent||''))`), 'every open day shows a number (0 too)');
 await shot('cal-' + W);
 await ev(`document.querySelector('[data-day="${day}"]').click()`); await sleep(500);
 const shown = await ev(`[...document.querySelectorAll('.res')].map(r=>r.querySelector('b').textContent)`);
