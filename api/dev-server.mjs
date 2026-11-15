@@ -12,7 +12,7 @@ function Sheet(name) {
   const range = (r, c, nr = 1, nc = 1) => ({
     setValues(v) { v.forEach((row, i) => row.forEach((x, j) => { (rows[r - 1 + i] ||= [])[c - 1 + j] = x; })); return this; },
     getValues() { return Array.from({ length: nr }, (_, i) => Array.from({ length: nc }, (_, j) => (rows[r - 1 + i] || [])[c - 1 + j] ?? '')); },
-    setValue(x) { (rows[r - 1] ||= [])[c - 1] = x; return this; },
+    setValue(x) { (rows[r - 1] ||= [])[c - 1] = typeof x === 'string' ? x.replace(/^'/, '') : x; return this; },
     setFontWeight() { return this; }, setNumberFormat() { return this; },
   });
   return {
@@ -28,11 +28,11 @@ const fmt = (d, tz, f) => {
   return f.replace('yyyy', p.year).replace('MM', p.month).replace('dd', p.day).replace('HH', p.hour).replace('mm', p.minute);
 };
 const ctx = vm.createContext({
-  console, JSON, Math, Date, String, Array, Object, isNaN, parseInt,
+  console, JSON, Math, Date, String, Array, Object, isNaN, parseInt, encodeURIComponent,
   SpreadsheetApp: (() => { const ss = { getSheetByName: n => sheets[n] || null, insertSheet: n => (sheets[n] = Sheet(n)), getId: () => 'local', getUrl: () => 'local' }; return { create: () => ss, openById: () => ss }; })(),
   Logger: { log() {} },
   ContentService: { MimeType: { JSON: 'json' }, createTextOutput: s => ({ s, setMimeType() { return this; } }) },
-  Utilities: { formatDate: fmt },
+  Utilities: { formatDate: fmt, getUuid: () => crypto.randomUUID() },
   CacheService: { getScriptCache: () => ({ get: k => (cache[k] && cache[k].t > Date.now() ? cache[k].v : null), put: (k, v, ttl) => { cache[k] = { v, t: Date.now() + ttl * 1000 }; } }) },
   LockService: { getScriptLock: () => ({ waitLock() {}, releaseLock() {} }) },
   PropertiesService: { getScriptProperties: () => ({ getProperty: k => props[k] ?? process.env[k] ?? null, setProperty: (k, v) => { props[k] = v; } }) },

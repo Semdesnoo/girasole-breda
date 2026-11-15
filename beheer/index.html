@@ -69,7 +69,9 @@ nav.tabs button[aria-current="true"]::before{content:"";position:absolute;top:0;
 .res-n b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .res-n span{font-size:13px;color:var(--muted)}
 .badge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--sun);color:var(--ink);white-space:nowrap}
-.badge.bevestigd{background:#DDEFE3;color:#1F5A37}.badge.afgewezen{background:#eee;color:#777}
+.badge.bevestigd{background:#DDEFE3;color:#1F5A37}.badge.afgewezen,.badge.geannuleerd{background:#eee;color:#777}.badge.gewijzigd{background:#E07B00;color:#fff}
+.res.gewijzigd{border-left-color:#E07B00}.res.geannuleerd{border-left-color:#bbb;opacity:.6}
+.res-n .was{display:block;font-size:12px;color:#B3262E;margin-top:2px}
 .res-x{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .res-x .btn{min-height:40px;padding:0 14px;font-size:12px;flex:1}
 .empty{text-align:center;padding:60px 20px;color:var(--muted)}
@@ -208,16 +210,17 @@ details.card[open]>summary{margin-bottom:16px}
   // reservations
   function loadRes(quiet) {
     api('lijst').then(function (d) { var r = d.lijst;
-      var before = S.res.filter(function (x) { return x.status === 'nieuw'; }).length, now = r.filter(function (x) { return x.status === 'nieuw'; }).length;
+      var before = S.res.filter(todo).length, now = r.filter(todo).length;
       S.res = r; renderRes();
-      if (quiet && now > before) toast('Nieuwe reservering binnen');
+      if (quiet && now > before) toast('Nieuwe of gewijzigde reservering binnen');
     }).catch(function (e) { if (!quiet) toast(e.message, true); });
   }
+  function todo(x) { return x.status === 'nieuw' || x.status === 'gewijzigd'; }
   function renderRes() {
-    var n = S.res.filter(function (x) { return x.status === 'nieuw'; }).length, dot = q('.js-dot');
+    var n = S.res.filter(todo).length, dot = q('.js-dot');
     dot.hidden = !n; dot.textContent = n;
     var list = S.res.filter(function (x) {
-      if (S.f === 'nieuw') return x.status === 'nieuw';
+      if (S.f === 'nieuw') return todo(x);
       if (S.f === 'vandaag') return x.dag === today;
       if (S.f === 'komend') return x.dag >= today;
       return true;
@@ -228,14 +231,14 @@ details.card[open]>summary{margin-bottom:16px}
     list.forEach(function (x) {
       if (x.dag !== last) {
         last = x.dag;
-        var tot = list.filter(function (y) { return y.dag === x.dag && y.status !== 'afgewezen'; }).reduce(function (s, y) { return s + y.personen; }, 0);
+        var tot = list.filter(function (y) { return y.dag === x.dag && y.status !== 'afgewezen' && y.status !== 'geannuleerd'; }).reduce(function (s, y) { return s + y.personen; }, 0);
         h += '<div class="day"><h3>' + esc(dayLabel(x.dag)) + '</h3><span>' + tot + ' gasten</span></div>';
       }
-      var lbl = { nieuw: 'Nieuw', bevestigd: 'Bevestigd', afgewezen: 'Afgewezen' }[x.status];
-      h += '<article class="res ' + x.status + '"><div class="res-top"><span class="res-t">' + esc(x.tijd) + '</span><div class="res-n"><b>' + esc(x.naam) + '</b><span>' + x.personen + (x.personen === 1 ? ' persoon' : ' personen') + ' · ' + esc(x.keuze) + '</span></div><span class="badge ' + x.status + '">' + lbl + '</span></div>'
+      var lbl = { nieuw: 'Nieuw', bevestigd: 'Bevestigd', afgewezen: 'Afgewezen', gewijzigd: 'Gewijzigd', geannuleerd: 'Geannuleerd' }[x.status] || x.status;
+      h += '<article class="res ' + x.status + '"><div class="res-top"><span class="res-t">' + esc(x.tijd) + '</span><div class="res-n"><b>' + esc(x.naam) + '</b><span>' + x.personen + (x.personen === 1 ? ' persoon' : ' personen') + ' · ' + esc(x.keuze) + '</span>' + (x.vorige ? '<span class="was">' + (x.status === 'geannuleerd' ? 'Geannuleerd door de gast' : 'Was: ' + esc(x.vorige)) + '</span>' : '') + '</div><span class="badge ' + x.status + '">' + lbl + '</span></div>'
         + '<div class="res-x"><a class="btn line" href="tel:' + esc(x.telefoon.replace(/[^0-9+]/g, '')) + '">Bellen</a><a class="btn line" href="mailto:' + esc(x.email) + '?subject=' + encodeURIComponent('Je reservering bij Girasole') + '">Mailen</a>'
-        + (x.status !== 'bevestigd' ? '<button class="btn" data-st="bevestigd" data-id="' + x.id + '">Bevestigen</button>' : '')
-        + (x.status !== 'afgewezen' ? '<button class="btn line" data-st="afgewezen" data-id="' + x.id + '">Afwijzen</button>' : '')
+        + (x.status !== 'bevestigd' && x.status !== 'geannuleerd' ? '<button class="btn" data-st="bevestigd" data-id="' + x.id + '">Bevestigen</button>' : '')
+        + (x.status !== 'afgewezen' && x.status !== 'geannuleerd' ? '<button class="btn line" data-st="afgewezen" data-id="' + x.id + '">Afwijzen</button>' : '')
         + '</div></article>';
     });
     q('.js-res').innerHTML = h;

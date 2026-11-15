@@ -24,7 +24,7 @@ ok((await post({ action: 'check', pin: '000000' })).auth === false, 'wrong PIN r
 const b = await post({ ...good, naam: 'Test <b>', personen: '4' });
 ok(b.ok && b.id, 'booking stored', JSON.stringify(b));
 const mine = (await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id);
-ok(mine && mine.status === 'nieuw' && mine.personen === 4 && mine.dag === good.dag && mine.tijd === '19:15' && mine.telefoon === '0612345678', 'booking listed with exact values', JSON.stringify(mine));
+ok(mine && !('token' in mine) && mine.status === 'nieuw' && mine.personen === 4 && mine.dag === good.dag && mine.tijd === '19:15' && mine.telefoon === '0612345678', 'booking listed with exact values', JSON.stringify(mine));
 ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'bevestigd' })).ok, 'confirm booking');
 ok((await post({ action: 'lijst', pin: PIN })).lijst.find(x => String(x.id) === b.id).status === 'bevestigd', 'status saved');
 ok((await post({ action: 'status', pin: PIN, id: b.id, status: 'weg' })).error, 'bad status refused');
@@ -33,6 +33,28 @@ if (LOCAL) {
   const own = m.findLast(x => x.to === 'restaurant@example.nl'), guest = m.findLast(x => x.to === 'a@b.nl');
   ok(own && own.replyTo === 'a@b.nl' && /Test &lt;b&gt;/.test(own.htmlBody) && !/<b>Test/.test(own.htmlBody), 'owner mailed, reply-to guest, html escaped');
   ok(guest && guest.replyTo === 'restaurant@example.nl' && /we bellen je even, of sturen je een mailtje/i.test(guest.htmlBody) && /logo-mail\.png/.test(guest.htmlBody) && /4 gasten/.test(guest.htmlBody), 'guest gets confirmation with call notice');
+}
+
+if (LOCAL) { // guest self-service via the secret link in the mail
+  const m = await (await fetch(A + '/__mails')).json();
+  const link = m.findLast(x => x.to === 'a@b.nl').htmlBody.match(/wijzig\.html\?id=(\d+)&t=([a-f0-9]{32})/);
+  ok(link && link[1] === b.id, 'guest mail has personal change link');
+  const [, id, t] = link;
+  ok((await post({ action: 'mijn', id, t: 'f'.repeat(32) })).error, 'wrong token refused');
+  const me = await post({ action: 'mijn', id, t });
+  ok(me.res && me.res.tijd === '19:15' && !('email' in me.res) && !('telefoon' in me.res), 'guest sees own booking without contact data');
+  ok((await post({ action: 'wijzig', id, t, dag: good.dag, tijd: '19:15', personen: 4, keuze: 'À la carte' })).error, 'no-op change refused');
+  ok((await post({ action: 'wijzig', id, t, dag: good.dag, tijd: '20:30', personen: 4, keuze: 'À la carte' })).error, 'change to 20:30 refused');
+  ok((await post({ action: 'wijzig', id, t, dag: good.dag, tijd: '18:30', personen: 12, keuze: 'Menu, 4 gangen' })).ok, 'guest changes time + persons');
+  const ch = (await post({ action: 'lijst', pin: PIN })).lijst.find(x => x.id === id);
+  ok(ch.status === 'gewijzigd' && ch.tijd === '18:30' && ch.personen === 12 && ch.keuze === 'De Huiskamer' && /19:15/.test(ch.vorige) && !('token' in ch), 'app sees change (12p = Huiskamer, old value kept, token hidden)', JSON.stringify(ch));
+  const m2 = await (await fetch(A + '/__mails')).json();
+  ok(/^Gewijzigde reservering/.test(m2.findLast(x => x.to === 'restaurant@example.nl').subject), 'owner gets change mail');
+  ok(/wijziging/.test(m2.findLast(x => x.to === 'a@b.nl').subject), 'guest gets change confirmation');
+  ok((await post({ action: 'wijzig', id, t, annuleer: true })).ok, 'guest cancels');
+  ok((await post({ action: 'lijst', pin: PIN })).lijst.find(x => x.id === id).status === 'geannuleerd', 'app sees cancellation');
+  ok(/^Geannuleerd/.test((await (await fetch(A + '/__mails')).json()).findLast(x => x.to === 'restaurant@example.nl').subject), 'owner gets cancel mail');
+  ok((await post({ action: 'wijzig', id, t, dag: good.dag, tijd: '19:00', personen: 2, keuze: 'À la carte' })).error, 'no changes after cancel');
 }
 
 const menu = site.menu;

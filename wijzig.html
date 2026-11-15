@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="nl" data-api="https://script.google.com/macros/s/AKfycbzIU7miVX4exXqFyNk0Lv0--f_6sL_Ezd_06NkSCfbBIQvlrzZSO-CP0i9KQvmMpCy2/exec">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#5B0A19">
+<title>Je reservering wijzigen · Girasole</title>
+<link rel="icon" href="favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;1,400&family=Instrument+Sans:wght@400;500;600&family=Mrs+Saint+Delafield&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;min-height:100dvh;background:#F3E6D0 url(media/grain.png);background-size:300px;color:#3A0B14;font:15px/1.55 'Instrument Sans',system-ui,sans-serif;display:flex;justify-content:center;padding:24px 14px}
+.card{width:100%;max-width:520px;background:#FFFBF2;border-radius:22px;overflow:hidden;box-shadow:0 40px 70px -40px rgba(58,11,20,.5);align-self:flex-start}
+.top{background:#FDF5E1;border-bottom:4px solid #5B0A19;text-align:center;padding:26px 20px 22px}
+.top img{width:280px;max-width:85%;height:auto}
+.in{padding:28px 26px 30px}
+h1{font-family:'Mrs Saint Delafield',cursive;font-weight:400;font-size:46px;line-height:1;color:#B3262E;margin:0 0 6px;text-align:center}
+.sub{color:#6B4A4E;text-align:center;margin:0 0 22px}
+.now{background:#5B0A19;color:#FDF5E1;border-radius:16px;padding:16px 18px;text-align:center;margin-bottom:24px}
+.now small{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#F5B800;margin-bottom:6px}
+.now b{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:24px;display:block}
+label{display:flex;flex-direction:column;gap:6px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#876A6C;margin-bottom:14px}
+input,select{font:inherit;font-size:16px;letter-spacing:0;text-transform:none;color:#3A0B14;width:100%;min-height:50px;padding:12px 14px;border:1px solid rgba(58,11,20,.22);border-radius:12px;background:#fff;outline:none}
+input:focus,select:focus{border-color:#5B0A19;box-shadow:0 0 0 3px rgba(91,10,25,.12)}
+select:disabled{background:#F3E6D0}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+.btn{display:flex;align-items:center;justify-content:center;width:100%;min-height:54px;border-radius:999px;border:1px solid #5B0A19;background:#F5B800;border-color:#F5B800;color:#3A0B14;font:inherit;font-size:14px;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;margin-top:8px;text-decoration:none}
+.btn.line{background:transparent;border-color:rgba(179,38,46,.4);color:#B3262E}
+.btn:disabled{opacity:.5}
+.msg{border-radius:12px;padding:12px 14px;margin:6px 0 4px;font-size:14px}
+.msg.err{background:#FBE3E3;color:#8A1B22}
+.note{font-size:13px;color:#876A6C;text-align:center;margin:18px 0 0}
+.done{text-align:center}
+.done p{color:#6B4A4E}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main class="card">
+<div class="top"><a href="./"><img src="media/logo-mail.png" alt="GIRASOLE by Luca's Kitchen" width="280"></a></div>
+<div class="in">
+
+<div class="js-loading" style="text-align:center;color:#876A6C;padding:30px 0">Je reservering wordt geladen…</div>
+<div class="js-fail" hidden><h1>Oeps</h1><p class="sub js-fail-t"></p><a class="btn" href="tel:+31765224437">Bel 076 522 4437</a></div>
+
+<form class="js-form" hidden novalidate>
+<h1 class="js-hi">Ciao!</h1>
+<p class="sub">Pas hieronder je reservering aan.</p>
+<div class="now"><small>Je huidige reservering</small><b class="js-now"></b></div>
+<div class="grid">
+<label>Datum<input type="date" name="dag" required></label>
+<label>Tijd<select name="tijd" required></select></label>
+</div>
+<div class="grid">
+<label>Personen<select name="personen" required></select></label>
+<label>Keuze<select name="keuze"><option>À la carte</option><option>Menu, 4 gangen</option><option>Menu, 6 gangen</option><option>De Huiskamer</option></select></label>
+</div>
+<div class="msg err js-err" role="alert" hidden></div>
+<button class="btn js-save" type="submit">Wijziging doorgeven</button>
+<button class="btn line js-cancel" type="button">Reservering annuleren</button>
+<p class="note">Na je wijziging nemen we nog even contact met je op om je tafel te bevestigen.<br>Liever bellen? <a href="tel:+31765224437" style="color:#5B0A19">076 522 4437</a></p>
+</form>
+
+<div class="done js-done" hidden><h1 class="js-done-h"></h1><p class="js-done-t"></p><a class="btn" href="./">Naar de website</a></div>
+</div>
+</main>
+<script>
+(function () {
+  var API = /^(localhost|127.0.0.1)$/.test(location.hostname) ? 'http://127.0.0.1:8787' : document.documentElement.dataset.api, q = function (s) { return document.querySelector(s); };
+  var u = new URLSearchParams(location.search), id = u.get('id'), t = u.get('t');
+  var DG = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'], MN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+  var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var nice = function (d) { var x = new Date(d + 'T12:00'); return DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; };
+  var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
+  var f = q('.js-form');
+  function call(body) {
+    body.id = id; body.t = t;
+    return fetch(API, { method: 'POST', headers: { 'content-type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body) }).then(function (r) { return r.json(); });
+  }
+  function fail(msg) { q('.js-loading').hidden = true; f.hidden = true; q('.js-fail').hidden = false; q('.js-fail-t').textContent = msg; }
+  function done(h, txt) { f.hidden = true; q('.js-done').hidden = false; q('.js-done-h').textContent = h; q('.js-done-t').textContent = txt; }
+  function err(m) { var e = q('.js-err'); e.textContent = m || ''; e.hidden = !m; }
+
+  // options: times every 15 min 17:00-20:00, 1-12 persons
+  for (var m = 17 * 60; m <= 20 * 60; m += 15) f.tijd.insertAdjacentHTML('beforeend', '<option>' + pad(m / 60 | 0) + ':' + pad(m % 60) + '</option>');
+  for (var p = 1; p <= 12; p++) f.personen.insertAdjacentHTML('beforeend', '<option value="' + p + '">' + p + (p === 1 ? ' persoon' : ' personen') + '</option>');
+  var max = new Date(today + 'T12:00'); max.setDate(max.getDate() + 120);
+  f.dag.min = today; f.dag.max = max.toLocaleDateString('sv-SE');
+  function lock() { var big = f.personen.value === '12'; if (big) f.keuze.value = 'De Huiskamer'; f.keuze.disabled = big; }
+  f.personen.addEventListener('change', lock);
+  f.dag.addEventListener('change', function () { err(new Date(f.dag.value + 'T12:00').getDay() === 1 ? 'Op maandag zijn we gesloten. Kies een andere dag.' : ''); });
+
+  if (!API || !id || !t) return fail('Deze link is niet compleet. Gebruik de knop in je bevestigingsmail, of bel ons.');
+  call({ action: 'mijn' }).then(function (d) {
+    if (d.error) return fail(d.error);
+    var r = d.res;
+    q('.js-loading').hidden = true;
+    if (r.status === 'geannuleerd') return done('Geannuleerd', 'Deze reservering is al geannuleerd. Je bent altijd welkom om opnieuw te reserveren.');
+    if (r.dicht) return fail('Deze reservering kan niet meer online gewijzigd worden.');
+    f.hidden = false;
+    q('.js-hi').textContent = 'Ciao ' + r.naam.split(' ')[0] + '!';
+    q('.js-now').textContent = nice(r.dag) + ', ' + r.tijd + ' · ' + r.personen + (r.personen === 1 ? ' persoon' : ' personen');
+    f.dag.value = r.dag; f.tijd.value = r.tijd; f.personen.value = r.personen; f.keuze.value = r.keuze; lock();
+  }).catch(function () { fail('Er is geen verbinding. Probeer het zo nog eens, of bel ons.'); });
+
+  f.addEventListener('submit', function (e) {
+    e.preventDefault(); err('');
+    if (!f.dag.value) return err('Kies een datum.');
+    if (new Date(f.dag.value + 'T12:00').getDay() === 1) return err('Op maandag zijn we gesloten. Kies een andere dag.');
+    var b = q('.js-save'); b.disabled = true; b.textContent = 'Even geduld…';
+    call({ action: 'wijzig', dag: f.dag.value, tijd: f.tijd.value, personen: +f.personen.value, keuze: f.keuze.value }).then(function (d) {
+      if (d.error) throw new Error(d.error);
+      done('Grazie!', 'Je wijziging naar ' + nice(f.dag.value) + ' om ' + f.tijd.value + ' is doorgegeven. Je krijgt een mail, en we nemen nog even contact met je op om je tafel te bevestigen.');
+    }).catch(function (x) { err(x.message || 'Er ging iets mis. Bel ons even.'); b.disabled = false; b.textContent = 'Wijziging doorgeven'; });
+  });
+  q('.js-cancel').addEventListener('click', function () {
+    if (!confirm('Weet je zeker dat je je reservering wilt annuleren?')) return;
+    var b = this; b.disabled = true;
+    call({ action: 'wijzig', annuleer: true }).then(function (d) {
+      if (d.error) throw new Error(d.error);
+      done('Geannuleerd', 'Jammer dat je er niet bij kunt zijn. Je krijgt nog een bevestiging per mail. Hopelijk tot een andere keer!');
+    }).catch(function (x) { err(x.message || 'Er ging iets mis. Bel ons even.'); b.disabled = false; });
+  });
+})();
+</script>
+</body>
+</html>

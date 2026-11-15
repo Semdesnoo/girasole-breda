@@ -12,7 +12,8 @@ function setup() { resSheet(); tab('Instellingen', ['sleutel', 'waarde']); Logge
 
 var CATS = ['voor', 'pasta', 'hoofd', 'pizza'];
 var STATUS = ['nieuw', 'bevestigd', 'afgewezen'];
-var COLS = ['id', 'aangemaakt', 'dag', 'tijd', 'personen', 'keuze', 'naam', 'telefoon', 'email', 'status'];
+var COLS = ['id', 'aangemaakt', 'dag', 'tijd', 'personen', 'keuze', 'naam', 'telefoon', 'email', 'status', 'token', 'vorige'];
+var KEUZES = ['À la carte', 'Menu, 4 gangen', 'Menu, 6 gangen', 'De Huiskamer'];
 var DEFAULTS = {
  "menu": {
   "voor": [
@@ -192,7 +193,11 @@ function tab(name, header) {
   }
   return sh;
 }
-function resSheet() { return tab('Reserveringen', COLS); }
+function resSheet() {
+  var sh = tab('Reserveringen', COLS), head = sh.getRange(1, 1, 1, COLS.length).getValues()[0];
+  if (head.join() !== COLS.join()) sh.getRange(1, 1, 1, COLS.length).setValues([COLS]); // older sheets: add new columns
+  return sh;
+}
 
 function getSetting(k) {
   var rows = tab('Instellingen', ['sleutel', 'waarde']).getDataRange().getValues();
@@ -263,12 +268,16 @@ function pinError(pin) {
   return 'Onjuiste pincode';
 }
 
+function rowObj(row) {
+  var r = {}; COLS.forEach(function (c, j) { var x = row[j]; r[c] = x instanceof Date ? Utilities.formatDate(x, 'Europe/Amsterdam', c === 'tijd' ? 'HH:mm' : 'yyyy-MM-dd') : (x == null ? '' : x); });
+  r.personen = +r.personen; r.telefoon = String(r.telefoon); r.id = String(r.id);
+  return r;
+}
 function rowsToList() {
   var v = resSheet().getDataRange().getValues(), from = new Date(); from.setDate(from.getDate() - 30);
   var min = Utilities.formatDate(from, 'Europe/Amsterdam', 'yyyy-MM-dd'), list = [];
   for (var i = 1; i < v.length; i++) {
-    var r = {}; COLS.forEach(function (c, j) { r[c] = v[i][j] instanceof Date ? Utilities.formatDate(v[i][j], 'Europe/Amsterdam', c === 'tijd' ? 'HH:mm' : 'yyyy-MM-dd') : v[i][j]; });
-    r.personen = +r.personen; r.telefoon = String(r.telefoon);
+    var r = rowObj(v[i]); delete r.token;
     if (r.dag >= min) list.push(r);
   }
   return list.sort(function (a, b) { return (a.dag + a.tijd) < (b.dag + b.tijd) ? -1 : 1; });
@@ -305,50 +314,113 @@ function page(preheader, rows) {
     '<a href="tel:+31765224437" style="color:#F5B800;text-decoration:none">076 522 4437</a> · <a href="' + SITE + '" style="color:#F5B800;text-decoration:none">girasole website</a></td></tr>' +
     '</table></td></tr></table></body></html>';
 }
-function details(b) {
-  return '<div style="' + S + 'font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#B3262E">Je reservering</div>' +
+function details(b, label) {
+  return '<div style="' + S + 'font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#B3262E">' + (label || 'Je reservering') + '</div>' +
     '<div style="' + F + 'font-size:28px;margin:12px 0 6px">' + esc(langeDatum(b.dag)) + '</div>' +
     '<div style="' + S + 'font-size:17px;font-weight:bold">' + gasten(b.personen) + ' · ' + esc(b.tijd) + ' uur</div>' +
     '<div style="' + S + 'font-size:15px;color:#6B4A4E;margin-top:6px">' + esc(b.keuze) + '</div>';
 }
 
-function mailGast(b, id, replyTo) {
-  var html = page('We bellen of mailen je nog even om je tafel te bevestigen.',
-    block('<div style="' + F + 'font-style:italic;font-size:30px;color:#B3262E">Grazie, ' + esc(b.naam.split(' ')[0]) + '!</div>' +
-      '<p style="' + S + 'font-size:15px;line-height:1.6;color:#6B4A4E;margin:12px 0 0">We hebben je aanvraag goed ontvangen.</p>') +
-    block(details(b)) +
-    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we nemen nog even contact op</div>' +
-      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we contact met je hebben gehad. ' +
-      'We bellen je even, of sturen je een mailtje als we je niet te pakken krijgen. Zo weten we zeker dat er een plek voor je klaarstaat. ' +
-      'Houd je telefoon en je mail daarom even in de gaten, we laten zo snel mogelijk van ons horen.</p>', '#FDF0C9') +
-    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Iets wijzigen?</div>' +
-      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Kun je toch niet, of komen jullie met meer of minder personen? Bel ons even of beantwoord deze mail, dan passen we het graag aan.</p>' +
-      btn('tel:+31765224437', 'Bel ons', true) + btn('https://maps.google.com/?q=Sophiastraat+14+4811+EK+Breda', 'Route', false)) +
-    block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Openingstijden</div>' +
-      '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0">Dinsdag t/m zondag vanaf 17:00<br>Maandag gesloten</p>' +
-      '<p style="' + S + 'font-size:12px;color:#9A7F7F;margin:18px 0 0">Aanvraagnummer ' + esc(id) + '</p>'));
-  MailApp.sendEmail({ to: b.email, replyTo: replyTo, name: "Girasole by Luca's Kitchen",
-    subject: 'Je reserveringsaanvraag bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd, htmlBody: html });
+function mailGast(b, id, token, replyTo, kind, was) {
+  var first = esc(b.naam.split(' ')[0]), link = SITE + 'wijzig.html?id=' + encodeURIComponent(id) + '&t=' + token;
+  var head = {
+    nieuw: ['Grazie, ' + first + '!', 'We hebben je aanvraag goed ontvangen.'],
+    gewijzigd: ['Je wijziging is binnen', 'Dank je, ' + first + '. Dit is je nieuwe aanvraag.'],
+    geannuleerd: ['Je reservering is geannuleerd', 'Jammer dat je er niet bij kunt zijn, ' + first + '. Hopelijk tot een andere keer!']
+  }[kind];
+  var rows = block('<div style="' + F + 'font-style:italic;font-size:30px;color:#B3262E">' + head[0] + '</div>' +
+    '<p style="' + S + 'font-size:15px;line-height:1.6;color:#6B4A4E;margin:12px 0 0">' + head[1] + '</p>');
+  if (kind === 'geannuleerd') {
+    rows += block('<div style="' + S + 'font-size:12px;letter-spacing:3px;text-transform:uppercase;color:#B3262E">Geannuleerd</div>' +
+      '<div style="' + S + 'font-size:16px;color:#9A7F7F;text-decoration:line-through;margin-top:10px">' + esc(was) + '</div>') +
+      block('<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Toch komen? Je bent altijd welkom om opnieuw te reserveren.</p>' +
+        btn(SITE + '#reserveren', 'Opnieuw reserveren', true));
+  } else {
+    rows += block(details(b, kind === 'gewijzigd' ? 'Je nieuwe reservering' : '') + (was ? '<div style="' + S + 'font-size:13px;color:#9A7F7F;margin-top:12px">Was: <span style="text-decoration:line-through">' + esc(was) + '</span></div>' : '')) +
+      block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Let op: we nemen nog even contact op</div>' +
+        '<p style="' + S + 'font-size:15px;line-height:1.65;color:#4E2A30;margin:0">Je reservering is pas definitief nadat we contact met je hebben gehad. ' +
+        'We bellen je even, of sturen je een mailtje als we je niet te pakken krijgen. Zo weten we zeker dat er een plek voor je klaarstaat. ' +
+        'Houd je telefoon en je mail daarom even in de gaten, we laten zo snel mogelijk van ons horen.</p>', '#FDF0C9') +
+      block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Iets wijzigen?</div>' +
+        '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0 0 16px">Andere dag, tijd of aantal personen? Of kun je toch niet? Pas je reservering hier zelf aan, of bel ons even.</p>' +
+        btn(link, 'Wijzig reservering', true) + btn('tel:+31765224437', 'Bel ons', false));
+  }
+  rows += block('<div style="' + F + 'font-size:22px;margin-bottom:10px">Openingstijden</div>' +
+    '<p style="' + S + 'font-size:15px;line-height:1.65;color:#6B4A4E;margin:0">Dinsdag t/m zondag vanaf 17:00<br>Maandag gesloten</p>' +
+    '<p style="' + S + 'font-size:12px;color:#9A7F7F;margin:18px 0 0">Aanvraagnummer ' + esc(id) + '</p>');
+  var subject = {
+    nieuw: 'Je reserveringsaanvraag bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd,
+    gewijzigd: 'Je wijziging bij Girasole: ' + langeDatum(b.dag).toLowerCase() + ', ' + b.tijd,
+    geannuleerd: 'Je reservering bij Girasole is geannuleerd'
+  }[kind];
+  MailApp.sendEmail({ to: b.email, replyTo: replyTo, name: "Girasole by Luca's Kitchen", subject: subject,
+    htmlBody: page(kind === 'geannuleerd' ? 'Je reservering is geannuleerd.' : 'We bellen of mailen je nog even om je tafel te bevestigen.', rows) });
 }
 
-function mailEigenaar(b, id, to) {
+function mailEigenaar(b, id, to, kind, was) {
   var tel = b.telefoon.replace(/[^0-9+]/g, '');
   var row = function (k, v) { return '<tr><td style="' + S + 'font-size:13px;color:#876A6C;padding:8px 0;text-align:left;border-bottom:1px dashed #EFE2CC">' + k + '</td><td style="' + S + 'font-size:15px;font-weight:bold;padding:8px 0;text-align:right;border-bottom:1px dashed #EFE2CC">' + v + '</td></tr>'; };
-  var html = page(gasten(b.personen) + ' op ' + langeDatum(b.dag) + ' om ' + b.tijd,
-    block('<div style="display:inline-block;background:#F5B800;color:#3A0B14;' + S + 'font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:999px">Nieuwe reservering</div>' + '<div style="height:18px"></div>' + details(b)) +
+  var badge = { nieuw: ['Nieuwe reservering', '#F5B800', '#3A0B14'], gewijzigd: ['Gewijzigd door de gast', '#E07B00', '#FFFFFF'], geannuleerd: ['Geannuleerd door de gast', '#B3262E', '#FFFFFF'] }[kind];
+  var main = kind === 'geannuleerd'
+    ? '<div style="' + S + 'font-size:17px;color:#9A7F7F;text-decoration:line-through;margin-top:4px">' + esc(was) + '</div>'
+    : details(b, kind === 'gewijzigd' ? 'Nieuwe gegevens' : 'Reservering') + (was ? '<div style="' + S + 'font-size:13px;color:#9A7F7F;margin-top:12px">Was: <span style="text-decoration:line-through">' + esc(was) + '</span></div>' : '');
+  var todo = { nieuw: 'Bel de gast om de tafel te bevestigen en zet de reservering daarna op <b>Bevestigd</b> in de app.',
+    gewijzigd: 'De gast heeft de reservering aangepast. Kijk of het past, bel even en zet hem daarna weer op <b>Bevestigd</b> in de app.',
+    geannuleerd: 'De tafel is weer vrij. Je hoeft niets te doen.' }[kind];
+  var html = page(badge[0] + ': ' + esc(b.naam),
+    block('<div style="display:inline-block;background:' + badge[1] + ';color:' + badge[2] + ';' + S + 'font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:6px 14px;border-radius:999px">' + badge[0] + '</div><div style="height:18px"></div>' + main) +
     block('<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' +
       row('Naam', esc(b.naam)) + row('Telefoon', '<a href="tel:' + esc(tel) + '" style="color:#5B0A19">' + esc(b.telefoon) + '</a>') +
       row('E-mail', '<a href="mailto:' + esc(b.email) + '" style="color:#5B0A19">' + esc(b.email) + '</a>') + row('Aanvraagnummer', esc(id)) + '</table>') +
-    block('<p style="' + S + 'font-size:15px;line-height:1.6;color:#4E2A30;margin:0 0 16px">Bel de gast om de tafel te bevestigen en zet de reservering daarna op <b>Bevestigd</b> in de app.</p>' +
-      btn('tel:' + esc(tel), 'Bel ' + esc(b.naam.split(' ')[0]), true) + btn(SITE + 'beheer/', 'Open de app', false), '#FDF0C9'));
-  MailApp.sendEmail({ to: to, replyTo: b.email, name: 'Girasole reserveringen',
-    subject: 'Nieuwe reservering: ' + gasten(b.personen) + ', ' + langeDatum(b.dag).toLowerCase() + ' om ' + b.tijd, htmlBody: html });
+    block('<p style="' + S + 'font-size:15px;line-height:1.6;color:#4E2A30;margin:0 0 16px">' + todo + '</p>' +
+      (kind === 'geannuleerd' ? '' : btn('tel:' + esc(tel), 'Bel ' + esc(b.naam.split(' ')[0]), true)) + btn(SITE + 'beheer/', 'Open de app', false), '#FDF0C9'));
+  var subject = { nieuw: 'Nieuwe reservering: ', gewijzigd: 'Gewijzigde reservering: ', geannuleerd: 'Geannuleerd: ' }[kind] +
+    (kind === 'geannuleerd' ? b.naam + ', ' + was : gasten(b.personen) + ', ' + langeDatum(b.dag).toLowerCase() + ' om ' + b.tijd);
+  MailApp.sendEmail({ to: to, replyTo: b.email, name: 'Girasole reserveringen', subject: subject, htmlBody: html });
 }
 
-function mails(b, id) {
+function mails(b, id, token, kind, was) {
   var owner = PropertiesService.getScriptProperties().getProperty('MAIL_TO') || Session.getEffectiveUser().getEmail();
-  try { if (owner) mailEigenaar(b, id, owner); } catch (x) {}
-  try { mailGast(b, id, owner); } catch (x) {}
+  try { if (owner) mailEigenaar(b, id, owner, kind, was); } catch (x) {}
+  try { mailGast(b, id, token, owner, kind, was); } catch (x) {}
+}
+
+// ---- guest changes via the secret link in their mail ----
+function findBooking(id, token) {
+  if (!id || !/^[a-f0-9]{32}$/.test(String(token || ''))) return null;
+  var sh = resSheet(), v = sh.getDataRange().getValues(), t = COLS.indexOf('token');
+  for (var i = 1; i < v.length; i++) if (String(v[i][0]) === String(id) && String(v[i][t]) === String(token)) return { row: i + 1, r: rowObj(v[i]) };
+  return null;
+}
+function summary(r) { return langeDatum(r.dag) + ', ' + r.tijd + ', ' + gasten(r.personen) + ', ' + r.keuze; }
+function guestEdit(raw) {
+  if (count('tok') >= 40) return { error: 'Even te veel pogingen. Bel ons op 076 522 4437.' };
+  var f = findBooking(str(raw.id, 20), str(raw.t, 40));
+  if (!f) { bump('tok', 900); return { error: 'We kunnen deze reservering niet vinden. Bel ons op 076 522 4437.' }; }
+  var r = f.r, closed = r.status === 'geannuleerd' || r.status === 'afgewezen' || r.dag < today();
+  if (raw.action === 'mijn') return { res: { dag: r.dag, tijd: r.tijd, personen: r.personen, keuze: r.keuze, naam: r.naam, status: r.status, dicht: closed } };
+  if (closed) return { error: 'Deze reservering kan niet meer online gewijzigd worden. Bel ons op 076 522 4437.' };
+  var sh = resSheet(), col = function (c) { return COLS.indexOf(c) + 1; }, was = summary(r);
+  if (raw.annuleer === true) {
+    sh.getRange(f.row, col('status')).setValue('geannuleerd');
+    sh.getRange(f.row, col('vorige')).setValue("'" + was);
+    mails(r, r.id, '', 'geannuleerd', was);
+    return { ok: true, status: 'geannuleerd' };
+  }
+  var nb = { dag: str(raw.dag, 10), tijd: str(raw.tijd, 5), personen: parseInt(raw.personen, 10), keuze: str(raw.keuze, 40), naam: r.naam, telefoon: r.telefoon, email: r.email };
+  if (KEUZES.indexOf(nb.keuze) < 0) nb.keuze = 'À la carte';
+  if (nb.personen === 12) nb.keuze = 'De Huiskamer';
+  var err = checkBooking(nb, today());
+  if (err) return { error: err };
+  if (nb.dag === r.dag && nb.tijd === r.tijd && nb.personen === r.personen && nb.keuze === r.keuze) return { error: 'Je hebt nog niets gewijzigd.' };
+  sh.getRange(f.row, col('dag')).setValue("'" + nb.dag);
+  sh.getRange(f.row, col('tijd')).setValue("'" + nb.tijd);
+  sh.getRange(f.row, col('personen')).setValue(nb.personen);
+  sh.getRange(f.row, col('keuze')).setValue(nb.keuze);
+  sh.getRange(f.row, col('status')).setValue('gewijzigd');
+  sh.getRange(f.row, col('vorige')).setValue("'" + was);
+  mails(nb, r.id, str(raw.t, 40), 'gewijzigd', was);
+  return { ok: true, status: 'gewijzigd' };
 }
 
 // ---- endpoints ----
@@ -374,11 +446,14 @@ function handle(raw) {
     var err = checkBooking(b, today());
     if (err) return { error: err };
     bump('res', 3600);
-    var id = String(Date.now());
-    resSheet().appendRow([id, new Date().toISOString(), "'" + b.dag, "'" + b.tijd, b.personen, b.keuze, "'" + b.naam, "'" + b.telefoon, b.email, 'nieuw']);
-    mails(b, id); // each mail is wrapped in try: a mail hiccup must not lose the booking
+    var id = String(Date.now()), token = Utilities.getUuid().replace(/-/g, '');
+    if (b.personen === 12) b.keuze = 'De Huiskamer';
+    resSheet().appendRow([id, new Date().toISOString(), "'" + b.dag, "'" + b.tijd, b.personen, b.keuze, "'" + b.naam, "'" + b.telefoon, b.email, 'nieuw', token, '']);
+    mails(b, id, token, 'nieuw', ''); // each mail is wrapped in try: a mail hiccup must not lose the booking
     return { ok: true, id: id };
   }
+
+  if (raw.action === 'mijn' || raw.action === 'wijzig') return guestEdit(raw);
 
   var denied = pinError(raw.pin);
   if (denied) return { error: denied, auth: false };
