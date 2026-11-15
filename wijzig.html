@@ -41,6 +41,33 @@ input,select{-webkit-appearance:none;appearance:none;display:block;min-width:0;m
 select{padding-right:38px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235B0A19' stroke-width='1.6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;background-size:12px 8px}
 input[type=date]::-webkit-date-and-time-value{text-align:left;margin:0}
 input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
+
+/* custom rounded dropdowns + calendar (native popups can't be styled) */
+label{position:relative}
+.dd-b{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:52px;padding:0 14px;border:1px solid rgba(58,11,20,.22);border-radius:12px;background:#fff;font:inherit;font-size:16px;letter-spacing:0;text-transform:none;color:#3A0B14;cursor:pointer;text-align:left}
+.dd-b span{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.dd-b::after{content:"";flex:none;width:12px;height:8px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1.5l5 5 5-5' fill='none' stroke='%235B0A19' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat center/12px 8px;transition:transform .2s}
+.dd-b[aria-expanded="true"]{border-color:#5B0A19;box-shadow:0 0 0 3px rgba(91,10,25,.12)}.dd-b[aria-expanded="true"]::after{transform:rotate(180deg)}
+.dd-b:disabled{background:#F3E6D0;cursor:default}
+.dd-p{position:absolute;z-index:20;top:calc(100% + 6px);left:0;min-width:100%;max-height:290px;overflow:auto;background:#FFFBF2;border:1px solid rgba(58,11,20,.12);border-radius:16px;padding:6px;box-shadow:0 24px 50px -12px rgba(58,11,20,.35);text-transform:none;letter-spacing:0;animation:ddIn .16s ease-out}
+.dd-p.r{left:auto;right:0}
+@keyframes ddIn{from{opacity:0;transform:translateY(-4px)}}
+.dd-p [role=option]{display:block;width:100%;border:0;background:none;text-align:left;font:inherit;font-size:15px;color:#3A0B14;padding:11px 12px;border-radius:10px;cursor:pointer}
+.dd-p [role=option]:hover,.dd-p [role=option]:focus-visible{background:#F3E6D0;outline:none}
+.dd-p [role=option][aria-selected="true"]{background:#5B0A19;color:#FDF5E1}
+.cal-p{width:min(300px,calc(100vw - 70px));box-sizing:border-box;max-height:none;padding:10px}
+.cal-p .hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.cal-p .hd b{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:20px;text-transform:capitalize}
+.cal-p .hd button{width:36px;height:36px;border-radius:50%;border:1px solid rgba(58,11,20,.15);background:none;font-size:18px;color:#5B0A19;cursor:pointer}
+.cal-p .hd button:disabled{opacity:.3;cursor:default}
+.cal-p .gr{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}
+.cal-p .gr span{font-size:11px;color:#876A6C;padding:4px 0;text-transform:uppercase}
+.cal-p .gr button{height:36px;border:0;border-radius:10px;background:none;font:inherit;font-size:14px;color:#3A0B14;cursor:pointer}
+.cal-p .gr button:hover:not(:disabled){background:#F3E6D0}
+.cal-p .gr button:disabled{color:#CDBFB9;cursor:default}
+.cal-p .gr button.tod{box-shadow:inset 0 0 0 1px #F5B800}
+.cal-p .gr button[aria-selected="true"]{background:#5B0A19;color:#FDF5E1}
+.cal-p .ft{margin:8px 2px 0;font-size:12px;color:#876A6C;text-align:center}
 </style>
 </head>
 <body>
@@ -56,7 +83,7 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
 <p class="sub">Pas hieronder je reservering aan.</p>
 <div class="now"><small>Je huidige reservering</small><b class="js-now"></b></div>
 <div class="grid">
-<label>Datum<input type="date" name="dag" required></label>
+<label>Datum<input type="hidden" name="dag"><button type="button" class="dd-b js-dag-b" aria-haspopup="dialog"></button></label>
 <label>Tijd<select name="tijd" required></select></label>
 </div>
 <div class="grid">
@@ -78,6 +105,7 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
   var u = new URLSearchParams(location.search), id = u.get('id'), t = u.get('t');
   var DG = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag'], MN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni', 'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
   var pad = function (n) { return (n < 10 ? '0' : '') + n; };
+  var short = function (d) { var x = new Date(d + 'T12:00'); return DG[x.getDay()].slice(0, 2) + ' ' + x.getDate() + ' ' + MN[x.getMonth()].slice(0, 3); };
   var nice = function (d) { var x = new Date(d + 'T12:00'); return DG[x.getDay()] + ' ' + x.getDate() + ' ' + MN[x.getMonth()]; };
   var today = new Date().toLocaleDateString('sv-SE', { timeZone: 'Europe/Amsterdam' });
   var f = q('.js-form');
@@ -93,10 +121,69 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
   for (var m = 17 * 60; m <= 20 * 60; m += 15) f.tijd.insertAdjacentHTML('beforeend', '<option>' + pad(m / 60 | 0) + ':' + pad(m % 60) + '</option>');
   for (var p = 1; p <= 12; p++) f.personen.insertAdjacentHTML('beforeend', '<option value="' + p + '">' + p + (p === 1 ? ' persoon' : ' personen') + '</option>');
   var max = new Date(today + 'T12:00'); max.setDate(max.getDate() + 120);
-  f.dag.min = today; f.dag.max = max.toLocaleDateString('sv-SE');
-  function lock() { var big = f.personen.value === '12'; if (big) f.keuze.value = 'De Huiskamer'; f.keuze.disabled = big; }
+  var maxD = max.toLocaleDateString('sv-SE');
+
+  // ---- custom dropdowns: the native <select> stays the source of truth (hidden) ----
+  var open = null;
+  function closeAll() { if (open) { open.p.remove(); open.b.setAttribute('aria-expanded', 'false'); open = null; } }
+  document.addEventListener('click', function (e) { if (open && !open.p.contains(e.target) && e.target !== open.b && !open.b.contains(e.target)) closeAll(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) { var b = open.b; closeAll(); b.focus(); } });
+  function panel(b, el) {
+    closeAll(); el.classList.add('dd-p');
+    if (b.getBoundingClientRect().left > innerWidth / 2) el.classList.add('r');
+    requestAnimationFrame(function () { var r = el.getBoundingClientRect(); if (r.right > innerWidth - 12) el.style.left = (parseFloat(getComputedStyle(el).left) - (r.right - innerWidth + 12)) + 'px'; if (r.left < 12) el.style.left = (parseFloat(getComputedStyle(el).left) + 12 - r.left) + 'px'; });
+    b.parentNode.appendChild(el); b.setAttribute('aria-expanded', 'true'); open = { b: b, p: el };
+    var sel = el.querySelector('[aria-selected="true"]'); if (sel) { sel.scrollIntoView({ block: 'nearest' }); sel.focus({ preventScroll: true }); }
+  }
+  function dropdown(sel) {
+    var b = document.createElement('button');
+    b.type = 'button'; b.className = 'dd-b'; b.setAttribute('aria-haspopup', 'listbox'); b.setAttribute('aria-expanded', 'false');
+    sel.hidden = true; sel.parentNode.appendChild(b);
+    var sync = function () { b.innerHTML = '<span></span>'; b.firstChild.textContent = sel.options[sel.selectedIndex] ? sel.options[sel.selectedIndex].text : ''; b.disabled = sel.disabled; };
+    sel.sync = sync; sync();
+    b.addEventListener('click', function () {
+      if (open && open.b === b) return closeAll();
+      var l = document.createElement('div'); l.setAttribute('role', 'listbox');
+      [].forEach.call(sel.options, function (o, i) {
+        var x = document.createElement('button'); x.type = 'button'; x.setAttribute('role', 'option'); x.textContent = o.text;
+        x.setAttribute('aria-selected', i === sel.selectedIndex);
+        x.addEventListener('click', function () { sel.selectedIndex = i; sync(); sel.dispatchEvent(new Event('change')); closeAll(); b.focus(); });
+        l.appendChild(x);
+      });
+      panel(b, l);
+    });
+  }
+  ['tijd', 'personen', 'keuze'].forEach(function (n) { dropdown(f[n]); });
+
+  // ---- date: rounded month calendar, Mondays/past/after max disabled ----
+  var db = q('.js-dag-b'), C = { y: 0, m: 0 };
+  function syncDag() { db.innerHTML = '<span></span>'; db.firstChild.textContent = f.dag.value ? short(f.dag.value) : 'Kies een datum'; }
+  function drawCal(p) {
+    var first = new Date(C.y, C.m, 1), off = (first.getDay() + 6) % 7, n = new Date(C.y, C.m + 1, 0).getDate(), ym = C.y * 12 + C.m;
+    var h = '<div class="hd"><button type="button" data-m="-1" aria-label="Vorige maand"' + (ym <= +today.slice(0, 4) * 12 + +today.slice(5, 7) - 1 ? ' disabled' : '') + '>‹</button><b>' + MN[C.m] + ' ' + C.y + '</b>' +
+      '<button type="button" data-m="1" aria-label="Volgende maand"' + (ym >= +maxD.slice(0, 4) * 12 + +maxD.slice(5, 7) - 1 ? ' disabled' : '') + '>›</button></div><div class="gr">';
+    ['ma', 'di', 'wo', 'do', 'vr', 'za', 'zo'].forEach(function (w) { h += '<span>' + w + '</span>'; });
+    for (var i = 0; i < off; i++) h += '<span></span>';
+    for (var d = 1; d <= n; d++) {
+      var v = C.y + '-' + pad(C.m + 1) + '-' + pad(d), dis = v < today || v > maxD || new Date(C.y, C.m, d).getDay() === 1;
+      h += '<button type="button" role="option" data-d="' + v + '" aria-selected="' + (v === f.dag.value) + '"' + (v === today ? ' class="tod"' : '') + (dis ? ' disabled' : '') + '>' + d + '</button>';
+    }
+    p.innerHTML = h + '</div><p class="ft">Op maandag zijn we gesloten</p>';
+  }
+  db.addEventListener('click', function () {
+    if (open && open.b === db) return closeAll();
+    var base = f.dag.value || today; C.y = +base.slice(0, 4); C.m = +base.slice(5, 7) - 1;
+    var p = document.createElement('div'); p.className = 'cal-p'; p.setAttribute('role', 'dialog'); p.setAttribute('aria-label', 'Kies een datum');
+    drawCal(p);
+    p.addEventListener('click', function (e) {
+      var t = e.target.closest('button'); if (!t || t.disabled) return;
+      if (t.dataset.m) { var m = C.m + +t.dataset.m; C.y += Math.floor(m / 12); C.m = (m + 12) % 12; drawCal(p); return; }
+      f.dag.value = t.dataset.d; syncDag(); err(''); closeAll(); db.focus();
+    });
+    panel(db, p);
+  });
+  function lock() { var big = f.personen.value === '12'; if (big) f.keuze.value = 'De Huiskamer'; f.keuze.disabled = big; if (f.keuze.sync) f.keuze.sync(); }
   f.personen.addEventListener('change', lock);
-  f.dag.addEventListener('change', function () { err(new Date(f.dag.value + 'T12:00').getDay() === 1 ? 'Op maandag zijn we gesloten. Kies een andere dag.' : ''); });
 
   if (!API || !id || !t) return fail('Deze link is niet compleet. Gebruik de knop in je bevestigingsmail, of bel ons.');
   call({ action: 'mijn' }).then(function (d) {
@@ -108,7 +195,7 @@ input[type=date]::-webkit-calendar-picker-indicator{opacity:.6}
     f.hidden = false;
     q('.js-hi').textContent = 'Ciao ' + r.naam.split(' ')[0] + '!';
     q('.js-now').textContent = nice(r.dag) + ', ' + r.tijd + ' · ' + r.personen + (r.personen === 1 ? ' persoon' : ' personen');
-    f.dag.value = r.dag; f.tijd.value = r.tijd; f.personen.value = r.personen; f.keuze.value = r.keuze; lock();
+    f.dag.value = r.dag; f.tijd.value = r.tijd; f.personen.value = r.personen; f.keuze.value = r.keuze; lock(); syncDag(); f.tijd.sync(); f.personen.sync(); f.keuze.sync();
   }).catch(function () { fail('Er is geen verbinding. Probeer het zo nog eens, of bel ons.'); });
 
   f.addEventListener('submit', function (e) {
